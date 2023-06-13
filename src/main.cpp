@@ -1,18 +1,20 @@
 #include <Arduino.h>
 
-// put function declarations here:
-int myFunction(int, int);
+#include "motorgo_mini.h"
 
-void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+MotorGo::MotorGoMini* motorgo_mini;
+
+void setup()
+{
+  // Instantiate motorgo mini board
+  motorgo_mini = new MotorGo::MotorGoMini();
+
+  // Setup Ch0 with FOCStudio enabled
+  motorgo_mini->init_ch0(false, true);
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-}
-
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+void loop()
+{
+  // Run Ch0
+  motorgo_mini->loop_ch0();
 }

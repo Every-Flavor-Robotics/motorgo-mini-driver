@@ -1,14 +1,21 @@
 #include "motorgo_mini.h"
 
-SPIClass hspi = SPIClass(HSPI);
+// Encoder I2C bus, define and initialize here to avoid multiple definitions
+SPIClass MotorGo::hspi = SPIClass(HSPI);
 bool hspi_initialized = false;
 
-Commander command = Commander(Serial);
-BLDCMotor motor_ch0 = BLDCMotor(11);
-BLDCMotor motor_ch1 = BLDCMotor(11);
+Commander MotorGo::command = Commander(Serial);
+BLDCMotor MotorGo::motor_ch0 = BLDCMotor(11);
+BLDCMotor MotorGo::motor_ch1 = BLDCMotor(11);
 
-void do_target_ch0(char* cmd) { command.motor(&motor_ch0, cmd); }
-void do_target_ch1(char* cmd) { command.motor(&motor_ch1, cmd); }
+void do_target_ch0(char* cmd)
+{
+  MotorGo::command.motor(&MotorGo::motor_ch0, cmd);
+}
+void do_target_ch1(char* cmd)
+{
+  MotorGo::command.motor(&MotorGo::motor_ch1, cmd);
+}
 
 MotorGo::MotorGoMini::MotorGoMini()
     : encoder_ch0(MagneticSensorMT6701SSI(k_ch0_enc_cs)),
@@ -22,7 +29,7 @@ MotorGo::MotorGoMini::MotorGoMini()
 {
 }
 
-void MotorGo::MotorGoMini::init() { init(false, false); }
+void MotorGo::MotorGoMini::init_ch0() { init_ch0(false, false); }
 
 void MotorGo::MotorGoMini::init_helper(BLDCMotor& motor, BLDCDriver6PWM& driver,
                                        CalibratedSensor& sensor_calibrated,
@@ -30,7 +37,7 @@ void MotorGo::MotorGoMini::init_helper(BLDCMotor& motor, BLDCDriver6PWM& driver,
                                        const char* name)
 {
   // Init encoder
-  encoder.init(&hspi);
+  encoder.init(&MotorGo::hspi);
 
   // Link encoder to motor
   motor.linkSensor(&encoder);
@@ -84,13 +91,14 @@ void MotorGo::MotorGoMini::init_helper(BLDCMotor& motor, BLDCDriver6PWM& driver,
   Serial.println(name);
 }
 
-void MotorGo::MotorGoMini::init(bool should_calibrate, bool enable_foc_studio)
+void MotorGo::MotorGoMini::init_ch0(bool should_calibrate,
+                                    bool enable_foc_studio)
 {
   // Guard to prevent multiple initializations, which could cause a crash
   if (!hspi_initialized)
   {
     hspi_initialized = true;
-    hspi.begin(enc_scl, enc_sda, 27, 3);
+    MotorGo::hspi.begin(enc_scl, enc_sda, 27, 3);
   }
 
   this->should_calibrate = should_calibrate;
@@ -99,89 +107,95 @@ void MotorGo::MotorGoMini::init(bool should_calibrate, bool enable_foc_studio)
   Serial.println(enable_foc_studio ? "Yes" : "No");
 
   // Initialize motors
-  init_helper(motor_ch0, driver_ch0, sensor_calibrated_ch0, encoder_ch0, "ch0");
-  init_helper(motor_ch1, driver_ch1, sensor_calibrated_ch1, encoder_ch1, "ch1");
+  init_helper(MotorGo::motor_ch0, driver_ch0, sensor_calibrated_ch0,
+              encoder_ch0, "ch0");
+  //   init_helper(MotorGo::motor_ch1, driver_ch1, sensor_calibrated_ch1,
+  //   encoder_ch1, "ch1");
 
   // Set PID parameters for both motors
-  motor_ch1.PID_velocity.P = 0.75;
-  motor_ch1.PID_velocity.I = 0.09;
-  motor_ch1.PID_velocity.D = 0.001;
-  motor_ch1.PID_velocity.output_ramp = 10000.0;
+  //   MotorGo::motor_ch1.PID_velocity.P = 0.75;
+  //   MotorGo::motor_ch1.PID_velocity.I = 0.09;
+  //   MotorGo::motor_ch1.PID_velocity.D = 0.001;
+  //   MotorGo::motor_ch1.PID_velocity.output_ramp = 10000.0;
 
-  motor_ch0.PID_velocity.P = 0.75;
-  motor_ch0.PID_velocity.I = 0.09;
-  motor_ch0.PID_velocity.D = 0.001;
-  motor_ch0.PID_velocity.output_ramp = 10000.0;
+  MotorGo::motor_ch0.PID_velocity.P = 0.75;
+  MotorGo::motor_ch0.PID_velocity.I = 0.09;
+  MotorGo::motor_ch0.PID_velocity.D = 0.001;
+  MotorGo::motor_ch0.PID_velocity.output_ramp = 10000.0;
 
   // add command to commander
   if (enable_foc_studio)
   {
-    command.add('0', do_target_ch0, (char*)"target");
-    command.add('1', do_target_ch1, (char*)"target");
+    MotorGo::command.add('0', do_target_ch0, (char*)"target");
+    // command.add('1', do_target_ch1, (char*)"target");
   }
 
-  motor_ch0.disable();
-  motor_ch1.disable();
+  MotorGo::motor_ch0.disable();
+  //   MotorGo::motor_ch1.disable();
 }
 
-void MotorGo::MotorGoMini::set_target(float target_ch0, float target_ch1)
+void MotorGo::MotorGoMini::set_target_ch0(float target_ch0, float target_ch1)
 {
   if (!enable_foc_studio)
   {
-    motor_ch0.move(-target_ch0);
-    motor_ch1.move(target_ch1);
+    MotorGo::motor_ch0.move(-target_ch0);
+    // MotorGo::motor_ch1.move(target_ch1);
   }
 }
 
-void MotorGo::MotorGoMini::loop()
+void MotorGo::MotorGoMini::loop_ch0()
 {
-  motor_ch0.loopFOC();
-  motor_ch1.loopFOC();
+  MotorGo::motor_ch0.loopFOC();
+  //   MotorGo::motor_ch1.loopFOC();
 
   // this function can be run at much lower frequency than loopFOC()
-  motor_ch0.move();
-  motor_ch1.move();
+  MotorGo::motor_ch0.move();
+  //   MotorGo::motor_ch1.move();
 
   // Monitoring, use only if necessary as it slows loop down significantly
   if (enable_foc_studio)
   {
     // user communication
-    command.run();
+    MotorGo::command.run();
 
-    motor_ch0.monitor();
-    motor_ch1.monitor();
+    MotorGo::motor_ch0.monitor();
+    // MotorGo::motor_ch1.monitor();
   }
 }
 
-void MotorGo::MotorGoMini::enable()
+void MotorGo::MotorGoMini::enable_ch0()
 {
-  motor_ch0.enable();
-  motor_ch1.enable();
+  MotorGo::motor_ch0.enable();
+  //   MotorGo::motor_ch1.enable();
 }
 
-void MotorGo::MotorGoMini::disable()
+void MotorGo::MotorGoMini::disable_ch0()
 {
-  motor_ch0.disable();
-  motor_ch1.disable();
+  MotorGo::motor_ch0.disable();
+  //   MotorGo::motor_ch1.disable();
 }
 
 // Getters
 float MotorGo::MotorGoMini::get_ch0_position()
 {
-  return motor_ch0.shaftAngle();
+  return MotorGo::motor_ch0.shaftAngle();
 }
 float MotorGo::MotorGoMini::get_ch0_velocity()
 {
-  return motor_ch0.shaftVelocity();
+  return MotorGo::motor_ch0.shaftVelocity();
 }
-float MotorGo::MotorGoMini::get_ch0_voltage() { return motor_ch0.voltage.q; }
+float MotorGo::MotorGoMini::get_ch0_voltage()
+{
+  return MotorGo::motor_ch0.voltage.q;
+}
 
-float MotorGo::MotorGoMini::get_ch1_position()
-{
-  return motor_ch1.shaftAngle();
-}
-float MotorGo::MotorGoMini::get_ch1_velocity()
-{
-  return motor_ch1.shaftVelocity();
-}
-float MotorGo::MotorGoMini::get_ch1_voltage() { return motor_ch1.voltage.q; }
+// float MotorGo::MotorGoMini::get_ch1_position()
+// {
+//   return MotorGo::motor_ch1.shaftAngle();
+// }
+// float MotorGo::MotorGoMini::get_ch1_velocity()
+// {
+//   return MotorGo::motor_ch1.shaftVelocity();
+// }
+// float MotorGo::MotorGoMini::get_ch1_voltage() { return
+// MotorGo::motor_ch1.voltage.q; }

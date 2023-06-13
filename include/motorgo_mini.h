@@ -28,24 +28,33 @@ class MotorGoMini
 
   // Init motors and encoders, calibration is automatically loaded and FOCStudio
   // is disabled
-  void init();
+  void init_ch0();
+  void init_ch1();
 
   // Init motors and encoders, optionally calibrating and/or enabling FOCStudio
-  void init(bool should_calibrate, bool enable_foc_studio);
+  void init_ch0(bool should_calibrate, bool enable_foc_studio);
+  void init_ch1(bool should_calibrate, bool enable_foc_studio);
 
-  void loop();
+  void loop_ch0();
+  void loop_ch1();
 
-  void set_target(float target_ch0, float target_ch1);
+  void set_target_ch0(float target_ch0, float target_ch1);
+  void set_target_ch1(float target_ch0, float target_ch1);
 
-  void enable();
-  void disable();
+  void enable_ch0();
+  void enable_ch1();
+
+  void disable_ch0();
+  void disable_ch1();
 
   float get_ch0_position();
   float get_ch0_velocity();
+  float get_ch0_torque();
   float get_ch0_voltage();
 
   float get_ch1_position();
   float get_ch1_velocity();
+  float get_ch1_torque();
   float get_ch1_voltage();
 
   // void doTargetch0(char* cmd);
