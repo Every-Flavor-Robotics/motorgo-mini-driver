@@ -94,11 +94,11 @@ void MotorGo::MotorGoMini::init_helper(BLDCMotor& motor, BLDCDriver6PWM& driver,
 void MotorGo::MotorGoMini::init_ch0(bool should_calibrate,
                                     bool enable_foc_studio)
 {
-  // Guard to prevent multiple initializations, which could cause a crash
+  //   Guard to prevent multiple initializations, which could cause a crash
   if (!hspi_initialized)
   {
     hspi_initialized = true;
-    MotorGo::hspi.begin(enc_scl, enc_sda, 27, 3);
+    MotorGo::hspi.begin(enc_scl, enc_sda, 45, 46);
   }
 
   this->should_calibrate = should_calibrate;
@@ -127,7 +127,7 @@ void MotorGo::MotorGoMini::init_ch0(bool should_calibrate,
   if (enable_foc_studio)
   {
     MotorGo::command.add('0', do_target_ch0, (char*)"target");
-    // command.add('1', do_target_ch1, (char*)"target");
+    command.add('1', do_target_ch1, (char*)"target");
   }
 
   MotorGo::motor_ch0.disable();

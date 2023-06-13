@@ -62,26 +62,26 @@ class MotorGoMini
 
  private:
   // Encoder I2C bus
-  const int enc_sda = 28;
-  const int enc_scl = 29;
+  const int enc_sda = 35;
+  const int enc_scl = 36;
 
   // ch0 Motor and Encoder pins
-  const int k_ch0_enc_cs = 30;
-  const int k_ch0_gpio_uh = 11;
-  const int k_ch0_gpio_ul = 8;
-  const int k_ch0_gpio_vh = 10;
+  const int k_ch0_enc_cs = 37;
+  const int k_ch0_gpio_uh = 18;
+  const int k_ch0_gpio_ul = 15;
+  const int k_ch0_gpio_vh = 17;
   const int k_ch0_gpio_vl = 5;
-  const int k_ch0_gpio_wh = 9;
+  const int k_ch0_gpio_wh = 16;
   const int k_ch0_gpio_wl = 6;
 
   // ch1 Motor and Encoder pins
-  const int k_ch1_enc_cs = 25;
-  const int k_ch1_gpio_uh = 17;
-  const int k_ch1_gpio_ul = 21;
-  const int k_ch1_gpio_vh = 18;
-  const int k_ch1_gpio_vl = 23;
-  const int k_ch1_gpio_wh = 19;
-  const int k_ch1_gpio_wl = 22;
+  const int k_ch1_enc_cs = 48;
+  const int k_ch1_gpio_uh = 9;
+  const int k_ch1_gpio_ul = 13;
+  const int k_ch1_gpio_vh = 10;
+  const int k_ch1_gpio_vl = 21;
+  const int k_ch1_gpio_wh = 11;
+  const int k_ch1_gpio_wl = 14;
 
   // Motor and Encoder parameters
   const float k_voltage_power_supply = 9.0;
