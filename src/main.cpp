@@ -31,7 +31,7 @@ void loop()
 
   //   Spin forward
   //   Enable
-  motorgo_mini->set_target_ch0(10.0, 10.0);
+  motorgo_mini->set_target_velocity_ch0(10.0);
   i++;
 
   // Delay necessary amount micros
