@@ -46,12 +46,11 @@ class MotorGoMini
   void init_ch0(bool should_calibrate, bool enable_foc_studio);
   void init_ch1(bool should_calibrate, bool enable_foc_studio);
 
+  // Run control loop, should be called at fixed frequency
   void loop_ch0();
   void loop_ch1();
 
-  void set_target_ch0(float target_ch0, float target_ch1);
-  void set_target_ch1(float target_ch0, float target_ch1);
-
+  // Enable and disable motors
   void enable_ch0();
   void enable_ch1();
 
@@ -81,9 +80,6 @@ class MotorGoMini
   float get_ch1_torque();
   float get_ch1_voltage();
 
-  // void doTargetch0(char* cmd);
-  // void doTargetch1(char* cmd);
-
  private:
   // Encoder I2C bus
   const int enc_sda = 35;
@@ -107,14 +103,24 @@ class MotorGoMini
   const int k_ch1_gpio_wh = 11;
   const int k_ch1_gpio_wl = 14;
 
-  // Motor and Encoder parameters
+  // Additional motor and encoder parameters
   const float k_voltage_power_supply = 9.0;
   const float k_voltage_limit = 9.0;
   const float k_current_limit = 10.0;
   const float k_velocity_limit = 100.0;
   const float k_voltage_calibration = 2.0;
 
+  // Calibration parameters
+  // If should_calibrate is set to true, the motor will be calibrated on startup
+  // Else, the calibration will be loaded from EEPROM. If no calibration is
+  // found, the motor will be calibrated anyway and the calibration will be
+  // saved to EEPROM
   bool should_calibrate;
+
+  // If enable_foc_studio is set to true, data will be written to serial
+  // to communicate with FOCStudio
+  // This significantly slows the control loop, enable only when necessary
+  // TODO: Enable "offline" tuning
   bool enable_foc_studio;
 
   // Encoder, motor, and driver instances
@@ -127,6 +133,8 @@ class MotorGoMini
   CalibratedSensor sensor_calibrated_ch1;
   BLDCDriver6PWM driver_ch1;
 
+  // Helper functions
+  // init_helper configures the motor and encoder
   void init_helper(BLDCMotor& motor, BLDCDriver6PWM& driver,
                    CalibratedSensor& sensor_calibrated,
                    MagneticSensorMT6701SSI& encoder, const char* name);
