@@ -138,14 +138,6 @@ void MotorGo::MotorGoMini::init_ch0(bool should_calibrate,
   //   MotorGo::motor_ch1.disable();
 }
 
-void MotorGo::MotorGoMini::set_target_velocity_ch0(float target)
-{
-  if (!enable_foc_studio)
-  {
-    MotorGo::motor_ch0.move(target);
-  }
-}
-
 void MotorGo::MotorGoMini::loop_ch0()
 {
   MotorGo::motor_ch0.loopFOC();
@@ -172,20 +164,7 @@ void MotorGo::MotorGoMini::loop_ch0()
   //   Serial.println(analogRead(k_ch0_current_w));
 }
 
-void MotorGo::MotorGoMini::enable_ch0()
-{
-  MotorGo::motor_ch0.enable();
-  //   MotorGo::motor_ch1.enable();
-}
-
-void MotorGo::MotorGoMini::disable_ch0()
-{
-  MotorGo::motor_ch0.disable();
-  //   MotorGo::motor_ch1.disable();
-}
-
-// Setters
-
+////// Helper Functions
 void set_control_mode_helper(BLDCMotor& motor,
                              MotorGo::ControlMode control_mode)
 {
@@ -222,16 +201,112 @@ void set_control_mode_helper(BLDCMotor& motor,
   }
 }
 
+void MotorGo::MotorGoMini::set_target_helper_ch0()
+{
+  // Switch command based on current control mode
+  switch (control_mode_ch0)
+  {
+    case MotorGo::ControlMode::Voltage:
+      motor_ch0.move(target_voltage_ch0);
+      break;
+    case MotorGo::ControlMode::Torque:
+      motor_ch0.move(target_torque_ch0);
+      break;
+    case MotorGo::ControlMode::Velocity:
+      motor_ch0.move(target_velocity_ch0);
+      break;
+    case MotorGo::ControlMode::Position:
+      motor_ch0.move(target_position_ch0);
+      break;
+    case MotorGo::ControlMode::VelocityOpenLoop:
+      motor_ch0.move(target_velocity_ch0);
+      break;
+    case MotorGo::ControlMode::PositionOpenLoop:
+      motor_ch0.move(target_position_ch0);
+      break;
+  }
+}
+
+void MotorGo::MotorGoMini::set_target_helper_ch1()
+{
+  if (!enable_foc_studio)
+  {
+    // Switch command based on current control mode
+    switch (control_mode_ch1)
+    {
+      case MotorGo::ControlMode::Voltage:
+        motor_ch1.move(target_voltage_ch1);
+        break;
+      case MotorGo::ControlMode::Torque:
+        motor_ch1.move(target_torque_ch1);
+        break;
+      case MotorGo::ControlMode::Velocity:
+        motor_ch1.move(target_velocity_ch1);
+        break;
+      case MotorGo::ControlMode::Position:
+        motor_ch1.move(target_position_ch1);
+        break;
+      case MotorGo::ControlMode::VelocityOpenLoop:
+        motor_ch1.move(target_velocity_ch1);
+        break;
+      case MotorGo::ControlMode::PositionOpenLoop:
+        motor_ch1.move(target_position_ch1);
+        break;
+    }
+  }
+}
+
+// Setters
+void MotorGo::MotorGoMini::enable_ch0() { MotorGo::motor_ch0.enable(); }
+void MotorGo::MotorGoMini::enable_ch1() { MotorGo::motor_ch1.enable(); }
+void MotorGo::MotorGoMini::disable_ch0() { MotorGo::motor_ch0.disable(); }
+void MotorGo::MotorGoMini::disable_ch1() { MotorGo::motor_ch1.disable(); }
+
 void MotorGo::MotorGoMini::set_control_mode_ch0(
     MotorGo::ControlMode control_mode)
 {
+  MotorGo::MotorGoMini::control_mode_ch0 = control_mode;
   set_control_mode_helper(MotorGo::motor_ch0, control_mode);
 }
 
 void MotorGo::MotorGoMini::set_control_mode_ch1(
     MotorGo::ControlMode control_mode)
 {
+  MotorGo::MotorGoMini::control_mode_ch1 = control_mode;
   set_control_mode_helper(MotorGo::motor_ch1, control_mode);
+}
+
+void MotorGo::MotorGoMini::set_target_velocity_ch0(float target)
+{
+  target_velocity_ch0 = target;
+  set_target_helper_ch0();
+}
+void MotorGo::MotorGoMini::set_target_velocity_ch1(float target)
+{
+  target_velocity_ch1 = target;
+  set_target_helper_ch1();
+}
+
+void MotorGo::MotorGoMini::set_target_torque_ch0(float target)
+{
+  target_torque_ch0 = target;
+  set_target_helper_ch0();
+}
+void MotorGo::MotorGoMini::set_target_torque_ch1(float target)
+{
+  target_torque_ch1 = target;
+  set_target_helper_ch1();
+}
+
+void MotorGo::MotorGoMini::set_target_position_ch0(float target)
+{
+  target_position_ch0 = target;
+  set_target_helper_ch0();
+}
+void MotorGo::MotorGoMini::set_target_position_ch1(float target)
+{
+  target_position_ch1 = target;
+  set_target_helper_ch1();
 }
 
 // Getters
@@ -248,13 +323,17 @@ float MotorGo::MotorGoMini::get_ch0_voltage()
   return MotorGo::motor_ch0.voltage.q;
 }
 
-// float MotorGo::MotorGoMini::get_ch1_position()
-// {
-//   return MotorGo::motor_ch1.shaftAngle();
-// }
-// float MotorGo::MotorGoMini::get_ch1_velocity()
-// {
-//   return MotorGo::motor_ch1.shaftVelocity();
-// }
-// float MotorGo::MotorGoMini::get_ch1_voltage() { return
-// MotorGo::motor_ch1.voltage.q; }
+float MotorGo::MotorGoMini::get_ch1_position()
+{
+  return MotorGo::motor_ch1.shaftAngle();
+}
+float MotorGo::MotorGoMini::get_ch1_velocity()
+{
+  return MotorGo::motor_ch1.shaftVelocity();
+}
+float MotorGo::MotorGoMini::get_ch1_voltage()
+{
+  return MotorGo::motor_ch1.voltage.q;
+}
+
+// TODO: Implement get torque

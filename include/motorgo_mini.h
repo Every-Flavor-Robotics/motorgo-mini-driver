@@ -53,7 +53,6 @@ class MotorGoMini
   // Enable and disable motors
   void enable_ch0();
   void enable_ch1();
-
   void disable_ch0();
   void disable_ch1();
 
@@ -68,6 +67,10 @@ class MotorGoMini
   // Set target torque
   void set_target_torque_ch0(float target);
   void set_target_torque_ch1(float target);
+
+  // Set target position
+  void set_target_position_ch0(float target);
+  void set_target_position_ch1(float target);
 
   // Get states
   float get_ch0_position();
@@ -114,6 +117,25 @@ class MotorGoMini
   const float k_velocity_limit = 100.0;
   const float k_voltage_calibration = 2.0;
 
+  // Current targets
+  // Either velocity or torque will be used depending on the control mode
+  // Store both to avoid erroneous behaviors due to switching units
+  // when switching between control modes
+  ControlMode control_mode_ch0;
+  ControlMode control_mode_ch1;
+  // Rad/s
+  float target_velocity_ch0;
+  float target_velocity_ch1;
+  // N*m
+  float target_torque_ch0;
+  float target_torque_ch1;
+  // Rad
+  float target_position_ch0;
+  float target_position_ch1;
+  // V
+  float target_voltage_ch0;
+  float target_voltage_ch1;
+
   // Calibration parameters
   // If should_calibrate is set to true, the motor will be calibrated on startup
   // Else, the calibration will be loaded from EEPROM. If no calibration is
@@ -146,8 +168,11 @@ class MotorGoMini
   // set_control_mode_helper sets parameters for each control_mode option
   // Sets values for torque controller type and motion controller type
   void set_control_mode_helper(BLDCMotor& motor, ControlMode control_mode);
-};
 
+  // Set correct targets
+  void set_target_helper_ch0();
+  void set_target_helper_ch1();
+};
 }  // namespace MotorGo
 
 #endif  // MOTORGO_MINI_H
