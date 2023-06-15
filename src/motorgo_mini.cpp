@@ -134,12 +134,11 @@ void MotorGo::MotorGoMini::init_ch0(bool should_calibrate,
   //   MotorGo::motor_ch1.disable();
 }
 
-void MotorGo::MotorGoMini::set_target_ch0(float target_ch0, float target_ch1)
+void MotorGo::MotorGoMini::set_target_velocity_ch0(float target)
 {
   if (!enable_foc_studio)
   {
-    MotorGo::motor_ch0.move(-target_ch0);
-    // MotorGo::motor_ch1.move(target_ch1);
+    MotorGo::motor_ch0.move(target);
   }
 }
 
@@ -173,6 +172,56 @@ void MotorGo::MotorGoMini::disable_ch0()
 {
   MotorGo::motor_ch0.disable();
   //   MotorGo::motor_ch1.disable();
+}
+
+// Setters
+
+void set_control_mode_helper(BLDCMotor& motor,
+                             MotorGo::ControlMode control_mode)
+{
+  //   Switch for control mode
+  switch (control_mode)
+  {
+    case MotorGo::ControlMode::Voltage:
+      motor.torque_controller = TorqueControlType::voltage;
+      motor.controller = MotionControlType::torque;
+      break;
+    case MotorGo::ControlMode::Velocity:
+      motor.torque_controller = TorqueControlType::voltage;
+      motor.controller = MotionControlType::velocity;
+      break;
+    case MotorGo::ControlMode::Position:
+      motor.torque_controller = TorqueControlType::voltage;
+      motor.controller = MotionControlType::angle;
+      break;
+    case MotorGo::ControlMode::Torque:
+      motor.torque_controller = TorqueControlType::dc_current;
+      motor.controller = MotionControlType::torque;
+      break;
+    case MotorGo::ControlMode::VelocityOpenLoop:
+      motor.torque_controller = TorqueControlType::voltage;
+      motor.controller = MotionControlType::velocity_openloop;
+      break;
+    case MotorGo::ControlMode::PositionOpenLoop:
+      motor.torque_controller = TorqueControlType::voltage;
+      motor.controller = MotionControlType::angle_openloop;
+      break;
+    default:
+      Serial.println("Invalid control mode");
+      break;
+  }
+}
+
+void MotorGo::MotorGoMini::set_control_mode_ch0(
+    MotorGo::ControlMode control_mode)
+{
+  set_control_mode_helper(MotorGo::motor_ch0, control_mode);
+}
+
+void MotorGo::MotorGoMini::set_control_mode_ch1(
+    MotorGo::ControlMode control_mode)
+{
+  set_control_mode_helper(MotorGo::motor_ch1, control_mode);
 }
 
 // Getters
