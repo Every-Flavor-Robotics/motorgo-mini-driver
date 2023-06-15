@@ -13,6 +13,17 @@
 namespace MotorGo
 {
 
+// Control config struct
+enum ControlMode
+{
+  Voltage,
+  Velocity,
+  Torque,
+  Position,
+  VelocityOpenLoop,
+  PositionOpenLoop
+};
+
 // TODO: These are global because the SimpleFOC commander API doesn't support
 // lambdas to save state in for the callback Need to decide if this is the best
 // solution, or if there is something better we can do
@@ -47,6 +58,19 @@ class MotorGoMini
   void disable_ch0();
   void disable_ch1();
 
+  // Set control mode
+  void set_control_mode_ch0(ControlMode mode);
+  void set_control_mode_ch1(ControlMode mode);
+
+  //  Set target velocity
+  void set_target_velocity_ch0(float target);
+  void set_target_velocity_ch1(float target);
+
+  // Set target torque
+  void set_target_torque_ch0(float target);
+  void set_target_torque_ch1(float target);
+
+  // Get states
   float get_ch0_position();
   float get_ch0_velocity();
   float get_ch0_torque();
@@ -106,6 +130,10 @@ class MotorGoMini
   void init_helper(BLDCMotor& motor, BLDCDriver6PWM& driver,
                    CalibratedSensor& sensor_calibrated,
                    MagneticSensorMT6701SSI& encoder, const char* name);
+
+  // set_control_mode_helper sets parameters for each control_mode option
+  // Sets values for torque controller type and motion controller type
+  void set_control_mode_helper(BLDCMotor& motor, ControlMode control_mode);
 };
 
 }  // namespace MotorGo
