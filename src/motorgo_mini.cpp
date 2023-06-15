@@ -138,14 +138,6 @@ void MotorGo::MotorGoMini::init_ch0(bool should_calibrate,
   //   MotorGo::motor_ch1.disable();
 }
 
-void MotorGo::MotorGoMini::set_target_velocity_ch0(float target)
-{
-  if (!enable_foc_studio)
-  {
-    MotorGo::motor_ch0.move(target);
-  }
-}
-
 void MotorGo::MotorGoMini::loop_ch0()
 {
   MotorGo::motor_ch0.loopFOC();

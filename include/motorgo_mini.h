@@ -121,6 +121,8 @@ class MotorGoMini
   // Either velocity or torque will be used depending on the control mode
   // Store both to avoid erroneous behaviors due to switching units
   // when switching between control modes
+  ControlMode control_mode_ch0;
+  ControlMode control_mode_ch1;
   // Rad/s
   float target_velocity_ch0;
   float target_velocity_ch1;
@@ -170,8 +172,7 @@ class MotorGoMini
   // Set correct targets
   void set_target_helper_ch0();
   void set_target_helper_ch1();
-}
-
+};
 }  // namespace MotorGo
 
 #endif  // MOTORGO_MINI_H
