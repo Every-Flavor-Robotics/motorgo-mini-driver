@@ -343,3 +343,5 @@ float MotorGo::MotorGoMini::get_ch1_voltage()
 {
   return MotorGo::motor_ch1.voltage.q;
 }
+
+// TODO: Implement get torque
