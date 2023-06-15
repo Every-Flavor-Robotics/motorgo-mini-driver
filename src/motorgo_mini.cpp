@@ -27,6 +27,10 @@ MotorGo::MotorGoMini::MotorGoMini()
       driver_ch1(BLDCDriver6PWM(k_ch1_gpio_uh, k_ch1_gpio_ul, k_ch1_gpio_vh,
                                 k_ch1_gpio_vl, k_ch1_gpio_wh, k_ch1_gpio_wl))
 {
+  pinMode(k_ch0_current_u, INPUT);
+  pinMode(k_ch0_current_w, INPUT);
+  pinMode(k_ch1_current_u, INPUT);
+  pinMode(k_ch1_current_w, INPUT);
 }
 
 void MotorGo::MotorGoMini::init_ch0() { init_ch0(false, false); }
@@ -160,6 +164,12 @@ void MotorGo::MotorGoMini::loop_ch0()
     MotorGo::motor_ch0.monitor();
     // MotorGo::motor_ch1.monitor();
   }
+
+  // Print u and w currents
+  //   Serial.print("Current u: ");
+  //   Serial.print(analogRead(k_ch0_current_u));
+  //   Serial.print(" Current w: ");
+  //   Serial.println(analogRead(k_ch0_current_w));
 }
 
 void MotorGo::MotorGoMini::enable_ch0()

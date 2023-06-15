@@ -93,6 +93,8 @@ class MotorGoMini
   const int k_ch0_gpio_vl = 5;
   const int k_ch0_gpio_wh = 16;
   const int k_ch0_gpio_wl = 6;
+  const int k_ch0_current_u = 7;
+  const int k_ch0_current_w = 4;
 
   // ch1 Motor and Encoder pins
   const int k_ch1_enc_cs = 48;
@@ -102,6 +104,8 @@ class MotorGoMini
   const int k_ch1_gpio_vl = 21;
   const int k_ch1_gpio_wh = 11;
   const int k_ch1_gpio_wl = 14;
+  const int k_ch1_current_u = 47;
+  const int k_ch1_current_w = 12;
 
   // Additional motor and encoder parameters
   const float k_voltage_power_supply = 9.0;
