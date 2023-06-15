@@ -68,6 +68,10 @@ class MotorGoMini
   void set_target_torque_ch0(float target);
   void set_target_torque_ch1(float target);
 
+  // Set target position
+  void set_target_position_ch0(float target);
+  void set_target_position_ch1(float target);
+
   // Get states
   float get_ch0_position();
   float get_ch0_velocity();
