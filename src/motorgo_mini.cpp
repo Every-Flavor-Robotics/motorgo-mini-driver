@@ -29,6 +29,8 @@ MotorGo::MotorGoMini::MotorGoMini()
 {
   pinMode(k_ch0_current_u, INPUT);
   pinMode(k_ch0_current_w, INPUT);
+  pinMode(k_ch1_current_u, INPUT);
+  pinMode(k_ch1_current_w, INPUT);
 }
 
 void MotorGo::MotorGoMini::init_ch0() { init_ch0(false, false); }
