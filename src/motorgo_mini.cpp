@@ -225,13 +225,43 @@ void set_control_mode_helper(BLDCMotor& motor,
 void MotorGo::MotorGoMini::set_control_mode_ch0(
     MotorGo::ControlMode control_mode)
 {
-  set_control_mode_helper(MotorGo::motor_ch0, control_mode);
+    case MotorGo::ControlMode::Voltage:
+      motor_ch0.move(target_voltage_ch0);
+      break;
+    case MotorGo::ControlMode::Velocity ||
+        MotorGo::ControlMode::VelocityOpenLoop:
+      motor_ch0.move(target_velocity_ch0);
+      break;
+    case MotorGo::ControlMode::Torque:
+      motor_ch0.move(target_torque_ch0);
+      break;
+    case MotorGo::ControlMode::Position ||
+        MotorGo::ControlMode::PositionOpenLoop:
+      motor_ch0.move(target_position_ch0);
+      break;
+  }
 }
 
-void MotorGo::MotorGoMini::set_control_mode_ch1(
-    MotorGo::ControlMode control_mode)
+void MotorGo::MotorGoMini::set_target_helper_ch1()
 {
-  set_control_mode_helper(MotorGo::motor_ch1, control_mode);
+  // Switch command based on current control mode
+  switch (control_mode_ch1)
+  {
+    case MotorGo::ControlMode::Voltage:
+      motor_ch1.move(target_voltage_ch1);
+      break;
+    case MotorGo::ControlMode::Velocity ||
+        MotorGo::ControlMode::VelocityOpenLoop:
+      motor_ch1.move(target_velocity_ch1);
+      break;
+    case MotorGo::ControlMode::Torque:
+      motor_ch1.move(target_torque_ch1);
+      break;
+    case MotorGo::ControlMode::Position ||
+        MotorGo::ControlMode::PositionOpenLoop:
+      motor_ch1.move(target_position_ch1);
+      break;
+  }
 }
 
 // Getters
