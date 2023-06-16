@@ -30,6 +30,7 @@ MotorGo::MotorGoMini::MotorGoMini()
       driver_ch1(BLDCDriver6PWM(k_ch1_gpio_uh, k_ch1_gpio_ul, k_ch1_gpio_vh,
                                 k_ch1_gpio_vl, k_ch1_gpio_wh, k_ch1_gpio_wl))
 {
+  // Set current sensing pins to input
   pinMode(k_ch0_current_u, INPUT);
   pinMode(k_ch0_current_w, INPUT);
   pinMode(k_ch1_current_u, INPUT);
