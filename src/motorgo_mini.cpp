@@ -134,8 +134,8 @@ void MotorGo::MotorGoMini::init_ch0(bool should_calibrate,
     command.add('1', do_target_ch1, (char*)"target");
   }
 
-  MotorGo::motor_ch0.disable();
-  //   MotorGo::motor_ch1.disable();
+  disable_ch0();
+  disable_ch1();
 }
 
 void MotorGo::MotorGoMini::loop_ch0()
@@ -210,12 +210,28 @@ void MotorGo::MotorGoMini::set_target_helper_ch0()
       motor_ch0.move(target_voltage_ch0);
       break;
     case MotorGo::ControlMode::Torque:
+      //  Disable motor if PID params not set
+      if (!pid_torque_ch0_enabled)
+      {
+        disable_ch0();
+      }
       motor_ch0.move(target_torque_ch0);
       break;
     case MotorGo::ControlMode::Velocity:
+      // Disable motor if PID params not set
+      if (!pid_velocity_ch0_enabled)
+      {
+        disable_ch0();
+      }
+
       motor_ch0.move(target_velocity_ch0);
       break;
     case MotorGo::ControlMode::Position:
+      // Disable motor if PID params not set
+      if (!pid_position_ch0_enabled)
+      {
+        disable_ch0();
+      }
       motor_ch0.move(target_position_ch0);
       break;
     case MotorGo::ControlMode::VelocityOpenLoop:
@@ -238,12 +254,27 @@ void MotorGo::MotorGoMini::set_target_helper_ch1()
         motor_ch1.move(target_voltage_ch1);
         break;
       case MotorGo::ControlMode::Torque:
+        //   Disable motor if PID params not set
+        if (!pid_torque_ch1_enabled)
+        {
+          disable_ch1();
+        }
         motor_ch1.move(target_torque_ch1);
         break;
       case MotorGo::ControlMode::Velocity:
+        //  Disable motor if PID params not set
+        if (!pid_velocity_ch1_enabled)
+        {
+          disable_ch1();
+        }
         motor_ch1.move(target_velocity_ch1);
         break;
       case MotorGo::ControlMode::Position:
+        //  Disable motor if PID params not set
+        if (!pid_position_ch1_enabled)
+        {
+          disable_ch1();
+        }
         motor_ch1.move(target_position_ch1);
         break;
       case MotorGo::ControlMode::VelocityOpenLoop:
