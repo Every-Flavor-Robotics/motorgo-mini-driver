@@ -5,8 +5,11 @@ SPIClass MotorGo::hspi = SPIClass(HSPI);
 bool hspi_initialized = false;
 
 Commander MotorGo::command = Commander(Serial);
-BLDCMotor MotorGo::motor_ch0 = BLDCMotor(11);
-BLDCMotor MotorGo::motor_ch1 = BLDCMotor(11);
+// TODO: Motors are currently instantiated with a default number of pole pairs
+// This is not great design, would be better to not initialize motors
+// until the user calls init_ch0() or init_ch1()
+BLDCMotor MotorGo::motor_ch0 = BLDCMotor(3);
+BLDCMotor MotorGo::motor_ch1 = BLDCMotor(3);
 
 void do_target_ch0(char* cmd)
 {
@@ -33,13 +36,17 @@ MotorGo::MotorGoMini::MotorGoMini()
   pinMode(k_ch1_current_w, INPUT);
 }
 
-void MotorGo::MotorGoMini::init_ch0() { init_ch0(false, false); }
-
-void MotorGo::MotorGoMini::init_helper(BLDCMotor& motor, BLDCDriver6PWM& driver,
+void MotorGo::MotorGoMini::init_helper(MotorParameters params,
+                                       bool should_calibrate,
+                                       bool enable_foc_studio, BLDCMotor& motor,
+                                       BLDCDriver6PWM& driver,
                                        CalibratedSensor& sensor_calibrated,
                                        MagneticSensorMT6701SSI& encoder,
                                        const char* name)
 {
+  // Reconfigure number of pole pairs
+  motor.pole_pairs = params.pole_pairs;
+
   // Init encoder
   encoder.init(&MotorGo::hspi);
 
@@ -47,18 +54,16 @@ void MotorGo::MotorGoMini::init_helper(BLDCMotor& motor, BLDCDriver6PWM& driver,
   motor.linkSensor(&encoder);
 
   // Init driver and link to motor
-  driver.voltage_power_supply = k_voltage_power_supply;
-  driver.voltage_limit = k_voltage_limit;
+  driver.voltage_power_supply = params.power_supply_voltage;
+  driver.voltage_limit = params.voltage_limit;
   driver.init();
   motor.linkDriver(&driver);
 
   // Set motor control parameters
   motor.foc_modulation = FOCModulationType::SpaceVectorPWM;
-  motor.controller = MotionControlType::torque;
-  motor.torque_controller = TorqueControlType::voltage;
-  motor.velocity_limit = k_velocity_limit;
-  motor.voltage_limit = k_voltage_limit;
-  motor.current_limit = k_current_limit;
+  motor.velocity_limit = params.velocity_limit;
+  motor.voltage_limit = params.voltage_limit;
+  motor.current_limit = params.current_limit;
 
   // FOCStudio options
   if (enable_foc_studio)
@@ -72,7 +77,7 @@ void MotorGo::MotorGoMini::init_helper(BLDCMotor& motor, BLDCDriver6PWM& driver,
   motor.init();
 
   // Calibrate encoders
-  sensor_calibrated.voltage_calibration = k_voltage_calibration;
+  sensor_calibrated.voltage_calibration = params.calibration_voltage;
   if (should_calibrate)
   {
     sensor_calibrated.calibrate(motor, name);
@@ -95,7 +100,18 @@ void MotorGo::MotorGoMini::init_helper(BLDCMotor& motor, BLDCDriver6PWM& driver,
   Serial.println(name);
 }
 
-void MotorGo::MotorGoMini::init_ch0(bool should_calibrate,
+void MotorGo::MotorGoMini::init_ch0(MotorParameters params)
+{
+  init_ch0(params, false, false);
+}
+
+void MotorGo::MotorGoMini::init_ch1(MotorParameters params)
+{
+  init_ch1(params, false, false);
+}
+
+void MotorGo::MotorGoMini::init_ch0(MotorParameters params,
+                                    bool should_calibrate,
                                     bool enable_foc_studio)
 {
   //   Guard to prevent multiple initializations, which could cause a crash
@@ -105,37 +121,55 @@ void MotorGo::MotorGoMini::init_ch0(bool should_calibrate,
     MotorGo::hspi.begin(enc_scl, enc_sda, 45, 46);
   }
 
-  this->should_calibrate = should_calibrate;
-  this->enable_foc_studio = enable_foc_studio;
-  Serial.print("Enable FOC Studio? ");
-  Serial.println(enable_foc_studio ? "Yes" : "No");
+  this->should_calibrate_ch0 = should_calibrate;
+  this->enable_foc_studio_ch0 = enable_foc_studio;
+
+  //   Save motor parameters
+  motor_params_ch0 = params;
 
   // Initialize motors
-  init_helper(MotorGo::motor_ch0, driver_ch0, sensor_calibrated_ch0,
-              encoder_ch0, "ch0");
-  //   init_helper(MotorGo::motor_ch1, driver_ch1, sensor_calibrated_ch1,
-  //   encoder_ch1, "ch1");
-
-  // Set PID parameters for both motors
-  //   MotorGo::motor_ch1.PID_velocity.P = 0.75;
-  //   MotorGo::motor_ch1.PID_velocity.I = 0.09;
-  //   MotorGo::motor_ch1.PID_velocity.D = 0.001;
-  //   MotorGo::motor_ch1.PID_velocity.output_ramp = 10000.0;
-
-  MotorGo::motor_ch0.PID_velocity.P = 0.75;
-  MotorGo::motor_ch0.PID_velocity.I = 0.09;
-  MotorGo::motor_ch0.PID_velocity.D = 0.001;
-  MotorGo::motor_ch0.PID_velocity.output_ramp = 10000.0;
+  init_helper(params, should_calibrate, enable_foc_studio, MotorGo::motor_ch0,
+              driver_ch0, sensor_calibrated_ch0, encoder_ch0, "ch0");
 
   // add command to commander
   if (enable_foc_studio)
   {
+    Serial.println("Channel 0: Enabling FOC Studio. Command: 0");
     MotorGo::command.add('0', do_target_ch0, (char*)"target");
-    command.add('1', do_target_ch1, (char*)"target");
   }
 
-  MotorGo::motor_ch0.disable();
-  //   MotorGo::motor_ch1.disable();
+  disable_ch0();
+}
+
+void MotorGo::MotorGoMini::init_ch1(MotorParameters params,
+                                    bool should_calibrate,
+                                    bool enable_foc_studio)
+{
+  //   Guard to prevent multiple initializations, which could cause a crash
+  if (!hspi_initialized)
+  {
+    hspi_initialized = true;
+    MotorGo::hspi.begin(enc_scl, enc_sda, 45, 46);
+  }
+
+  this->should_calibrate_ch1 = should_calibrate;
+  this->enable_foc_studio_ch1 = enable_foc_studio;
+
+  //   Save motor parameters
+  motor_params_ch1 = params;
+
+  // Initialize motors
+  init_helper(params, should_calibrate, enable_foc_studio, MotorGo::motor_ch1,
+              driver_ch1, sensor_calibrated_ch1, encoder_ch1, "ch1");
+
+  // add command to commander
+  if (enable_foc_studio)
+  {
+    Serial.println("Channel 1: Enabling FOC Studio. Command: 1");
+    MotorGo::command.add('1', do_target_ch1, (char*)"target");
+  }
+
+  disable_ch1();
 }
 
 void MotorGo::MotorGoMini::loop_ch0()
@@ -148,7 +182,7 @@ void MotorGo::MotorGoMini::loop_ch0()
   //   MotorGo::motor_ch1.move();
 
   // Monitoring, use only if necessary as it slows loop down significantly
-  if (enable_foc_studio)
+  if (enable_foc_studio_ch0)
   {
     // user communication
     MotorGo::command.run();
@@ -164,9 +198,29 @@ void MotorGo::MotorGoMini::loop_ch0()
   //   Serial.println(analogRead(k_ch0_current_w));
 }
 
+void MotorGo::MotorGoMini::loop_ch1()
+{
+  MotorGo::motor_ch1.loopFOC();
+  //   MotorGo::motor_ch1.loopFOC();
+
+  // this function can be run at much lower frequency than loopFOC()
+  MotorGo::motor_ch1.move();
+  //   MotorGo::motor_ch1.move();
+
+  // Monitoring, use only if necessary as it slows loop down significantly
+  if (enable_foc_studio_ch1)
+  {
+    // user communication
+    MotorGo::command.run();
+
+    MotorGo::motor_ch1.monitor();
+    // MotorGo::motor_ch1.monitor();
+  }
+}
+
 ////// Helper Functions
-void set_control_mode_helper(BLDCMotor& motor,
-                             MotorGo::ControlMode control_mode)
+void MotorGo::MotorGoMini::set_control_mode_helper(
+    BLDCMotor& motor, MotorGo::ControlMode control_mode)
 {
   //   Switch for control mode
   switch (control_mode)
@@ -210,12 +264,28 @@ void MotorGo::MotorGoMini::set_target_helper_ch0()
       motor_ch0.move(target_voltage_ch0);
       break;
     case MotorGo::ControlMode::Torque:
+      //  Disable motor if PID params not set
+      if (!pid_torque_ch0_enabled)
+      {
+        disable_ch0();
+      }
       motor_ch0.move(target_torque_ch0);
       break;
     case MotorGo::ControlMode::Velocity:
+      // Disable motor if PID params not set
+      if (!pid_velocity_ch0_enabled)
+      {
+        disable_ch0();
+      }
+
       motor_ch0.move(target_velocity_ch0);
       break;
     case MotorGo::ControlMode::Position:
+      // Disable motor if PID params not set
+      if (!pid_position_ch0_enabled)
+      {
+        disable_ch0();
+      }
       motor_ch0.move(target_position_ch0);
       break;
     case MotorGo::ControlMode::VelocityOpenLoop:
@@ -229,7 +299,7 @@ void MotorGo::MotorGoMini::set_target_helper_ch0()
 
 void MotorGo::MotorGoMini::set_target_helper_ch1()
 {
-  if (!enable_foc_studio)
+  if (!enable_foc_studio_ch1)
   {
     // Switch command based on current control mode
     switch (control_mode_ch1)
@@ -238,12 +308,27 @@ void MotorGo::MotorGoMini::set_target_helper_ch1()
         motor_ch1.move(target_voltage_ch1);
         break;
       case MotorGo::ControlMode::Torque:
+        //   Disable motor if PID params not set
+        if (!pid_torque_ch1_enabled)
+        {
+          disable_ch1();
+        }
         motor_ch1.move(target_torque_ch1);
         break;
       case MotorGo::ControlMode::Velocity:
+        //  Disable motor if PID params not set
+        if (!pid_velocity_ch1_enabled)
+        {
+          disable_ch1();
+        }
         motor_ch1.move(target_velocity_ch1);
         break;
       case MotorGo::ControlMode::Position:
+        //  Disable motor if PID params not set
+        if (!pid_position_ch1_enabled)
+        {
+          disable_ch1();
+        }
         motor_ch1.move(target_position_ch1);
         break;
       case MotorGo::ControlMode::VelocityOpenLoop:
@@ -256,7 +341,79 @@ void MotorGo::MotorGoMini::set_target_helper_ch1()
   }
 }
 
+void MotorGo::MotorGoMini::set_torque_controller_helper(
+    BLDCMotor& motor, MotorGo::PIDParameters params)
+{
+  motor.PID_current_q.P = params.p;
+  motor.PID_current_q.I = params.i;
+  motor.PID_current_q.D = params.d;
+  motor.PID_current_q.output_ramp = params.output_ramp;
+  motor.LPF_current_q.Tf = params.lpf_time_constant;
+}
+
+void MotorGo::MotorGoMini::set_velocity_controller_helper(
+    BLDCMotor& motor, MotorGo::PIDParameters params)
+{
+  motor.PID_velocity.P = params.p;
+  motor.PID_velocity.I = params.i;
+  motor.PID_velocity.D = params.d;
+  motor.PID_velocity.output_ramp = params.output_ramp;
+  motor.LPF_velocity.Tf = params.lpf_time_constant;
+}
+
+void MotorGo::MotorGoMini::set_position_controller_helper(
+    BLDCMotor& motor, MotorGo::PIDParameters params)
+{
+  motor.P_angle.P = params.p;
+  motor.P_angle.I = params.i;
+  motor.P_angle.D = params.d;
+  motor.P_angle.output_ramp = params.output_ramp;
+  motor.LPF_angle.Tf = params.lpf_time_constant;
+}
+
 // Setters
+void MotorGo::MotorGoMini::set_torque_controller_ch0(
+    MotorGo::PIDParameters params)
+{
+  set_torque_controller_helper(MotorGo::motor_ch0, params);
+  pid_torque_ch0_enabled = true;
+}
+
+void MotorGo::MotorGoMini::set_torque_controller_ch1(
+    MotorGo::PIDParameters params)
+{
+  set_torque_controller_helper(MotorGo::motor_ch1, params);
+  pid_torque_ch1_enabled = true;
+}
+
+void MotorGo::MotorGoMini::set_velocity_controller_ch0(
+    MotorGo::PIDParameters params)
+{
+  set_velocity_controller_helper(MotorGo::motor_ch0, params);
+  pid_velocity_ch0_enabled = true;
+}
+
+void MotorGo::MotorGoMini::set_velocity_controller_ch1(
+    MotorGo::PIDParameters params)
+{
+  set_velocity_controller_helper(MotorGo::motor_ch1, params);
+  pid_velocity_ch1_enabled = true;
+}
+
+void MotorGo::MotorGoMini::set_position_controller_ch0(
+    MotorGo::PIDParameters params)
+{
+  set_position_controller_helper(MotorGo::motor_ch0, params);
+  pid_position_ch0_enabled = true;
+}
+
+void MotorGo::MotorGoMini::set_position_controller_ch1(
+    MotorGo::PIDParameters params)
+{
+  set_position_controller_helper(MotorGo::motor_ch1, params);
+  pid_position_ch1_enabled = true;
+}
+
 void MotorGo::MotorGoMini::enable_ch0() { MotorGo::motor_ch0.enable(); }
 void MotorGo::MotorGoMini::enable_ch1() { MotorGo::motor_ch1.enable(); }
 void MotorGo::MotorGoMini::disable_ch0() { MotorGo::motor_ch0.disable(); }
