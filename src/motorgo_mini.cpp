@@ -256,7 +256,79 @@ void MotorGo::MotorGoMini::set_target_helper_ch1()
   }
 }
 
+void MotorGo::MotorGoMini::set_torque_controller_helper(
+    BLDCMotor& motor, MotorGo::PIDParameters params)
+{
+  motor.PID_current_q.P = params.p;
+  motor.PID_current_q.I = params.i;
+  motor.PID_current_q.D = params.d;
+  motor.PID_current_q.output_ramp = params.output_ramp;
+  motor.LPF_current_q.Tf = params.lpf_time_constant;
+}
+
+void MotorGo::MotorGoMini::set_velocity_controller_helper(
+    BLDCMotor& motor, MotorGo::PIDParameters params)
+{
+  motor.PID_velocity.P = params.p;
+  motor.PID_velocity.I = params.i;
+  motor.PID_velocity.D = params.d;
+  motor.PID_velocity.output_ramp = params.output_ramp;
+  motor.LPF_velocity.Tf = params.lpf_time_constant;
+}
+
+void MotorGo::MotorGoMini::set_position_controller_helper(
+    BLDCMotor& motor, MotorGo::PIDParameters params)
+{
+  motor.P_angle.P = params.p;
+  motor.P_angle.I = params.i;
+  motor.P_angle.D = params.d;
+  motor.P_angle.output_ramp = params.output_ramp;
+  motor.LPF_angle.Tf = params.lpf_time_constant;
+}
+
 // Setters
+void MotorGo::MotorGoMini::set_torque_controller_ch0(
+    MotorGo::PIDParameters params)
+{
+  set_torque_controller_helper(MotorGo::motor_ch0, params);
+  pid_torque_ch0_enabled = true;
+}
+
+void MotorGo::MotorGoMini::set_torque_controller_ch1(
+    MotorGo::PIDParameters params)
+{
+  set_torque_controller_helper(MotorGo::motor_ch1, params);
+  pid_torque_ch1_enabled = true;
+}
+
+void MotorGo::MotorGoMini::set_velocity_controller_ch0(
+    MotorGo::PIDParameters params)
+{
+  set_velocity_controller_helper(MotorGo::motor_ch0, params);
+  pid_velocity_ch0_enabled = true;
+}
+
+void MotorGo::MotorGoMini::set_velocity_controller_ch1(
+    MotorGo::PIDParameters params)
+{
+  set_velocity_controller_helper(MotorGo::motor_ch1, params);
+  pid_velocity_ch1_enabled = true;
+}
+
+void MotorGo::MotorGoMini::set_position_controller_ch0(
+    MotorGo::PIDParameters params)
+{
+  set_position_controller_helper(MotorGo::motor_ch0, params);
+  pid_position_ch0_enabled = true;
+}
+
+void MotorGo::MotorGoMini::set_position_controller_ch1(
+    MotorGo::PIDParameters params)
+{
+  set_position_controller_helper(MotorGo::motor_ch1, params);
+  pid_position_ch1_enabled = true;
+}
+
 void MotorGo::MotorGoMini::enable_ch0() { MotorGo::motor_ch0.enable(); }
 void MotorGo::MotorGoMini::enable_ch1() { MotorGo::motor_ch1.enable(); }
 void MotorGo::MotorGoMini::disable_ch0() { MotorGo::motor_ch0.disable(); }

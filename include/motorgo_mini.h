@@ -50,6 +50,15 @@ class MotorGoMini
   void loop_ch0();
   void loop_ch1();
 
+  void set_torque_controller_ch0(PIDParameters params);
+  void set_torque_controller_ch1(PIDParameters params);
+
+  void set_velocity_controller_ch0(PIDParameters params);
+  void set_velocity_controller_ch1(PIDParameters params);
+
+  void set_position_controller_ch0(PIDParameters params);
+  void set_position_controller_ch1(PIDParameters params);
+
   // Enable and disable motors
   void enable_ch0();
   void enable_ch1();
@@ -117,6 +126,17 @@ class MotorGoMini
   const float k_velocity_limit = 100.0;
   const float k_voltage_calibration = 2.0;
 
+  // Store whether the parameters have been set
+  // If not, the motor will not run be disabled when a command is received
+  bool pid_torque_ch0_enabled = false;
+  bool pid_torque_ch1_enabled = false;
+
+  bool pid_velocity_ch0_enabled = false;
+  bool pid_velocity_ch1_enabled = false;
+
+  bool pid_position_ch0_enabled = false;
+  bool pid_position_ch1_enabled = false;
+
   // Current targets
   // Either velocity or torque will be used depending on the control mode
   // Store both to avoid erroneous behaviors due to switching units
@@ -172,6 +192,10 @@ class MotorGoMini
   // Set correct targets
   void set_target_helper_ch0();
   void set_target_helper_ch1();
+
+  void set_torque_controller_helper(BLDCMotor& motor, PIDParameters params);
+  void set_velocity_controller_helper(BLDCMotor& motor, PIDParameters params);
+  void set_position_controller_helper(BLDCMotor& motor, PIDParameters params);
 };
 }  // namespace MotorGo
 
