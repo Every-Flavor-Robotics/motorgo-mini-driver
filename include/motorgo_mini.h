@@ -16,6 +16,7 @@ namespace MotorGo
 // Control config struct
 enum ControlMode
 {
+  None,
   Voltage,
   Velocity,
   Torque,
@@ -150,8 +151,9 @@ class MotorGoMini
   // Either velocity or torque will be used depending on the control mode
   // Store both to avoid erroneous behaviors due to switching units
   // when switching between control modes
-  ControlMode control_mode_ch0;
-  ControlMode control_mode_ch1;
+  // Set to None by default to require user to set a control mode
+  ControlMode control_mode_ch0 = None;
+  ControlMode control_mode_ch1 = None;
   // Rad/s
   float target_velocity_ch0 = 0.0f;
   float target_velocity_ch1 = 0.0f;
