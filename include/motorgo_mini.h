@@ -24,6 +24,15 @@ enum ControlMode
   PositionOpenLoop
 };
 
+struct PIDParameters
+{
+  float p;
+  float i;
+  float d;
+  float output_ramp;
+  float lpf_time_constant;
+};
+
 // TODO: These are global because the SimpleFOC commander API doesn't support
 // lambdas to save state in for the callback Need to decide if this is the best
 // solution, or if there is something better we can do
