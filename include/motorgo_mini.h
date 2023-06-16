@@ -153,17 +153,17 @@ class MotorGoMini
   ControlMode control_mode_ch0;
   ControlMode control_mode_ch1;
   // Rad/s
-  float target_velocity_ch0;
-  float target_velocity_ch1;
+  float target_velocity_ch0 = 0.0f;
+  float target_velocity_ch1 = 0.0f;
   // N*m
-  float target_torque_ch0;
-  float target_torque_ch1;
+  float target_torque_ch0 = 0.0f;
+  float target_torque_ch1 = 0.0f;
   // Rad
-  float target_position_ch0;
-  float target_position_ch1;
+  float target_position_ch0 = 0.0f;
+  float target_position_ch1 = 0.0f;
   // V
-  float target_voltage_ch0;
-  float target_voltage_ch1;
+  float target_voltage_ch0 = 0.0f;
+  float target_voltage_ch1 = 0.0f;
 
   // Calibration parameters
   // If should_calibrate is set to true, the motor will be calibrated on startup

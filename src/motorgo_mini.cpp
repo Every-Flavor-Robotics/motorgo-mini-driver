@@ -113,19 +113,6 @@ void MotorGo::MotorGoMini::init_ch0(bool should_calibrate,
   // Initialize motors
   init_helper(MotorGo::motor_ch0, driver_ch0, sensor_calibrated_ch0,
               encoder_ch0, "ch0");
-  //   init_helper(MotorGo::motor_ch1, driver_ch1, sensor_calibrated_ch1,
-  //   encoder_ch1, "ch1");
-
-  // Set PID parameters for both motors
-  //   MotorGo::motor_ch1.PID_velocity.P = 0.75;
-  //   MotorGo::motor_ch1.PID_velocity.I = 0.09;
-  //   MotorGo::motor_ch1.PID_velocity.D = 0.001;
-  //   MotorGo::motor_ch1.PID_velocity.output_ramp = 10000.0;
-
-  MotorGo::motor_ch0.PID_velocity.P = 0.75;
-  MotorGo::motor_ch0.PID_velocity.I = 0.09;
-  MotorGo::motor_ch0.PID_velocity.D = 0.001;
-  MotorGo::motor_ch0.PID_velocity.output_ramp = 10000.0;
 
   // add command to commander
   if (enable_foc_studio)
