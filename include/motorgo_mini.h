@@ -34,9 +34,19 @@ struct PIDParameters
   float lpf_time_constant;
 };
 
-// TODO: These are global because the SimpleFOC commander API doesn't support
-// lambdas to save state in for the callback Need to decide if this is the best
-// solution, or if there is something better we can do
+struct MotorParameters
+{
+  int pole_pairs;
+  float power_supply_voltage;
+  float voltage_limit;
+  float current_limit;
+  float velocity_limit;
+  float calibration_voltage;
+};
+
+// TODO: These are global because the SimpleFOC commander API doesn't
+// support lambdas to save state in for the callback Need to decide if this
+// is the best solution, or if there is something better we can do
 extern Commander command;
 extern BLDCMotor motor_ch0;
 extern BLDCMotor motor_ch1;
@@ -49,12 +59,14 @@ class MotorGoMini
 
   // Init motors and encoders, calibration is automatically loaded and FOCStudio
   // is disabled
-  void init_ch0();
-  void init_ch1();
+  void init_ch0(MotorParameters params);
+  void init_ch1(MotorParameters params);
 
   // Init motors and encoders, optionally calibrating and/or enabling FOCStudio
-  void init_ch0(bool should_calibrate, bool enable_foc_studio);
-  void init_ch1(bool should_calibrate, bool enable_foc_studio);
+  void init_ch0(MotorParameters params, bool should_calibrate,
+                bool enable_foc_studio);
+  void init_ch1(MotorParameters params, bool should_calibrate,
+                bool enable_foc_studio);
 
   // Run control loop, should be called at fixed frequency
   void loop_ch0();
@@ -130,11 +142,8 @@ class MotorGoMini
   const int k_ch1_current_w = 12;
 
   // Additional motor and encoder parameters
-  const float k_voltage_power_supply = 9.0;
-  const float k_voltage_limit = 9.0;
-  const float k_current_limit = 10.0;
-  const float k_velocity_limit = 100.0;
-  const float k_voltage_calibration = 2.0;
+  MotorParameters motor_params_ch0;
+  MotorParameters motor_params_ch1;
 
   // Store whether the parameters have been set
   // If not, the motor will not run be disabled when a command is received
@@ -172,13 +181,15 @@ class MotorGoMini
   // Else, the calibration will be loaded from EEPROM. If no calibration is
   // found, the motor will be calibrated anyway and the calibration will be
   // saved to EEPROM
-  bool should_calibrate;
+  bool should_calibrate_ch0;
+  bool should_calibrate_ch1;
 
   // If enable_foc_studio is set to true, data will be written to serial
   // to communicate with FOCStudio
   // This significantly slows the control loop, enable only when necessary
   // TODO: Enable "offline" tuning
-  bool enable_foc_studio;
+  bool enable_foc_studio_ch0;
+  bool enable_foc_studio_ch1;
 
   // Encoder, motor, and driver instances
   // MT6701Sensor encoder_ch0;
@@ -192,8 +203,9 @@ class MotorGoMini
 
   // Helper functions
   // init_helper configures the motor and encoder
-  void init_helper(BLDCMotor& motor, BLDCDriver6PWM& driver,
-                   CalibratedSensor& sensor_calibrated,
+  void init_helper(MotorParameters params, bool should_calibrate,
+                   bool enable_foc_studio, BLDCMotor& motor,
+                   BLDCDriver6PWM& driver, CalibratedSensor& sensor_calibrated,
                    MagneticSensorMT6701SSI& encoder, const char* name);
 
   // set_control_mode_helper sets parameters for each control_mode option
