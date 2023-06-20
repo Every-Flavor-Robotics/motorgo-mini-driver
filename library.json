@@ -16,5 +16,13 @@
     ],
     "license": "MIT",
     "frameworks": "arduino",
-    "platforms": "esp32-s3-motorgo-mini"
+    "platforms": "esp32-s3-motorgo-mini",
+    "dependencies": {
+        "Preferences": "*",
+        "askuric/Simple FOC ": "^2.3.0",
+        "https://github.com/Roam-Studios/Arduino-FOC-drivers.git": "*",
+        "https://github.com/Roam-Studios/esp-options.git": "*",
+        "Wire": "*",
+        "SPI": "*"
+    }
 }
