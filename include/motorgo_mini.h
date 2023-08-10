@@ -103,6 +103,10 @@ class MotorGoMini
   void set_target_position_ch0(float target);
   void set_target_position_ch1(float target);
 
+  // Zero Position
+  void zero_position_ch0();
+  void zero_position_ch1();
+
   // Get states
   float get_ch0_position();
   float get_ch0_velocity();

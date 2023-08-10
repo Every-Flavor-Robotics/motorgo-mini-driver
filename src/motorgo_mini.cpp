@@ -467,6 +467,16 @@ void MotorGo::MotorGoMini::set_target_position_ch1(float target)
   set_target_helper_ch1();
 }
 
+void MotorGo::MotorGoMini::zero_position_ch0()
+{
+  MotorGo::motor_ch0.sensor_offset = MotorGo::motor_ch0.shaftAngle();
+}
+
+void MotorGo::MotorGoMini::zero_position_ch1()
+{
+  MotorGo::motor_ch1.sensor_offset = MotorGo::motor_ch1.shaftAngle();
+}
+
 // Getters
 float MotorGo::MotorGoMini::get_ch0_position()
 {
