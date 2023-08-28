@@ -22,7 +22,7 @@
             "owner": "askuric",
             "name": "Simple FOC",
             "version": "^2.3.0"
-        },gi
+        },
             "name": "SimpleFOCDrivers",
             "version": "https://github.com/Roam-Studios/Arduino-FOC-drivers.git#ccw-bug-fix"
         },
