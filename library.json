@@ -23,6 +23,7 @@
             "name": "Simple FOC",
             "version": "^2.3.0"
         },
+        {
             "name": "SimpleFOCDrivers",
             "version": "https://github.com/Roam-Studios/Arduino-FOC-drivers.git#ccw-bug-fix"
         },
