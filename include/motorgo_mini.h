@@ -30,7 +30,7 @@ struct PIDParameters
   float p;
   float i;
   float d;
-  float output_ramp = 10000f;
+  float output_ramp = 10000.0f;
   float lpf_time_constant = 0.1f;
   float limit = 10000.0f;
 };
