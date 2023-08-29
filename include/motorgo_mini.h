@@ -30,8 +30,9 @@ struct PIDParameters
   float p;
   float i;
   float d;
-  float output_ramp;
-  float lpf_time_constant;
+  float output_ramp = 10000f;
+  float lpf_time_constant = 0.1f;
+  float limit = 10000.0f;
 };
 
 struct MotorParameters
@@ -39,8 +40,8 @@ struct MotorParameters
   int pole_pairs;
   float power_supply_voltage;
   float voltage_limit;
-  float current_limit;
-  float velocity_limit;
+  float current_limit = 1000.0f;
+  float velocity_limit = 1000.0f;
   float calibration_voltage;
 };
 

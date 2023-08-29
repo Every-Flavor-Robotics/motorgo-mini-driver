@@ -62,7 +62,6 @@ void MotorGo::MotorGoMini::init_helper(MotorParameters params,
 
   // Set motor control parameters
   motor.foc_modulation = FOCModulationType::SpaceVectorPWM;
-  motor.velocity_limit = params.velocity_limit;
   motor.voltage_limit = params.voltage_limit;
   motor.current_limit = params.current_limit;
 
@@ -349,6 +348,7 @@ void MotorGo::MotorGoMini::set_torque_controller_helper(
   motor.PID_current_q.I = params.i;
   motor.PID_current_q.D = params.d;
   motor.PID_current_q.output_ramp = params.output_ramp;
+  motor.PID_current_q.limit = params.limit;
   motor.LPF_current_q.Tf = params.lpf_time_constant;
 }
 
@@ -359,6 +359,7 @@ void MotorGo::MotorGoMini::set_velocity_controller_helper(
   motor.PID_velocity.I = params.i;
   motor.PID_velocity.D = params.d;
   motor.PID_velocity.output_ramp = params.output_ramp;
+  motor.PID_velocity.limit = params.limit;
   motor.LPF_velocity.Tf = params.lpf_time_constant;
 }
 
@@ -369,6 +370,7 @@ void MotorGo::MotorGoMini::set_position_controller_helper(
   motor.P_angle.I = params.i;
   motor.P_angle.D = params.d;
   motor.P_angle.output_ramp = params.output_ramp;
+  motor.P_angle.limit = params.limit;
   motor.LPF_angle.Tf = params.lpf_time_constant;
 }
 
