@@ -11,6 +11,8 @@ bool hspi_initialized = false;
 // until the user calls init_ch0() or init_ch1()
 BLDCMotor MotorGo::motor_ch0 = BLDCMotor(3);
 BLDCMotor MotorGo::motor_ch1 = BLDCMotor(3);
+InlineCurrentSense MotorGo::current_sense_ch0 =
+    InlineCurrentSense(0.003, 200, 7, _NC, 4);
 
 MotorGo::MotorGoMini::MotorGoMini()
     : encoder_ch0(MagneticSensorMT6701SSI(CH0_ENC_CS)),
@@ -51,6 +53,8 @@ void MotorGo::MotorGoMini::init_helper(MotorParameters& params,
   driver.init();
   motor.linkDriver(&driver);
 
+  current_sense_ch0.linkDriver(&driver_ch0);
+
   // Set motor control parameters
   motor.foc_modulation = FOCModulationType::SpaceVectorPWM;
   motor.voltage_limit = params.voltage_limit;
@@ -74,6 +78,18 @@ void MotorGo::MotorGoMini::init_helper(MotorParameters& params,
 
   // Link the calibrated sensor to the motor
   motor.linkSensor(&sensor_calibrated);
+
+  Serial.println("Starting Current Sense init");
+  // init current sense
+  if (current_sense_ch0.init())
+    Serial.println("Current sense init success!");
+  else
+  {
+    Serial.println("Current sense init failed!");
+    return;
+  }
+
+  motor_ch0.linkCurrentSense(&current_sense_ch0);
 
   // Init FOC
   motor.initFOC();

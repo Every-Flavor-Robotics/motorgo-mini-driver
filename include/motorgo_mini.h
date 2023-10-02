@@ -67,6 +67,7 @@ struct MotorParameters
 // TODO: Update architecture now that simpleFOC studio support is removed.
 extern BLDCMotor motor_ch0;
 extern BLDCMotor motor_ch1;
+extern InlineCurrentSense current_sense_ch0;
 extern SPIClass hspi;
 
 class MotorGoMini
