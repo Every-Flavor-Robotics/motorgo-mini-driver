@@ -82,7 +82,9 @@ void MotorGoGroupLeader::discovery_receive_cb(const uint8_t* mac,
 
   String sender_mac_str = macStr;
 
-  // Check if device is already registered
+  // Check if device is already registered AND that it is in device_names
+  // TODO: Currently, this will connect to any device that sends a beacon
+  // Without checking if it is in device_names. Is this the desired behavior?
   if (registered_devices.find(sender_mac_str) == registered_devices.end())
   {
     // Register the new follower
