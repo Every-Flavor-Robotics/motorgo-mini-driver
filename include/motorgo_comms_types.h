@@ -4,6 +4,9 @@
 // typedef for time as long
 typedef long time_t;
 
+// Broadcast address
+static uint8_t broadcast_address[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+
 struct DeviceInfo
 {
   bool registered;
@@ -21,19 +24,19 @@ struct AckPayload
   char message[20];
 };
 
-enum LEADER_STATE
+enum class LeaderState
 {
-  DISCOVERY,
-  RUN,
-  WAIT_FOR_RECONNECT,
-  UNINITIALIZED
+  Discovery,
+  Run,
+  WaitForReconnect,
+  Uninitialized
 };
 
-enum GROUPIE_STATE
+enum class GroupieState
 {
-  DISCOVERY,
-  RUN,
-  UNINITIALIZED
+  Discovery,
+  Run,
+  Uninitialized
 };
 
 #endif  // MOTOR_GO_COMM_TYPES_H

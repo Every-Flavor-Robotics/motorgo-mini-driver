@@ -1,7 +1,6 @@
 #ifndef MOTOR_GO_GROUPIE_H
 #define MOTOR_GO_GROUPIE_H
 
-#include <Arduino_JSON.h>
 #include <WiFi.h>
 #include <esp_now.h>
 
@@ -9,13 +8,14 @@
 #include <map>
 #include <vector>
 
+#include "esp_now_comms.h"
 #include "motorgo_comms_types.h"
 
 class MotorGoGroupie
 {
  public:
   MotorGoGroupie();
-  ~MotorGoGroupie();
+  //   ~MotorGoGroupie();
 
   // Init takes in a vector of device names to register
   void init(std::string device_name);
@@ -23,13 +23,11 @@ class MotorGoGroupie
   void register_device(const uint8_t* mac, const uint8_t* data, int len);
 
  private:
-  static uint8_t broadcast_address[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
   std::string device_name;
 
-  GROUPIE_STATE state = UNINITIALIZED;
+  GroupieState state = GroupieState::Uninitialized;
 
-  static void discovery_receive_cb(const uint8_t* mac, const uint8_t* data,
-                                   int len);
+  void discovery_receive_cb(const uint8_t* mac, const uint8_t* data, int len);
 
   static void run_receive_cb(const uint8_t* mac, const uint8_t* data, int len);
 
