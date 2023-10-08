@@ -5,41 +5,37 @@ MotorGoGroupie::MotorGoGroupie()
   // Constructor
 }
 
-MotorGoGroupie::~MotorGoGroupie()
-{
-  // Destructor
-}
-
 void MotorGoGroupie::init(std::string device_name)
 {
   this->device_name = device_name;
 
-  WiFi.mode(WIFI_STA);
-  WiFi.disconnect();
+  ESPNowComms::init_esp_now();
 
-  // Initialize ESP-NOW
-  if (esp_now_init() != ESP_OK)
-  {
-    Serial.println("Error initializing ESP-NOW");
-    return;
-  }
+  MotorGoGroupie::enter_discovery_mode();
 
-  enter_discovery_mode();
+  ESPNowComms::register_device(broadcast_address);
 }
 
 void MotorGoGroupie::loop()
 {
-  if (state == DISCOVERY)
+  if (state == GroupieState::Discovery)
   {
     BeaconPayload beacon_payload;
     strncpy(beacon_payload.device_name, device_name.c_str(),
             sizeof(beacon_payload.device_name));
 
-    esp_now_send(broadcast_address, (uint8_t*)&beacon_payload,
-                 sizeof(beacon_payload));
+    ESPNowComms::message_t message;
+    message.data = (uint8_t*)&beacon_payload;
+    message.len = sizeof(beacon_payload);
+
+    Serial.println("Sending beacon");
+
+    ESPNowComms::send_data(broadcast_address, message);
+
+    delay(100);
   }
 
-  if (state == RUN)
+  if (state == GroupieState::Run)
   {
     Serial.println("Running");
     delay(500);
@@ -74,33 +70,41 @@ void MotorGoGroupie::send_ack(const uint8_t* mac)
 
 void MotorGoGroupie::enter_discovery_mode()
 {
-  state = DISCOVERY;
+  state = GroupieState::Discovery;
 
   // Set up callbacks correctly for send/receive
-  esp_now_register_recv_cb(discovery_receive_cb);
-  esp_now_register_send_cb(data_send_cb);
+  ESPNowComms::set_data_receive_callback(
+      [this](const uint8_t* mac, const uint8_t* data, int len)
+      { this->discovery_receive_cb(mac, data, len); });
+
+  ESPNowComms::set_data_send_callback(
+      [](const uint8_t* mac_addr, esp_now_send_status_t status)
+      {
+        Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Send success"
+                                                      : "Send failure");
+      });
 }
 
 void MotorGoGroupie::enter_run_mode()
 {
-  state = RUN;
+  state = GroupieState::Run;
 
   // TODO: This code does not handle the failure mode where the peer is not
   // added successfully
-  esp_now_peer_info_t peer_info;
-  memcpy(peer_info.peer_addr, broadcast_address, 6);
-  peer_info.encrypt = false;
+  //   esp_now_peer_info_t peer_info;
+  //   memcpy(peer_info.peer_addr, broadcast_address, 6);
+  //   peer_info.encrypt = false;
 
-  if (esp_now_add_peer(&peer_info) == ESP_OK)
-  {
-  }
-  else
-  {
-    Serial.println("Failed to add peer");
-    delay(500);
-  }
+  //   if (esp_now_add_peer(&peer_info) == ESP_OK)
+  //   {
+  //   }
+  //   else
+  //   {
+  //     Serial.println("Failed to add peer");
+  //     delay(500);
+  //   }
 
   // Set up callbacks correctly for send/receive
-  esp_now_register_recv_cb(run_receive_cb);
+  //   esp_now_register_recv_cb(run_receive_cb);
   //   esp_now_register_send_cb(run_send_cb);
 }
