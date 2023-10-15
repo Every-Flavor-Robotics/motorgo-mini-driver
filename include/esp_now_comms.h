@@ -51,6 +51,7 @@ bool register_device(const uint8_t* mac);
 bool send_ack(const uint8_t* mac);
 
 bool send_data(const uint8_t* mac, const message_t& message);
+bool send_data(const String mac, const message_t& message);
 
 // Send and receive callbacks
 void data_send_callback(const uint8_t* mac, esp_now_send_status_t status);

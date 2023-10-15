@@ -1,5 +1,7 @@
 #include "motorgo_group_leader.h"
 
+const uint8_t broadcast_address[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+
 MotorGoGroupLeader::MotorGoGroupLeader()
 {
   // Constructor
@@ -48,8 +50,14 @@ void MotorGoGroupLeader::loop()
 
   if (state == LeaderState::Run)
   {
-    Serial.println("Running");
-    delay(500);
+    // If latest message is > 1 second ago, send heartbeat
+    for (auto& device : devices)
+    {
+      if (ESPNowComms::get_time_since_last_send(device.second) > 1000)
+      {
+        send_heartbeat(device.second);
+      }
+    }
   }
 }
 
@@ -134,3 +142,18 @@ void MotorGoGroupLeader::enter_discovery_mode()
 //   esp_now_register_recv_cb(run_receive_cb);
 //   esp_now_register_send_cb(run_send_cb);
 // }
+
+void MotorGoGroupLeader::send_heartbeat(const String mac)
+{
+  Serial.println("Sending heartbeat");
+
+  // Send heartbeat to device
+  HeartbeatMessage heartbeat;
+
+  ESPNowComms::message_t message;
+  encode_message(heartbeat, message.data, &message.len);
+  Serial.println(message.len);
+  Serial.println(message[0]);
+
+  ESPNowComms::send_data(mac, message);
+}

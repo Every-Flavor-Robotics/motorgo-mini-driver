@@ -1,5 +1,7 @@
 #include "motorgo_groupie.h"
 
+const uint8_t broadcast_address[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+
 MotorGoGroupie::MotorGoGroupie()
 {
   // Constructor
@@ -51,21 +53,40 @@ void MotorGoGroupie::register_device(const uint8_t* mac, const uint8_t* data,
 void MotorGoGroupie::discovery_receive_cb(const uint8_t* mac,
                                           const uint8_t* data, int len)
 {
-  AckPayload* ack = (AckPayload*)data;
-  if (strncmp(ack->message, "Registered", sizeof(ack->message)) == 0)
+  Serial.println("Starting Decode");
+  Serial.println(len);
+  std::unique_ptr<MessageBase> decoded_msg = decode_message(data, len);
+
+  //   Check if nullptr
+  if (decoded_msg == nullptr)
   {
+    Serial.println("Failed to decode message");
+  }
+  Serial.println("Finished Decode");
+  if (decoded_msg->type() == 0x01)
+  {
+    // Heartbeat message
+    Serial.println("Received heartbeat");
+    Serial.println("Entering run mode");
     enter_run_mode();
+  }
+}
+
+void MotorGoGroupie::run_receive_cb(const uint8_t* mac, const uint8_t* data,
+                                    int len)
+{
+  std::unique_ptr<MessageBase> decoded_msg = decode_message(data, len);
+
+  if (decoded_msg->type() == 0x01)
+  {
+    // Heartbeat message
+    Serial.println("Received heartbeat in run");
   }
 }
 
 void MotorGoGroupie::data_send_cb(const uint8_t* mac,
                                   esp_now_send_status_t status)
 {
-}
-
-void MotorGoGroupie::send_ack(const uint8_t* mac)
-{
-  // Send acknowledgment
 }
 
 void MotorGoGroupie::enter_discovery_mode()
@@ -88,6 +109,11 @@ void MotorGoGroupie::enter_discovery_mode()
 void MotorGoGroupie::enter_run_mode()
 {
   state = GroupieState::Run;
+
+  // Set up callbacks correctly for send/receive
+  ESPNowComms::set_data_receive_callback(
+      [this](const uint8_t* mac, const uint8_t* data, int len)
+      { this->run_receive_cb(mac, data, len); });
 
   // TODO: This code does not handle the failure mode where the peer is not
   // added successfully
