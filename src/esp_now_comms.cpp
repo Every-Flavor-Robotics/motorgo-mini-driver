@@ -31,6 +31,21 @@ bool ESPNowComms::send_data(const uint8_t* mac, const message_t& message)
   return result == ESP_OK;
 }
 
+bool ESPNowComms::send_data(const String mac, const message_t& message)
+{
+  // Look up mac address in registered devices
+  if (ESPNowComms::registered_devices.find(mac) ==
+      ESPNowComms::registered_devices.end())
+  {
+    Serial.println("Device not registered");
+    return false;
+  }
+  // Send data to device
+  esp_err_t result =
+      esp_now_send(registered_devices[mac].mac, message.data, message.len);
+  return result == ESP_OK;
+}
+
 void ESPNowComms::set_data_receive_callback(data_receive_callback_t callback)
 {
   ESPNowComms::user_data_receive_callback = callback;
@@ -138,7 +153,7 @@ void ESPNowComms::data_receive_callback(const uint8_t* mac, const uint8_t* data,
   // Turn off LED
   digitalWrite(ESPNowComms::LED_PIN, LOW);
 
-  Serial.println("ESP Now data received");
+  //   Serial.println("ESP Now data received");
 
   // Call user defined callback if it exists
   if (ESPNowComms::user_data_receive_callback != NULL)

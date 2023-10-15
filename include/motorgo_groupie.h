@@ -11,6 +11,8 @@
 #include "esp_now_comms.h"
 #include "motorgo_comms_types.h"
 
+extern const uint8_t broadcast_address[];
+
 class MotorGoGroupie
 {
  public:
@@ -29,7 +31,7 @@ class MotorGoGroupie
 
   void discovery_receive_cb(const uint8_t* mac, const uint8_t* data, int len);
 
-  static void run_receive_cb(const uint8_t* mac, const uint8_t* data, int len);
+  void run_receive_cb(const uint8_t* mac, const uint8_t* data, int len);
 
   static void data_send_cb(const uint8_t* mac, esp_now_send_status_t status);
 

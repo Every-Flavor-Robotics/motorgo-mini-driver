@@ -12,6 +12,8 @@
 #include "esp_now_comms.h"
 #include "motorgo_comms_types.h"
 
+extern const uint8_t broadcast_address[];
+
 class MotorGoGroupLeader
 {
  public:
@@ -34,7 +36,7 @@ class MotorGoGroupLeader
 
   void enter_discovery_mode();
 
-  void send_ack(const uint8_t* mac);
+  void send_heartbeat(const String mac);
 };
 
 #endif  // MOTOR_GO_GROUP_LEADER_H
