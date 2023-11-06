@@ -417,6 +417,36 @@ void MotorGo::MotorGoMini::set_position_controller_ch1(
   pid_position_ch1_enabled = true;
 }
 
+void MotorGo::MotorGoMini::reset_torque_controller_ch0()
+{
+  MotorGo::motor_ch0.PID_current_q.reset();
+}
+
+void MotorGo::MotorGoMini::reset_torque_controller_ch1()
+{
+  MotorGo::motor_ch1.PID_current_q.reset();
+}
+
+void MotorGo::MotorGoMini::reset_velocity_controller_ch0()
+{
+  MotorGo::motor_ch0.PID_velocity.reset();
+}
+
+void MotorGo::MotorGoMini::reset_velocity_controller_ch1()
+{
+  MotorGo::motor_ch1.PID_velocity.reset();
+}
+
+void MotorGo::MotorGoMini::reset_position_controller_ch0()
+{
+  MotorGo::motor_ch0.P_angle.reset();
+}
+
+void MotorGo::MotorGoMini::reset_position_controller_ch1()
+{
+  MotorGo::motor_ch1.P_angle.reset();
+}
+
 void MotorGo::MotorGoMini::enable_ch0() { MotorGo::motor_ch0.enable(); }
 void MotorGo::MotorGoMini::enable_ch1() { MotorGo::motor_ch1.enable(); }
 void MotorGo::MotorGoMini::disable_ch0() { MotorGo::motor_ch0.disable(); }
