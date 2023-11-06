@@ -82,6 +82,15 @@ class MotorGoMini
   void set_position_controller_ch0(PIDParameters params);
   void set_position_controller_ch1(PIDParameters params);
 
+  void reset_torque_controller_ch0();
+  void reset_torque_controller_ch1();
+
+  void reset_velocity_controller_ch0();
+  void reset_velocity_controller_ch1();
+
+  void reset_position_controller_ch0();
+  void reset_position_controller_ch1();
+
   // Enable and disable motors
   void enable_ch0();
   void enable_ch1();
