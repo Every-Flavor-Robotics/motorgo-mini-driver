@@ -52,17 +52,17 @@ void setup()
 
   // Set velocity controller parameters
   // Setup PID parameters
-  velocity_pid_params_ch0.p = 4.0;
-  velocity_pid_params_ch0.i = 0.5;
+  velocity_pid_params_ch0.p = 1.6;
+  velocity_pid_params_ch0.i = 0.01;
   velocity_pid_params_ch0.d = 0.0;
   velocity_pid_params_ch0.output_ramp = 10000.0;
-  velocity_pid_params_ch0.lpf_time_constant = 0.1;
+  velocity_pid_params_ch0.lpf_time_constant = 0.11;
 
-  velocity_pid_params_ch1.p = 4.0;
-  velocity_pid_params_ch1.i = 0.5;
+  velocity_pid_params_ch1.p = 1.6;
+  velocity_pid_params_ch1.i = 0.01;
   velocity_pid_params_ch1.d = 0.0;
   velocity_pid_params_ch1.output_ramp = 10000.0;
-  velocity_pid_params_ch1.lpf_time_constant = 0.1;
+  velocity_pid_params_ch1.lpf_time_constant = 0.11;
 
   motorgo_mini->set_velocity_controller_ch0(velocity_pid_params_ch0);
   motorgo_mini->set_velocity_controller_ch1(velocity_pid_params_ch1);

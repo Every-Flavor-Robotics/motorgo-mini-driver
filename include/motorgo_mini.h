@@ -35,6 +35,21 @@ struct PIDParameters
   float limit = 10000.0f;
 };
 
+typedef union
+{
+  struct __attribute__((packed))
+  {
+    float p;
+    float i;
+    float d;
+    float output_ramp;
+    float lpf_time_constant;
+    float limit;
+  };
+
+  uint8_t raw[sizeof(PIDParameters)];
+} packed_pid_parameters_t;
+
 struct MotorParameters
 {
   int pole_pairs;
@@ -72,6 +87,15 @@ class MotorGoMini
   // Run control loop, should be called at fixed frequency
   void loop_ch0();
   void loop_ch1();
+
+  PIDParameters get_torque_controller_ch0();
+  PIDParameters get_torque_controller_ch1();
+
+  PIDParameters get_velocity_controller_ch0();
+  PIDParameters get_velocity_controller_ch1();
+
+  PIDParameters get_position_controller_ch0();
+  PIDParameters get_position_controller_ch1();
 
   void set_torque_controller_ch0(PIDParameters params);
   void set_torque_controller_ch1(PIDParameters params);
@@ -112,6 +136,21 @@ class MotorGoMini
   // Set target position
   void set_target_position_ch0(float target);
   void set_target_position_ch1(float target);
+
+  void save_torque_controller_ch0();
+  void save_torque_controller_ch1();
+  void load_torque_controller_ch0();
+  void load_torque_controller_ch1();
+
+  void save_velocity_controller_ch0();
+  void save_velocity_controller_ch1();
+  void load_velocity_controller_ch0();
+  void load_velocity_controller_ch1();
+
+  void save_position_controller_ch0();
+  void save_position_controller_ch1();
+  void load_position_controller_ch0();
+  void load_position_controller_ch1();
 
   // Zero Position
   void zero_position_ch0();
@@ -230,6 +269,9 @@ class MotorGoMini
   void set_target_helper_ch0();
   void set_target_helper_ch1();
 
+  void save_controller_helper(const char* key,
+                              const packed_pid_parameters_t& packed_params);
+  packed_pid_parameters_t load_controller_helper(const char* key);
   void set_torque_controller_helper(BLDCMotor& motor, PIDParameters params);
   void set_velocity_controller_helper(BLDCMotor& motor, PIDParameters params);
   void set_position_controller_helper(BLDCMotor& motor, PIDParameters params);

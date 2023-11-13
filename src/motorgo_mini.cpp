@@ -1,5 +1,7 @@
 #include "motorgo_mini.h"
 
+#include "Preferences.h"
+
 // Encoder I2C bus, define and initialize here to avoid multiple definitions
 SPIClass MotorGo::hspi = SPIClass(HSPI);
 bool hspi_initialized = false;
@@ -374,6 +376,85 @@ void MotorGo::MotorGoMini::set_position_controller_helper(
   motor.LPF_angle.Tf = params.lpf_time_constant;
 }
 
+// Getters
+MotorGo::PIDParameters MotorGo::MotorGoMini::get_torque_controller_ch0()
+{
+  MotorGo::PIDParameters params;
+  params.p = MotorGo::motor_ch0.PID_current_q.P;
+  params.i = MotorGo::motor_ch0.PID_current_q.I;
+  params.d = MotorGo::motor_ch0.PID_current_q.D;
+  params.output_ramp = MotorGo::motor_ch0.PID_current_q.output_ramp;
+  params.lpf_time_constant = MotorGo::motor_ch0.LPF_current_q.Tf;
+  params.limit = MotorGo::motor_ch0.PID_current_q.limit;
+
+  return params;
+}
+
+MotorGo::PIDParameters MotorGo::MotorGoMini::get_torque_controller_ch1()
+{
+  MotorGo::PIDParameters params;
+  params.p = MotorGo::motor_ch1.PID_current_q.P;
+  params.i = MotorGo::motor_ch1.PID_current_q.I;
+  params.d = MotorGo::motor_ch1.PID_current_q.D;
+  params.output_ramp = MotorGo::motor_ch1.PID_current_q.output_ramp;
+  params.lpf_time_constant = MotorGo::motor_ch1.LPF_current_q.Tf;
+  params.limit = MotorGo::motor_ch1.PID_current_q.limit;
+
+  return params;
+}
+
+MotorGo::PIDParameters MotorGo::MotorGoMini::get_velocity_controller_ch0()
+{
+  MotorGo::PIDParameters params;
+  params.p = MotorGo::motor_ch0.PID_velocity.P;
+  params.i = MotorGo::motor_ch0.PID_velocity.I;
+  params.d = MotorGo::motor_ch0.PID_velocity.D;
+  params.output_ramp = MotorGo::motor_ch0.PID_velocity.output_ramp;
+  params.lpf_time_constant = MotorGo::motor_ch0.LPF_velocity.Tf;
+  params.limit = MotorGo::motor_ch0.PID_velocity.limit;
+
+  return params;
+}
+
+MotorGo::PIDParameters MotorGo::MotorGoMini::get_velocity_controller_ch1()
+{
+  MotorGo::PIDParameters params;
+  params.p = MotorGo::motor_ch1.PID_velocity.P;
+  params.i = MotorGo::motor_ch1.PID_velocity.I;
+  params.d = MotorGo::motor_ch1.PID_velocity.D;
+  params.output_ramp = MotorGo::motor_ch1.PID_velocity.output_ramp;
+  params.lpf_time_constant = MotorGo::motor_ch1.LPF_velocity.Tf;
+  params.limit = MotorGo::motor_ch1.PID_velocity.limit;
+
+  return params;
+}
+
+MotorGo::PIDParameters MotorGo::MotorGoMini::get_position_controller_ch0()
+{
+  MotorGo::PIDParameters params;
+  params.p = MotorGo::motor_ch0.P_angle.P;
+  params.i = MotorGo::motor_ch0.P_angle.I;
+  params.d = MotorGo::motor_ch0.P_angle.D;
+  params.output_ramp = MotorGo::motor_ch0.P_angle.output_ramp;
+  params.lpf_time_constant = MotorGo::motor_ch0.LPF_angle.Tf;
+  params.limit = MotorGo::motor_ch0.P_angle.limit;
+
+  return params;
+}
+
+MotorGo::PIDParameters MotorGo::MotorGoMini::get_position_controller_ch1()
+{
+  MotorGo::PIDParameters params;
+  params.p = MotorGo::motor_ch1.P_angle.P;
+  params.i = MotorGo::motor_ch1.P_angle.I;
+  params.d = MotorGo::motor_ch1.P_angle.D;
+  params.output_ramp = MotorGo::motor_ch1.P_angle.output_ramp;
+  params.lpf_time_constant = MotorGo::motor_ch1.LPF_angle.Tf;
+  params.limit = MotorGo::motor_ch1.P_angle.limit;
+
+  return params;
+}
+
 // Setters
 void MotorGo::MotorGoMini::set_torque_controller_ch0(
     MotorGo::PIDParameters params)
@@ -445,6 +526,190 @@ void MotorGo::MotorGoMini::reset_position_controller_ch0()
 void MotorGo::MotorGoMini::reset_position_controller_ch1()
 {
   MotorGo::motor_ch1.P_angle.reset();
+}
+
+void MotorGo::MotorGoMini::save_controller_helper(
+    const char* key, const packed_pid_parameters_t& packed_params)
+{
+  Preferences preferences;
+  preferences.begin("pid", false);
+
+  preferences.putBytes(key, packed_params.raw, sizeof(packed_params));
+
+  preferences.end();
+}
+
+MotorGo::packed_pid_parameters_t MotorGo::MotorGoMini::load_controller_helper(
+    const char* key)
+{
+  Preferences preferences;
+  preferences.begin("pid", true);
+
+  packed_pid_parameters_t packed_params;
+
+  //   Confirm key exists
+  if (preferences.isKey(key))
+  {
+    preferences.getBytes(key, packed_params.raw, sizeof(packed_params));
+  }
+
+  preferences.end();
+
+  return packed_params;
+}
+
+void MotorGo::MotorGoMini::save_position_controller_ch0()
+{
+  packed_pid_parameters_t packed_params;
+  packed_params.p = MotorGo::motor_ch0.P_angle.P;
+  packed_params.i = MotorGo::motor_ch0.P_angle.I;
+  packed_params.d = MotorGo::motor_ch0.P_angle.D;
+  packed_params.output_ramp = MotorGo::motor_ch0.P_angle.output_ramp;
+  packed_params.lpf_time_constant = MotorGo::motor_ch0.LPF_angle.Tf;
+  packed_params.limit = MotorGo::motor_ch0.P_angle.limit;
+
+  save_controller_helper("ch0_position", packed_params);
+}
+
+void MotorGo::MotorGoMini::save_position_controller_ch1()
+{
+  packed_pid_parameters_t packed_params;
+  packed_params.p = MotorGo::motor_ch1.P_angle.P;
+  packed_params.i = MotorGo::motor_ch1.P_angle.I;
+  packed_params.d = MotorGo::motor_ch1.P_angle.D;
+  packed_params.output_ramp = MotorGo::motor_ch1.P_angle.output_ramp;
+  packed_params.lpf_time_constant = MotorGo::motor_ch1.LPF_angle.Tf;
+  packed_params.limit = MotorGo::motor_ch1.P_angle.limit;
+
+  save_controller_helper("ch1_position", packed_params);
+}
+
+void MotorGo::MotorGoMini::save_velocity_controller_ch0()
+{
+  packed_pid_parameters_t packed_params;
+  packed_params.p = MotorGo::motor_ch0.PID_velocity.P;
+  packed_params.i = MotorGo::motor_ch0.PID_velocity.I;
+  packed_params.d = MotorGo::motor_ch0.PID_velocity.D;
+  packed_params.output_ramp = MotorGo::motor_ch0.PID_velocity.output_ramp;
+  packed_params.lpf_time_constant = MotorGo::motor_ch0.LPF_velocity.Tf;
+  packed_params.limit = MotorGo::motor_ch0.PID_velocity.limit;
+
+  save_controller_helper("ch0_velocity", packed_params);
+}
+
+void MotorGo::MotorGoMini::save_velocity_controller_ch1()
+{
+  packed_pid_parameters_t packed_params;
+  packed_params.p = MotorGo::motor_ch1.PID_velocity.P;
+  packed_params.i = MotorGo::motor_ch1.PID_velocity.I;
+  packed_params.d = MotorGo::motor_ch1.PID_velocity.D;
+  packed_params.output_ramp = MotorGo::motor_ch1.PID_velocity.output_ramp;
+  packed_params.lpf_time_constant = MotorGo::motor_ch1.LPF_velocity.Tf;
+  packed_params.limit = MotorGo::motor_ch1.PID_velocity.limit;
+
+  save_controller_helper("ch1_velocity", packed_params);
+}
+
+void MotorGo::MotorGoMini::save_torque_controller_ch0()
+{
+  packed_pid_parameters_t packed_params;
+  packed_params.p = MotorGo::motor_ch0.PID_current_q.P;
+  packed_params.i = MotorGo::motor_ch0.PID_current_q.I;
+  packed_params.d = MotorGo::motor_ch0.PID_current_q.D;
+  packed_params.output_ramp = MotorGo::motor_ch0.PID_current_q.output_ramp;
+  packed_params.lpf_time_constant = MotorGo::motor_ch0.LPF_current_q.Tf;
+  packed_params.limit = MotorGo::motor_ch0.PID_current_q.limit;
+
+  save_controller_helper("ch0_torque", packed_params);
+}
+
+void MotorGo::MotorGoMini::save_torque_controller_ch1()
+{
+  packed_pid_parameters_t packed_params;
+  packed_params.p = MotorGo::motor_ch1.PID_current_q.P;
+  packed_params.i = MotorGo::motor_ch1.PID_current_q.I;
+  packed_params.d = MotorGo::motor_ch1.PID_current_q.D;
+  packed_params.output_ramp = MotorGo::motor_ch1.PID_current_q.output_ramp;
+  packed_params.lpf_time_constant = MotorGo::motor_ch1.LPF_current_q.Tf;
+  packed_params.limit = MotorGo::motor_ch1.PID_current_q.limit;
+
+  save_controller_helper("ch1_torque", packed_params);
+}
+
+void MotorGo::MotorGoMini::load_position_controller_ch0()
+{
+  packed_pid_parameters_t packed_params =
+      load_controller_helper("ch0_position");
+
+  MotorGo::motor_ch0.P_angle.P = packed_params.p;
+  MotorGo::motor_ch0.P_angle.I = packed_params.i;
+  MotorGo::motor_ch0.P_angle.D = packed_params.d;
+  MotorGo::motor_ch0.P_angle.output_ramp = packed_params.output_ramp;
+  MotorGo::motor_ch0.LPF_angle.Tf = packed_params.lpf_time_constant;
+  MotorGo::motor_ch0.P_angle.limit = packed_params.limit;
+}
+
+void MotorGo::MotorGoMini::load_position_controller_ch1()
+{
+  packed_pid_parameters_t packed_params =
+      load_controller_helper("ch1_position");
+
+  MotorGo::motor_ch1.P_angle.P = packed_params.p;
+  MotorGo::motor_ch1.P_angle.I = packed_params.i;
+  MotorGo::motor_ch1.P_angle.D = packed_params.d;
+  MotorGo::motor_ch1.P_angle.output_ramp = packed_params.output_ramp;
+  MotorGo::motor_ch1.LPF_angle.Tf = packed_params.lpf_time_constant;
+  MotorGo::motor_ch1.P_angle.limit = packed_params.limit;
+}
+
+void MotorGo::MotorGoMini::load_velocity_controller_ch0()
+{
+  packed_pid_parameters_t packed_params =
+      load_controller_helper("ch0_velocity");
+
+  MotorGo::motor_ch0.PID_velocity.P = packed_params.p;
+  MotorGo::motor_ch0.PID_velocity.I = packed_params.i;
+  MotorGo::motor_ch0.PID_velocity.D = packed_params.d;
+  MotorGo::motor_ch0.PID_velocity.output_ramp = packed_params.output_ramp;
+  MotorGo::motor_ch0.LPF_velocity.Tf = packed_params.lpf_time_constant;
+  MotorGo::motor_ch0.PID_velocity.limit = packed_params.limit;
+}
+
+void MotorGo::MotorGoMini::load_velocity_controller_ch1()
+{
+  packed_pid_parameters_t packed_params =
+      load_controller_helper("ch1_velocity");
+
+  MotorGo::motor_ch1.PID_velocity.P = packed_params.p;
+  MotorGo::motor_ch1.PID_velocity.I = packed_params.i;
+  MotorGo::motor_ch1.PID_velocity.D = packed_params.d;
+  MotorGo::motor_ch1.PID_velocity.output_ramp = packed_params.output_ramp;
+  MotorGo::motor_ch1.LPF_velocity.Tf = packed_params.lpf_time_constant;
+  MotorGo::motor_ch1.PID_velocity.limit = packed_params.limit;
+}
+
+void MotorGo::MotorGoMini::load_torque_controller_ch0()
+{
+  packed_pid_parameters_t packed_params = load_controller_helper("ch0_torque");
+
+  MotorGo::motor_ch0.PID_current_q.P = packed_params.p;
+  MotorGo::motor_ch0.PID_current_q.I = packed_params.i;
+  MotorGo::motor_ch0.PID_current_q.D = packed_params.d;
+  MotorGo::motor_ch0.PID_current_q.output_ramp = packed_params.output_ramp;
+  MotorGo::motor_ch0.LPF_current_q.Tf = packed_params.lpf_time_constant;
+  MotorGo::motor_ch0.PID_current_q.limit = packed_params.limit;
+}
+
+void MotorGo::MotorGoMini::load_torque_controller_ch1()
+{
+  packed_pid_parameters_t packed_params = load_controller_helper("ch1_torque");
+
+  MotorGo::motor_ch1.PID_current_q.P = packed_params.p;
+  MotorGo::motor_ch1.PID_current_q.I = packed_params.i;
+  MotorGo::motor_ch1.PID_current_q.D = packed_params.d;
+  MotorGo::motor_ch1.PID_current_q.output_ramp = packed_params.output_ramp;
+  MotorGo::motor_ch1.LPF_current_q.Tf = packed_params.lpf_time_constant;
+  MotorGo::motor_ch1.PID_current_q.limit = packed_params.limit;
 }
 
 void MotorGo::MotorGoMini::enable_ch0() { MotorGo::motor_ch0.enable(); }
