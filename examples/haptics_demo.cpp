@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include <ESPmDNS.h>
 
 #include "configurable.h"
 #include "motorgo_mini.h"
@@ -10,6 +9,7 @@ MotorGo::MotorGoMini* motorgo_mini;
 MotorGo::MotorParameters motor_params_ch0;
 MotorGo::MotorParameters motor_params_ch1;
 
+// instantiate pid motorgo pid params
 MotorGo::PIDParameters current_pid_params_ch0;
 MotorGo::PIDParameters current_pid_params_ch1;
 
@@ -151,22 +151,6 @@ bool load_pid_params_ch1()
   return true;
 }
 
-// ESPWifiConfig::Readable<bool> call_save_pid_params_ch0(
-//     save_pid_params_ch0, "/ch0/save_pid_params",
-//     "Save PID parameters for Channel 0");
-
-// ESPWifiConfig::Readable<bool> call_save_pid_params_ch1(
-//     save_pid_params_ch1, "/ch1/save_pid_params",
-//     "Save PID parameters for Channel 1");
-
-// ESPWifiConfig::Readable<bool> call_load_pid_params_ch0(
-//     load_pid_params_ch0, "/ch0/load_pid_params",
-//     "Save PID parameters for Channel 0");
-
-// ESPWifiConfig::Readable<bool> call_load_pid_params_ch1(
-//     load_pid_params_ch1, "/ch1/load_pid_params",
-//     "Save PID parameters for Channel 1");
-
 void get_pid_params_ch0()
 {
   position_pid_params_ch0 = motorgo_mini->get_position_controller_ch0();
@@ -257,8 +241,8 @@ void freq_println(String str, int freq)
 void setup()
 {
   Serial.begin(115200);
-  delay(3000);
 
+  delay(3000);
   //   Configure PID update callbacks
   current_p_ch0.set_get_callback(get_pid_params_ch0);
   current_i_ch0.set_get_callback(get_pid_params_ch0);
@@ -341,25 +325,52 @@ void setup()
   motorgo_mini->init_ch1(motor_params_ch1, calibrate, enable_foc_studio);
 
   // Set velocity controller parameters
-  // Setup PID parameters
-  velocity_pid_params_ch0.p = 4.0;
-  velocity_pid_params_ch0.i = 0.5;
-  velocity_pid_params_ch0.d = 0.0;
+  // Setup PID parameters - velocity
+
+  float velP = 0.5;
+  float velI = 0.0;
+  float velD = 0.0;
+
+  velocity_pid_params_ch0.p = velP;
+  velocity_pid_params_ch0.i = velI;
+  velocity_pid_params_ch0.d = velD;
   velocity_pid_params_ch0.output_ramp = 10000.0;
-  velocity_pid_params_ch0.lpf_time_constant = 0.1;
+  velocity_pid_params_ch0.lpf_time_constant = 0.11;
 
-  velocity_pid_params_ch1.p = 4.0;
-  velocity_pid_params_ch1.i = 0.5;
-  velocity_pid_params_ch1.d = 0.0;
+  velocity_pid_params_ch1.p = velP;
+  velocity_pid_params_ch1.i = velI;
+  velocity_pid_params_ch1.d = velD;
   velocity_pid_params_ch1.output_ramp = 10000.0;
-  velocity_pid_params_ch1.lpf_time_constant = 0.1;
+  velocity_pid_params_ch1.lpf_time_constant = 0.11;
 
+  // Setup PID parameters - position
+  // set up p controller only for position control.
+  float posP = 5.0;
+  float posI = 0.5;
+  float posD = 0.0;
+
+  position_pid_params_ch0.p = posP;
+  position_pid_params_ch0.i = posI;
+  position_pid_params_ch0.d = posD;
+  position_pid_params_ch0.output_ramp = 10000.0;
+  position_pid_params_ch0.lpf_time_constant = 0.11;
+
+  position_pid_params_ch1.p = posP;
+  position_pid_params_ch1.i = posI;
+  position_pid_params_ch1.d = posD;
+  position_pid_params_ch1.output_ramp = 10000.0;
+  position_pid_params_ch1.lpf_time_constant = 0.11;
+
+  // Instantiate controllers
   motorgo_mini->set_velocity_controller_ch0(velocity_pid_params_ch0);
   motorgo_mini->set_velocity_controller_ch1(velocity_pid_params_ch1);
 
-  //   Set closed-loop velocity mode
-  motorgo_mini->set_control_mode_ch0(MotorGo::ControlMode::Velocity);
-  motorgo_mini->set_control_mode_ch1(MotorGo::ControlMode::Velocity);
+  motorgo_mini->set_position_controller_ch0(position_pid_params_ch0);
+  motorgo_mini->set_position_controller_ch1(position_pid_params_ch1);
+
+  //   Set closed-loop position mode
+  motorgo_mini->set_control_mode_ch0(MotorGo::ControlMode::Position);
+  motorgo_mini->set_control_mode_ch1(MotorGo::ControlMode::Position);
 
   //   Print url: http://{IP_ADDRESS}:PORT
   Serial.print("Please connect to http://");
@@ -367,8 +378,9 @@ void setup()
   Serial.print(":");
   Serial.println(8080);
 
-  //   motorgo_mini->enable_ch0();
-  //   motorgo_mini->enable_ch1();
+  // enable controllers and prepare for the loop
+  motorgo_mini->enable_ch0();
+  motorgo_mini->enable_ch1();
 }
 
 void loop()
@@ -377,12 +389,16 @@ void loop()
   motorgo_mini->loop_ch0();
   motorgo_mini->loop_ch1();
 
-  motorgo_mini->set_target_velocity_ch0(10.0);
-  motorgo_mini->set_target_velocity_ch1(10.0);
+  // measure positions
+  float ch0_pos = motorgo_mini->get_ch0_position();
+  float ch1_pos = motorgo_mini->get_ch1_position();
 
-  //   String str = "Velocity - Ch0: " +
-  //   String(motorgo_mini->get_ch0_velocity()) +
-  //                " Ch1: " + String(motorgo_mini->get_ch1_velocity());
+  // set target positions between each motor
+  motorgo_mini->set_target_position_ch0(ch1_pos);
+  motorgo_mini->set_target_position_ch1(ch0_pos);
 
-  //   freq_println(str, 10);
+  String x = "ch0 pos: " + String(ch0_pos);
+  String y = "ch1 pos: " + String(ch1_pos);
+
+  freq_println(x + " | " + y, 10);
 }
