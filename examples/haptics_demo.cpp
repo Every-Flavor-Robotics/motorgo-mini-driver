@@ -174,6 +174,8 @@ void position_pid_update_ch0(float value)
   motorgo_mini->reset_position_controller_ch0();
   motorgo_mini->reset_velocity_controller_ch0();
   motorgo_mini->reset_torque_controller_ch0();
+
+  motorgo_mini->enable_ch0();
 }
 
 void position_pid_update_ch1(float value)
@@ -185,6 +187,8 @@ void position_pid_update_ch1(float value)
   motorgo_mini->reset_position_controller_ch1();
   motorgo_mini->reset_velocity_controller_ch1();
   motorgo_mini->reset_torque_controller_ch1();
+
+  motorgo_mini->enable_ch1();
 }
 
 void velocity_pid_update_ch0(float value)
@@ -195,6 +199,8 @@ void velocity_pid_update_ch0(float value)
   //   Reset velocity and torque controllers;
   motorgo_mini->reset_velocity_controller_ch0();
   motorgo_mini->reset_torque_controller_ch0();
+
+  motorgo_mini->enable_ch0();
 }
 
 void velocity_pid_update_ch1(float value)
@@ -205,6 +211,8 @@ void velocity_pid_update_ch1(float value)
   //   Reset velocity and torque controllers;
   motorgo_mini->reset_velocity_controller_ch1();
   motorgo_mini->reset_torque_controller_ch1();
+
+  motorgo_mini->enable_ch1();
 }
 
 void current_pid_update_ch0(float value)
@@ -214,6 +222,8 @@ void current_pid_update_ch0(float value)
 
   //   Reset torque controller;
   motorgo_mini->reset_torque_controller_ch0();
+
+  motorgo_mini->enable_ch0();
 }
 
 void current_pid_update_ch1(float value)
@@ -223,6 +233,8 @@ void current_pid_update_ch1(float value)
 
   //   Reset torque controller;
   motorgo_mini->reset_torque_controller_ch1();
+
+  motorgo_mini->enable_ch1();
 }
 
 // Function to print at a maximum frequency
