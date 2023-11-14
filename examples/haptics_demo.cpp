@@ -339,37 +339,37 @@ void setup()
   // Set velocity controller parameters
   // Setup PID parameters - velocity
 
-  float velP = 0.5;
-  float velI = 0.0;
-  float velD = 0.0;
+  float vel_p = 0.5;
+  float vel_i = 0.0;
+  float vel_d = 0.0;
 
-  velocity_pid_params_ch0.p = velP;
-  velocity_pid_params_ch0.i = velI;
-  velocity_pid_params_ch0.d = velD;
+  velocity_pid_params_ch0.p = vel_p;
+  velocity_pid_params_ch0.i = vel_i;
+  velocity_pid_params_ch0.d = vel_d;
   velocity_pid_params_ch0.output_ramp = 10000.0;
   velocity_pid_params_ch0.lpf_time_constant = 0.11;
 
-  velocity_pid_params_ch1.p = velP;
-  velocity_pid_params_ch1.i = velI;
-  velocity_pid_params_ch1.d = velD;
+  velocity_pid_params_ch1.p = vel_p;
+  velocity_pid_params_ch1.i = vel_i;
+  velocity_pid_params_ch1.d = vel_d;
   velocity_pid_params_ch1.output_ramp = 10000.0;
   velocity_pid_params_ch1.lpf_time_constant = 0.11;
 
   // Setup PID parameters - position
   // set up p controller only for position control.
-  float posP = 5.0;
-  float posI = 0.5;
-  float posD = 0.0;
+  float pos_p = 5.0;
+  float pos_i = 0.5;
+  float pos_d = 0.0;
 
-  position_pid_params_ch0.p = posP;
-  position_pid_params_ch0.i = posI;
-  position_pid_params_ch0.d = posD;
+  position_pid_params_ch0.p = pos_p;
+  position_pid_params_ch0.i = pos_i;
+  position_pid_params_ch0.d = pos_d;
   position_pid_params_ch0.output_ramp = 10000.0;
   position_pid_params_ch0.lpf_time_constant = 0.11;
 
-  position_pid_params_ch1.p = posP;
-  position_pid_params_ch1.i = posI;
-  position_pid_params_ch1.d = posD;
+  position_pid_params_ch1.p = pos_p;
+  position_pid_params_ch1.i = pos_i;
+  position_pid_params_ch1.d = pos_d;
   position_pid_params_ch1.output_ramp = 10000.0;
   position_pid_params_ch1.lpf_time_constant = 0.11;
 
