@@ -115,6 +115,24 @@ ESPWifiConfig::Configurable<float> position_lpf_ch1(
     position_pid_params_ch1.lpf_time_constant, "/ch1/position/lpf",
     "Low pass filter time constant for Channel 1 position controller");
 
+bool motors_enabled = false;
+ESPWifiConfig::Configurable<bool> enable_motors(motors_enabled, "/enable",
+                                                "Enable motors");
+
+void enable_motors_callback(bool value)
+{
+  if (value)
+  {
+    motorgo_mini->enable_ch0();
+    motorgo_mini->enable_ch1();
+  }
+  else
+  {
+    motorgo_mini->disable_ch0();
+    motorgo_mini->disable_ch1();
+  }
+}
+
 bool save_pid_params_ch0()
 {
   motorgo_mini->save_position_controller_ch0();
@@ -310,6 +328,8 @@ void setup()
   position_d_ch0.set_post_callback(position_pid_update_ch0);
   position_lpf_ch0.set_post_callback(position_pid_update_ch0);
 
+  enable_motors.set_post_callback(enable_motors_callback);
+
   ESPWifiConfig::WebServer::getInstance().start();
 
   // Setup motor parameters
@@ -391,8 +411,8 @@ void setup()
   Serial.println(8080);
 
   // enable controllers and prepare for the loop
-  motorgo_mini->enable_ch0();
-  motorgo_mini->enable_ch1();
+  //   motorgo_mini->enable_ch0();
+  //   motorgo_mini->enable_ch1();
 }
 
 void loop()
