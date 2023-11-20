@@ -137,6 +137,10 @@ class MotorGoMini
   void set_target_position_ch0(float target);
   void set_target_position_ch1(float target);
 
+  // Set target voltage
+  void set_target_voltage_ch0(float target);
+  void set_target_voltage_ch1(float target);
+
   void save_torque_controller_ch0();
   void save_torque_controller_ch1();
   void load_torque_controller_ch0();
@@ -191,7 +195,7 @@ class MotorGoMini
   const int k_ch1_gpio_vl = 21;
   const int k_ch1_gpio_wh = 11;
   const int k_ch1_gpio_wl = 14;
-  const int k_ch1_current_u = 47;
+  const int k_ch1_current_u = 8;
   const int k_ch1_current_w = 12;
 
   // Additional motor and encoder parameters
