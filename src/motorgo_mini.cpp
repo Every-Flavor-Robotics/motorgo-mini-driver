@@ -764,6 +764,18 @@ void MotorGo::MotorGoMini::set_target_position_ch1(float target)
   set_target_helper_ch1();
 }
 
+void MotorGo::MotorGoMini::set_target_voltage_ch0(float target)
+{
+  target_voltage_ch0 = target;
+  set_target_helper_ch0();
+}
+
+void MotorGo::MotorGoMini::set_target_voltage_ch1(float target)
+{
+  target_voltage_ch1 = target;
+  set_target_helper_ch1();
+}
+
 void MotorGo::MotorGoMini::zero_position_ch0()
 {
   MotorGo::motor_ch0.sensor_offset = MotorGo::motor_ch0.shaftAngle();
