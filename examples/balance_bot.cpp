@@ -1,27 +1,77 @@
-#include <Adafruit_MPU6050.h>
 #include <Arduino.h>
 
+#include "Adafruit_AHRS_Madgwick.h"
+#include "Adafruit_MPU6050.h"
 #include "Wire.h"
+#include "common/lowpass_filter.h"
+#include "common/pid.h"
 #include "configurable.h"
 #include "motorgo_mini.h"
-#include "readable.h"
-#include "web_server.h"
+#include "pid_manager.h"
 
 MotorGo::MotorGoMini* motorgo_mini;
 MotorGo::MotorParameters motor_params_ch0;
 MotorGo::MotorParameters motor_params_ch1;
 
-// instantiate pid motorgo pid params
-MotorGo::PIDParameters current_pid_params_ch0;
-MotorGo::PIDParameters current_pid_params_ch1;
+// declare PID manager object
+MotorGo::PIDManager pid_manager;
 
-MotorGo::PIDParameters velocity_pid_params_ch0;
-MotorGo::PIDParameters velocity_pid_params_ch1;
+// declare two pre-built PID controller objects for individual motor velocity
+// control
+// MotorGo::PIDParameters velocity_pid_params;
 
-MotorGo::PIDParameters position_pid_params_ch0;
-MotorGo::PIDParameters position_pid_params_ch1;
+// MotorGo::PIDParameters velocity_controller_params;
+MotorGo::PIDParameters velocity_controller_params;
+LowPassFilter velocity_lpf(velocity_controller_params.lpf_time_constant);
+PIDController velocity_controller(velocity_controller_params.p,
+                                  velocity_controller_params.i,
+                                  velocity_controller_params.d,
+                                  velocity_controller_params.output_ramp,
+                                  velocity_controller_params.limit);
+
+// declare and configure custom balance controller object
+MotorGo::PIDParameters balancing_controller_params;
+LowPassFilter balancing_lpf(balancing_controller_params.lpf_time_constant);
+PIDController balancing_controller(balancing_controller_params.p,
+                                   balancing_controller_params.i,
+                                   balancing_controller_params.d,
+                                   balancing_controller_params.output_ramp,
+                                   balancing_controller_params.limit);
+
+// declare and configure custom steering controller object
+MotorGo::PIDParameters steering_controller_params;
+LowPassFilter steering_lpf(steering_controller_params.lpf_time_constant);
+PIDController steering_controller(steering_controller_params.p,
+                                  steering_controller_params.i,
+                                  steering_controller_params.d,
+                                  steering_controller_params.output_ramp,
+                                  steering_controller_params.limit);
+
+bool motors_enabled = false;
+ESPWifiConfig::Configurable<bool> enable_motors(motors_enabled, "/enable",
+                                                "Enable motors");
 
 Adafruit_MPU6050 mpu;
+Adafruit_Madgwick filter(0.8);
+float pitch_zero = 0.0092;
+float initial_angle_ch0;
+float initial_angle_ch1;
+
+void enable_motors_callback(bool value)
+{
+  if (value)
+  {
+    Serial.println("Enabling motors");
+    motorgo_mini->enable_ch0();
+    motorgo_mini->enable_ch1();
+  }
+  else
+  {
+    Serial.println("Disabling motors");
+    motorgo_mini->disable_ch0();
+    motorgo_mini->disable_ch1();
+  }
+}
 
 // Function to print at a maximum frequency
 void freq_println(String str, int freq)
@@ -39,12 +89,13 @@ void freq_println(String str, int freq)
 void setup()
 {
   Serial.begin(115200);
+  delay(3000);
 
-  //   Configure Wire on pins 8, 38
-  Wire.begin(8, 38);
+  //   Configure Wire on pins 38, 47
+  Wire1.begin(38, 47);
 
   //   Begin IMU on Wire
-  if (!mpu.begin(MPU6050_I2CADDR_DEFAULT, &Wire))
+  if (!mpu.begin(0x68, &Wire1))
   {
     Serial.println("Failed to find MPU6050 chip");
     while (1)
@@ -52,8 +103,12 @@ void setup()
       delay(10);
     }
   }
+  mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
+  mpu.setGyroRange(MPU6050_RANGE_2000_DEG);
+  mpu.setFilterBandwidth(MPU6050_BAND_260_HZ);
+  mpu.setHighPassFilter(MPU6050_HIGHPASS_DISABLE);
 
-  delay(3000);
+  filter.begin(300);
 
   // Setup motor parameters
   motor_params_ch0.pole_pairs = 7;
@@ -82,56 +137,104 @@ void setup()
   // Set velocity controller parameters
   // Setup PID parameters - velocity
 
-  float vel_p = 0.5;
-  float vel_i = 0.0;
+  float vel_p = 3.0;
+  float vel_i = 0.3;
   float vel_d = 0.0;
 
-  velocity_pid_params_ch0.p = vel_p;
-  velocity_pid_params_ch0.i = vel_i;
-  velocity_pid_params_ch0.d = vel_d;
-  velocity_pid_params_ch0.output_ramp = 10000.0;
-  velocity_pid_params_ch0.lpf_time_constant = 0.11;
-
-  velocity_pid_params_ch1.p = vel_p;
-  velocity_pid_params_ch1.i = vel_i;
-  velocity_pid_params_ch1.d = vel_d;
-  velocity_pid_params_ch1.output_ramp = 10000.0;
-  velocity_pid_params_ch1.lpf_time_constant = 0.11;
-
-  // Setup PID parameters - position
-  // set up p controller only for position control.
-  float pos_p = 5.0;
-  float pos_i = 0.5;
-  float pos_d = 0.0;
-
-  position_pid_params_ch0.p = pos_p;
-  position_pid_params_ch0.i = pos_i;
-  position_pid_params_ch0.d = pos_d;
-  position_pid_params_ch0.output_ramp = 10000.0;
-  position_pid_params_ch0.lpf_time_constant = 0.11;
-
-  position_pid_params_ch1.p = pos_p;
-  position_pid_params_ch1.i = pos_i;
-  position_pid_params_ch1.d = pos_d;
-  position_pid_params_ch1.output_ramp = 10000.0;
-  position_pid_params_ch1.lpf_time_constant = 0.11;
+  //   velocity_pid_params.p = vel_p;
+  //   velocity_pid_params.i = vel_i;
+  //   velocity_pid_params.d = vel_d;
+  //   velocity_pid_params.output_ramp = 10000.0;
+  //   velocity_pid_params.lpf_time_constant = 0.11;
 
   // Instantiate controllers
-  motorgo_mini->set_velocity_controller_ch0(velocity_pid_params_ch0);
-  motorgo_mini->set_velocity_controller_ch1(velocity_pid_params_ch1);
-
-  motorgo_mini->set_position_controller_ch0(position_pid_params_ch0);
-  motorgo_mini->set_position_controller_ch1(position_pid_params_ch1);
+  //   motorgo_mini->set_velocity_controller_ch0(velocity_pid_params);
+  //   motorgo_mini->set_velocity_controller_ch1(velocity_pid_params);
 
   //   Set closed-loop position mode
-  motorgo_mini->set_control_mode_ch0(MotorGo::ControlMode::Position);
-  motorgo_mini->set_control_mode_ch1(MotorGo::ControlMode::Position);
+  motorgo_mini->set_control_mode_ch0(MotorGo::ControlMode::Voltage);
+  motorgo_mini->set_control_mode_ch1(MotorGo::ControlMode::Voltage);
 
-  //   Print url: http://{IP_ADDRESS}:PORT
-  Serial.print("Please connect to http://");
-  Serial.print(WiFi.localIP());
-  Serial.print(":");
-  Serial.println(8080);
+  // wrap controller params into a configurable object, pass anonymous function
+  // to allow board to update controller values after receiving input over wifi.
+  pid_manager.add_controller(
+      "/velocity", velocity_controller_params,
+      []()
+      {
+        velocity_controller.P = velocity_controller_params.p;
+        velocity_controller.I = velocity_controller_params.i;
+        velocity_controller.D = velocity_controller_params.d;
+        velocity_controller.output_ramp =
+            velocity_controller_params.output_ramp;
+        velocity_controller.limit = velocity_controller_params.limit;
+        velocity_lpf.Tf = velocity_controller_params.lpf_time_constant;
+        velocity_controller.reset();
+      });
+
+  // wrap controller params into a configurable object, pass anonymous function
+  // to allow board to update controller values after receiving input over wifi.
+  pid_manager.add_controller(
+      "/balancing", balancing_controller_params,
+      []()
+      {
+        balancing_controller.P = balancing_controller_params.p;
+        balancing_controller.I = balancing_controller_params.i;
+        balancing_controller.D = balancing_controller_params.d;
+        balancing_controller.output_ramp =
+            balancing_controller_params.output_ramp;
+        balancing_controller.limit = balancing_controller_params.limit;
+        balancing_lpf.Tf = balancing_controller_params.lpf_time_constant;
+        balancing_controller.reset();
+      });
+
+  // wrap controller params into a configurable object, pass anonymous function
+  // to allow board to update controller values after receiving input over wifi.
+  pid_manager.add_controller(
+      "/steering", steering_controller_params,
+      []()
+      {
+        if (motors_enabled)
+        {
+          motorgo_mini->disable_ch0();
+          motorgo_mini->disable_ch1();
+        }
+
+        // Compute new initial angle
+        initial_angle_ch0 = motorgo_mini->get_ch0_position();
+        initial_angle_ch1 = motorgo_mini->get_ch1_position();
+
+        steering_controller.P = steering_controller_params.p;
+        steering_controller.I = steering_controller_params.i;
+        steering_controller.D = steering_controller_params.d;
+        steering_controller.output_ramp =
+            steering_controller_params.output_ramp;
+        steering_controller.limit = steering_controller_params.limit;
+        steering_lpf.Tf = steering_controller_params.lpf_time_constant;
+        steering_controller.reset();
+
+        if (motors_enabled)
+        {
+          motorgo_mini->enable_ch0();
+          motorgo_mini->enable_ch1();
+        }
+      });
+
+  enable_motors.set_post_callback(enable_motors_callback);
+
+  // initialize the PID manager
+  pid_manager.init();
+
+  // Run the filter for 1000 steps to get a good initial estimate of the yaw
+  for (int i = 0; i < 1000; i++)
+  {
+    sensors_event_t a, g, temp;
+    mpu.getEvent(&a, &g, &temp);
+    filter.updateIMU(g.gyro.x, g.gyro.y, g.gyro.z, a.acceleration.x,
+                     a.acceleration.y, a.acceleration.z);
+  }
+
+  initial_angle_ch0 = motorgo_mini->get_ch0_position();
+  initial_angle_ch1 = motorgo_mini->get_ch1_position();
 
   // enable controllers and prepare for the loop
   //   motorgo_mini->enable_ch0();
@@ -140,42 +243,39 @@ void setup()
 
 void loop()
 {
-  // Print IMU data
-  sensors_event_t a, g, temp;
-  mpu.getEvent(&a, &g, &temp);
-
-  Serial.println("IMU Data:");
-  Serial.print("aX = ");
-  Serial.print(a.acceleration.x);
-  Serial.print(" aY = ");
-  Serial.print(a.acceleration.y);
-  Serial.print(" aZ = ");
-  Serial.print(a.acceleration.z);
-
-  Serial.print(" gX = ");
-  Serial.print(g.gyro.x);
-  Serial.print(" gY = ");
-  Serial.print(g.gyro.y);
-  Serial.print(" gZ = ");
-  Serial.print(g.gyro.z);
-
-  Serial.print(" t = ");
-  Serial.println(temp.temperature);
-
-  delay(100);
+  // Every 2 seconds, switch between 0 rad/s and 10 rad/s
+  static unsigned long last_time = 0;
+  unsigned long now = millis();
 
   // Run Ch0
-  //   motorgo_mini->loop_ch0();
-  //   motorgo_mini->loop_ch1();
+  motorgo_mini->loop_ch0();
+  motorgo_mini->loop_ch1();
 
-  // measure positions
-  //   float ch0_pos = motorgo_mini->get_ch0_position();
-  //   float ch1_pos = motorgo_mini->get_ch1_position();
+  sensors_event_t a, g, temp;
+  mpu.getEvent(&a, &g, &temp);
+  filter.updateIMU(g.gyro.x, g.gyro.y, g.gyro.z, a.acceleration.x,
+                   a.acceleration.y, a.acceleration.z);
 
-  //   // set target positions between each motor
-  //   motorgo_mini->set_target_position_ch0(ch1_pos);
-  //   motorgo_mini->set_target_position_ch1(ch0_pos);
+  float pitch = filter.getRollRadians();
+  // Print pitch using frequency print
+  freq_println("Pitch: " + String(pitch, 5), 10);
 
-  //   String x = "ch0 pos: " + String(ch0_pos);
-  //   String y = "ch1 pos: " + String(ch1_pos);
+  float wheel_velocity =
+      (motorgo_mini->get_ch0_velocity() - motorgo_mini->get_ch1_velocity()) / 2;
+
+  float ch0_pos = motorgo_mini->get_ch0_position() - initial_angle_ch0;
+  float ch1_pos = -(motorgo_mini->get_ch1_position() - initial_angle_ch1);
+
+  float velocity_command = velocity_controller(wheel_velocity);
+  float balance_command = balancing_controller(pitch - pitch_zero);
+  float steering_command = steering_controller(ch0_pos - ch1_pos);
+
+  // Print balance_command
+  freq_println("Balancing error: " + String(pitch - pitch_zero, 5), 10);
+
+  float command_ch0 = balance_command - steering_command - velocity_command;
+  float command_ch1 = balance_command + steering_command - velocity_command;
+
+  motorgo_mini->set_target_voltage_ch0(command_ch0);
+  motorgo_mini->set_target_voltage_ch1(command_ch1);
 }
