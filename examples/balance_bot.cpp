@@ -1,13 +1,12 @@
 #include <Arduino.h>
 
-#include "Adafruit_AHRS_Madgwick.h"
-#include "Adafruit_MPU6050.h"
 #include "Wire.h"
 #include "common/lowpass_filter.h"
 #include "common/pid.h"
 #include "configurable.h"
 #include "motorgo_mini.h"
 #include "pid_manager.h"
+#include "sensorgo_mpu6050.h"
 
 MotorGo::MotorGoMini* motorgo_mini;
 MotorGo::MotorParameters motor_params_ch0;
@@ -51,8 +50,7 @@ bool motors_enabled = false;
 ESPWifiConfig::Configurable<bool> enable_motors(motors_enabled, "/enable",
                                                 "Enable motors");
 
-Adafruit_MPU6050 mpu;
-Adafruit_Madgwick filter(0.8);
+SensorGoMPU6050 mpu;
 float pitch_zero = 0.0092;
 float initial_angle_ch0;
 float initial_angle_ch1;
@@ -95,20 +93,24 @@ void setup()
   Wire1.begin(38, 47);
 
   //   Begin IMU on Wire
-  if (!mpu.begin(0x68, &Wire1))
+  if (!mpu.begin(&Wire1))
   {
+    Serial.println("------------- ERROR ---------------");
     Serial.println("Failed to find MPU6050 chip");
-    while (1)
-    {
-      delay(10);
-    }
+    //   Restart the board
+    Serial.println("Restarting to try again...");
+    Serial.println("------------------------------------") ESP.restart();
   }
-  mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
-  mpu.setGyroRange(MPU6050_RANGE_2000_DEG);
-  mpu.setFilterBandwidth(MPU6050_BAND_260_HZ);
-  mpu.setHighPassFilter(MPU6050_HIGHPASS_DISABLE);
 
-  filter.begin(300);
+  Serial.println("Calibrating IMU in 3 seconds, do not move robot");
+  Serial.println("3...");
+  delay(1000);
+  Serial.println("2...");
+  delay(1000);
+  Serial.println("1...");
+  delay(1000);
+  Serial.println("Calibrating IMU...");
+  mpu.calibrate();
 
   // Setup motor parameters
   motor_params_ch0.pole_pairs = 7;
@@ -133,23 +135,6 @@ void setup()
   bool enable_foc_studio = false;
   motorgo_mini->init_ch0(motor_params_ch0, calibrate, enable_foc_studio);
   motorgo_mini->init_ch1(motor_params_ch1, calibrate, enable_foc_studio);
-
-  // Set velocity controller parameters
-  // Setup PID parameters - velocity
-
-  float vel_p = 3.0;
-  float vel_i = 0.3;
-  float vel_d = 0.0;
-
-  //   velocity_pid_params.p = vel_p;
-  //   velocity_pid_params.i = vel_i;
-  //   velocity_pid_params.d = vel_d;
-  //   velocity_pid_params.output_ramp = 10000.0;
-  //   velocity_pid_params.lpf_time_constant = 0.11;
-
-  // Instantiate controllers
-  //   motorgo_mini->set_velocity_controller_ch0(velocity_pid_params);
-  //   motorgo_mini->set_velocity_controller_ch1(velocity_pid_params);
 
   //   Set closed-loop position mode
   motorgo_mini->set_control_mode_ch0(MotorGo::ControlMode::Voltage);
@@ -224,58 +209,51 @@ void setup()
   // initialize the PID manager
   pid_manager.init();
 
-  // Run the filter for 1000 steps to get a good initial estimate of the yaw
-  for (int i = 0; i < 1000; i++)
-  {
-    sensors_event_t a, g, temp;
-    mpu.getEvent(&a, &g, &temp);
-    filter.updateIMU(g.gyro.x, g.gyro.y, g.gyro.z, a.acceleration.x,
-                     a.acceleration.y, a.acceleration.z);
-  }
-
   initial_angle_ch0 = motorgo_mini->get_ch0_position();
   initial_angle_ch1 = motorgo_mini->get_ch1_position();
 
-  // enable controllers and prepare for the loop
+  // Normally, we'd enable the motors here. However, since the GUI can enable,
+  // leave them disabled so the robot doesn't run away
   //   motorgo_mini->enable_ch0();
   //   motorgo_mini->enable_ch1();
 }
 
 void loop()
 {
-  // Every 2 seconds, switch between 0 rad/s and 10 rad/s
-  static unsigned long last_time = 0;
-  unsigned long now = millis();
+  // Only update if new data is ready from IMU
+  // Else, just keep running the controllers
+  if (mpu.data_ready())
+  {
+    //  Roll is actually pitch for the balance bot
+    float pitch = mpu.get_roll();
+
+    // Print pitch using frequency print
+    freq_println("Pitch: " + String(pitch, 5), 10);
+
+    float wheel_velocity =
+        (motorgo_mini->get_ch0_velocity() - motorgo_mini->get_ch1_velocity()) /
+        2;
+
+    float ch0_pos = motorgo_mini->get_ch0_position() - initial_angle_ch0;
+    float ch1_pos = -(motorgo_mini->get_ch1_position() - initial_angle_ch1);
+
+    float velocity_command = velocity_controller(wheel_velocity);
+    float balance_command = balancing_controller(pitch - pitch_zero);
+    float steering_command = steering_controller(ch0_pos - ch1_pos);
+
+    // Print balance_command
+    freq_println("Balancing error: " + String(pitch - pitch_zero, 5), 10);
+
+    // Combine controller outputs to compute motor commands
+    float command_ch0 = balance_command - steering_command - velocity_command;
+    float command_ch1 = balance_command + steering_command - velocity_command;
+
+    // Set target voltage
+    motorgo_mini->set_target_voltage_ch0(command_ch0);
+    motorgo_mini->set_target_voltage_ch1(command_ch1);
+  }
 
   // Run Ch0
   motorgo_mini->loop_ch0();
   motorgo_mini->loop_ch1();
-
-  sensors_event_t a, g, temp;
-  mpu.getEvent(&a, &g, &temp);
-  filter.updateIMU(g.gyro.x, g.gyro.y, g.gyro.z, a.acceleration.x,
-                   a.acceleration.y, a.acceleration.z);
-
-  float pitch = filter.getRollRadians();
-  // Print pitch using frequency print
-  freq_println("Pitch: " + String(pitch, 5), 10);
-
-  float wheel_velocity =
-      (motorgo_mini->get_ch0_velocity() - motorgo_mini->get_ch1_velocity()) / 2;
-
-  float ch0_pos = motorgo_mini->get_ch0_position() - initial_angle_ch0;
-  float ch1_pos = -(motorgo_mini->get_ch1_position() - initial_angle_ch1);
-
-  float velocity_command = velocity_controller(wheel_velocity);
-  float balance_command = balancing_controller(pitch - pitch_zero);
-  float steering_command = steering_controller(ch0_pos - ch1_pos);
-
-  // Print balance_command
-  freq_println("Balancing error: " + String(pitch - pitch_zero, 5), 10);
-
-  float command_ch0 = balance_command - steering_command - velocity_command;
-  float command_ch1 = balance_command + steering_command - velocity_command;
-
-  motorgo_mini->set_target_voltage_ch0(command_ch0);
-  motorgo_mini->set_target_voltage_ch1(command_ch1);
 }
