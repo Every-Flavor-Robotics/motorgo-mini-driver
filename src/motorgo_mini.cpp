@@ -140,6 +140,7 @@ void MotorGo::MotorGoMini::init_ch0(MotorParameters params,
     MotorGo::command.add('0', do_target_ch0, (char*)"target");
   }
 
+  // Ensure motor is disabled after initialization
   disable_ch0();
 }
 
@@ -147,13 +148,14 @@ void MotorGo::MotorGoMini::init_ch1(MotorParameters params,
                                     bool should_calibrate,
                                     bool enable_foc_studio)
 {
-  //   Guard to prevent multiple initializations, which could cause a crash
+  // Initialize SPI only once to prevent crashes
   if (!hspi_initialized)
   {
     hspi_initialized = true;
     MotorGo::hspi.begin(enc_scl, enc_sda, 45, 46);
   }
 
+  // Store calibration and FOCStudio options
   this->should_calibrate_ch1 = should_calibrate;
   this->enable_foc_studio_ch1 = enable_foc_studio;
 
@@ -164,24 +166,23 @@ void MotorGo::MotorGoMini::init_ch1(MotorParameters params,
   init_helper(params, should_calibrate, enable_foc_studio, MotorGo::motor_ch1,
               driver_ch1, sensor_calibrated_ch1, encoder_ch1, "ch1");
 
-  // add command to commander
+  // Add command for FOCStudio, if enabled
   if (enable_foc_studio)
   {
     Serial.println("Channel 1: Enabling FOC Studio. Command: 1");
     MotorGo::command.add('1', do_target_ch1, (char*)"target");
   }
 
+  // Ensure motor is disabled after initialization
   disable_ch1();
 }
 
 void MotorGo::MotorGoMini::loop_ch0()
 {
   MotorGo::motor_ch0.loopFOC();
-  //   MotorGo::motor_ch1.loopFOC();
 
   // this function can be run at much lower frequency than loopFOC()
   MotorGo::motor_ch0.move();
-  //   MotorGo::motor_ch1.move();
 
   // Monitoring, use only if necessary as it slows loop down significantly
   if (enable_foc_studio_ch0)
@@ -190,24 +191,15 @@ void MotorGo::MotorGoMini::loop_ch0()
     MotorGo::command.run();
 
     MotorGo::motor_ch0.monitor();
-    // MotorGo::motor_ch1.monitor();
   }
-
-  // Print u and w currents
-  //   Serial.print("Current u: ");
-  //   Serial.print(analogRead(k_ch0_current_u));
-  //   Serial.print(" Current w: ");
-  //   Serial.println(analogRead(k_ch0_current_w));
 }
 
 void MotorGo::MotorGoMini::loop_ch1()
 {
   MotorGo::motor_ch1.loopFOC();
-  //   MotorGo::motor_ch1.loopFOC();
 
   // this function can be run at much lower frequency than loopFOC()
   MotorGo::motor_ch1.move();
-  //   MotorGo::motor_ch1.move();
 
   // Monitoring, use only if necessary as it slows loop down significantly
   if (enable_foc_studio_ch1)
@@ -216,7 +208,6 @@ void MotorGo::MotorGoMini::loop_ch1()
     MotorGo::command.run();
 
     MotorGo::motor_ch1.monitor();
-    // MotorGo::motor_ch1.monitor();
   }
 }
 
