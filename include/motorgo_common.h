@@ -23,7 +23,14 @@ struct BLDCChannelParameters
   uint8_t enc_cs;
 };
 
-// Control Mode
+/**
+ * @enum ControlMode
+ * @brief Enumerates the control modes for motor operation.
+ *
+ * This enumeration defines various modes of operation for the motor, such as
+ * voltage control, velocity control, torque control, position control, and
+ * their respective open-loop variants.
+ */
 enum ControlMode
 {
   None,
@@ -35,8 +42,14 @@ enum ControlMode
   PositionOpenLoop
 };
 
-// Motor Parameters
-struct MotorParameters
+/**
+ * @struct MotorParameters
+ * @brief Structure to store parameters for motor configuration.
+ *
+ * Encapsulates various parameters required for setting up a motor, such as the
+ * number of pole pairs, power supply voltage, limits on voltage and current,
+ * and calibration voltage.
+ */struct MotorParameters
 {
   int pole_pairs;
   float power_supply_voltage;
@@ -47,6 +60,15 @@ struct MotorParameters
   bool reversed = false;
 };
 
+/**
+ * @struct PIDParameters
+ * @brief Structure holding PID controller parameters.
+ *
+ * This structure encapsulates the proportional (P), integral (I), and
+ * derivative (D) parameters used in PID control, along with additional
+ * parameters such as output ramp rate, low pass filter time constant, and limit
+ * for the output.
+ */
 struct PIDParameters
 {
   float p;
@@ -57,6 +79,14 @@ struct PIDParameters
   float limit = 10000.0f;
 };
 
+/**
+ * @union packed_pid_parameters_t
+ * @brief Union representing PID parameters in packed and raw byte formats.
+ *
+ * This union allows PIDParameters to be accessed either as a struct with
+ * individual fields or as a raw byte array, facilitating easy storage or
+ * transmission.
+ */
 typedef union
 {
   struct __attribute__((packed))
@@ -72,7 +102,18 @@ typedef union
   uint8_t raw[sizeof(PIDParameters)];
 } packed_pid_parameters_t;
 
+/**
+ * @var hspi
+ * @brief Global instance of SPIClass for SPI communication.
+ *
+ * Used for SPI communication with peripherals.
+ */
 extern SPIClass hspi;
+
+/**
+ * @brief Initializes the SPI interface for communication with the two
+ *        encoders on the MotorGo Mini.
+ */
 void init_encoder_spi();
 
 }  // namespace MotorGo

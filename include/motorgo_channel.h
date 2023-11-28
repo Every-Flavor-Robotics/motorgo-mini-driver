@@ -14,70 +14,250 @@
 namespace MotorGo
 {
 
+/**
+ * @class MotorChannel
+ * @brief Provides control and management for each of the MotorGo brushless
+ *        DC (BLDC) motor channels.
+ *
+ * This class encapsulates the functionality for controlling and managing
+ * BLDC motors using the MotorGo hardware. It provides functions for setting
+ * up motors and encoders, running control loops, and setting control modes.
+ */
 class MotorChannel
 {
  public:
+  /**
+   * @brief Constructor for the MotorChannel class.
+   * @param params BLDCChannelParameters structure containing the pin
+   * configuration for the motor channel.
+   * @param name The name of the motor channel, used for saving calibration
+   * parameters to EEPROM.
+   */
   MotorChannel(BLDCChannelParameters params, const char* name);
   MotorChannel(const MotorChannel&) = delete;  // Delete copy constructor
   MotorChannel& operator=(const MotorChannel&) =
       delete;  // Delete copy assignment operator
 
-  // Init motors and encoders, calibration is automatically loaded
+  /**
+   * @defgroup motor_initialization Motor Initialization
+   * @brief Functions for initializing motors and encoders with various
+   * settings.
+   * @{
+   */
+
+  /**
+  * @brief Initializes motor and encoder with default settings. Calibration
+           is automatically loaded.
+  * @param params MotorParameters structure containing motor setup parameters.
+  */
   void init(MotorParameters params);
 
-  // Init motors and encoders, optionally calibrating
+  /**
+  * @brief Initializes motor and encoder with the option of calibration.
+  *        If should_calibrate is false, calibration procedure will not run.
+  *        Calibration will be loaded from flash if available, else the
+  *        channel will only run open loop control modes
+  * @param params MotorParameters structure containing motor setup parameters.
+  * @param should_calibrate If true, performs calibration on startup.
+  */
   void init(MotorParameters params, bool should_calibrate);
 
-  // Run control loop, call as fast as possible
+  /** @} */  // end of motor_initialization group
+
+  /**
+   * @brief Runs the control loop for the motor channel and updates encoder
+   *        data. This should be run as fast as possible, without delays.
+   */
   void loop();
 
-  // Retrieve built-in controllers
+  /**
+   * @defgroup pid_controller_management PID Controller Management
+   * @brief Functions for managing PID controllers, including getting and
+   * setting parameters.
+   * @{
+   */
+
+  /**
+   * @brief Retrieves the PID parameters for the torque controller
+   * motor.
+   * @return PIDParameters structure containing the current settings of the
+   * torque controller.
+   */
   PIDParameters get_torque_controller();
+
+  /**
+   * @brief Retrieves the PID parameters for the velocity controller.
+   * @return PIDParameters structure containing the current settings of the
+   * velocity controller.
+   */
   PIDParameters get_velocity_controller();
+
+  /**
+   * @brief Retrieves the PID parameters for the position controller.
+   * @return PIDParameters structure containing the current settings of the
+   * position controller.
+   */
   PIDParameters get_position_controller();
 
-  // Set the parameters for the built-in controllers
+  /**
+   * @brief Sets the PID parameters for the torque controller.
+   * @param params The PIDParameters structure to configure the torque
+   * controller.
+   */
   void set_torque_controller(PIDParameters params);
+
+  /**
+   * @brief Sets the PID parameters for the velocity controller.
+   * @param params The PIDParameters structure to configure the velocity
+   * controller.
+   */
   void set_velocity_controller(PIDParameters params);
+
+   /**
+   * @brief Sets the PID parameters for the position controller.
+   * @param params The PIDParameters structure to configure the position
+   * controller.
+   */
   void set_position_controller(PIDParameters params);
 
-  // Reset the state of the built-in controllers
-  // This will clear the integral term and reset the output to 0
+  /**
+   * @brief Resets the internal state of the torque controller. This clears
+   *        the integral term and sets the output to zero.
+   */
   void reset_torque_controller();
+
+   /**
+    * @brief Resets the internal state of the velocity controller. This clears
+    *        the integral term and sets the output to zero.
+    */
   void reset_velocity_controller();
+
+  /**
+   * @brief Resets the internal state of the position controller. This clears
+   *        the integral term and sets the output to zero.
+   */
   void reset_position_controller();
 
-  //   Enable and disable motors
-  //   Disabling will immediately set the voltage command to 0
-  void enable();
-  void disable();
-
-  //   Set control mode - changes which controllers are used
-  void set_control_mode(ControlMode mode);
-
-  //   Set the targets for each control mode
-  void set_target_velocity(float target);
-  void set_target_torque(float target);
-  void set_target_position(float target);
-  void set_target_voltage(float target);
-
-  //   Save and load controller parameters to EEPROM
+  /**
+   * @brief Saves the current torque controller settings to memory.
+   */
   void save_torque_controller();
+
+  /**
+   * @brief Saves the current velocity controller settings to memory.
+   */
   void save_velocity_controller();
+
+  /**
+   * @brief Saves the current position controller settings to memory.
+   */
   void save_position_controller();
 
+  /**
+   * @brief Loads the torque controller settings from memory.
+   */
   void load_torque_controller();
+
+  /**
+   * @brief Loads the velocity controller settings from memory.
+   */
   void load_velocity_controller();
+
+  /**
+   * @brief Loads the position controller settings from memory.
+   */
   void load_position_controller();
 
-  // Set the current encoder reading as the zero position
+  /** @} */  // end of pid_controller_management group
+
+  /**
+   * @defgroup motor_command Motor Command
+   * @brief Functions for basic motor command operations like enable, disable,
+   * and setting control modes.
+   * @{
+   */
+
+  /**
+   * @brief Enables the motor, it will run the currently set command.
+   */
+  void enable();
+
+  /**
+   * @brief Disables the motor, it will stop running and ignore commands.
+   */
+  void disable();
+
+  /**
+   * @brief Sets the control mode for the motor.
+   * @param mode The desired ControlMode (e.g., Velocity, Position) for the
+   * motor.
+   */
+  void set_control_mode(ControlMode mode);
+
+  /**
+   * @brief Sets the target torque for the motor.
+   * @param target The desired target torque in N*m for the motor.
+   */
+  void set_target_torque(float target);
+
+  /**
+   * @brief Sets the target velocity for the motor.
+   * @param target The desired target velocity in rad/s for the motor.
+   */
+  void set_target_velocity(float target);
+
+  /**
+   * @brief Sets the target position for the motor.
+   * @param target The desired target position in rad for the motor.
+   */
+  void set_target_position(float target);
+
+  /**
+   * @brief Sets the target voltage for the motor.
+   * @param target The desired target voltage in V for the motor.
+   */
+  void set_target_voltage(float target);
+
+  /** @} */  // end of motor_command group
+
+  /**
+   * @defgroup state_retrieval State Retrieval
+   * @brief Functions for retrieving the current state of the motors.
+   * @{
+   */
+
+  /**
+   * @brief Sets the current position of the motor to zero.
+   *        This function resets the motor's position value to zero.
+   */
   void zero_position();
 
-  // Get current motor state
-  float get_position();
-  float get_velocity();
+  /**
+   * @brief Retrieves the current torque of the motor.
+   * @return The motor's torque in N*m.
+   */
   float get_torque();
+
+  /**
+   * @brief Retrieves the current velocity of the motor.
+   * @return The motor's velocity in rad/s.
+   */
+  float get_velocity();
+
+  /**
+   * @brief Retrieves the current position of the motor.
+   * @return The motor's position in radians.
+   */
+  float get_position();
+
+  /**
+   * @brief Retrieves the current voltage of the motor.
+   * @return The motor's voltage in V.
+   */
   float get_voltage();
+
+  /** @} */  // end of state_retrieval group
+
 
  private:
   //    Motor name
