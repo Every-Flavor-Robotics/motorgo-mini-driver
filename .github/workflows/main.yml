@@ -22,7 +22,9 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install sphinx breathe exhale sphinx_rtd_theme
+          sudo apt-get update
+          sudo apt-get install doxygen
+          pip install sphinx breathe exhale sphinx_rtd_theme sphinxcontrib-versioning
 
       - name: Build Documentation
         run: |
