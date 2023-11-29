@@ -22,7 +22,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install sphinx breathe exhale
+          pip install sphinx breathe exhale sphinx_rtd_theme
 
       - name: Build Documentation
         run: |
