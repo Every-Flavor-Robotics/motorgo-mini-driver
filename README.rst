@@ -6,6 +6,8 @@ The MotorGo Mini is a 2-channel brushless motor controller designed to minimize 
 
 **Finish docs, link to product page,**
 
+.. end_intro
+
 Installation
 ============
 MotorGo supports development in PlatformIO and Arduino IDE.
