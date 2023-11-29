@@ -1,0 +1,36 @@
+name: Build and Publish Documentation
+
+on:
+  push:
+    branches:
+      - api_docs  # Set your default branch here
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11'  # Specify Python version
+
+    - name: Install Dependencies
+      run: |
+        pip install sphinx breathe exhale
+
+    - name: Build Documentation
+      run: |
+        cd docs  # Change to your documentation directory
+        make html  # Or your preferred build command
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs/_build/html  # Adjust to your build output directory
