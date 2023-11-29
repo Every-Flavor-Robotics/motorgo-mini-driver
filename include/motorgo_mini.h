@@ -153,7 +153,7 @@ class MotorGoMini
   MotorGoMini();
 
   /**
-   * @defgroup motor_initialization Motor Initialization
+   * @name Motor Initialization
    * @brief Functions for initializing motors and encoders with various
    * settings.
    * @{
@@ -196,7 +196,7 @@ class MotorGoMini
   /** @} */  // end of motor_initialization group
 
   /**
-   * @defgroup control_loop Control Loop
+   * @name Control Loop
    * @brief Functions to run the control loop for each motor.
    * @{
    */
@@ -214,7 +214,7 @@ class MotorGoMini
   /** @} */  // end of control_loop group
 
   /**
-   * @defgroup pid_controller_management PID Controller Management
+   * @name PID Controller Management
    * @brief Functions for managing PID controllers, including getting and
    * setting parameters.
    * @{
@@ -421,7 +421,7 @@ class MotorGoMini
   /** @} */  // end of pid_controller_management group
 
   /**
-   * @defgroup motor_command Motor Command
+   * @name Motor Command
    * @brief Functions for basic motor command operations like enable, disable,
    * and setting control modes.
    * @{
@@ -518,7 +518,7 @@ class MotorGoMini
   /** @} */  // end of motor_control group
 
   /**
-   * @defgroup state_retrieval State Retrieval
+   * @name State Retrieval
    * @brief Functions for retrieving the current state of the motors.
    * @{
    */
