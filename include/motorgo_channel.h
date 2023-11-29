@@ -39,7 +39,7 @@ class MotorChannel
       delete;  // Delete copy assignment operator
 
   /**
-   * @defgroup motor_initialization Motor Initialization
+   * @name Motor Initialization
    * @brief Functions for initializing motors and encoders with various
    * settings.
    * @{
@@ -62,7 +62,7 @@ class MotorChannel
   */
   void init(MotorParameters params, bool should_calibrate);
 
-  /** @} */  // end of motor_initialization group
+    /** @} */  // end of motor_initialization group
 
   /**
    * @brief Runs the control loop for the motor channel and updates encoder
@@ -71,7 +71,7 @@ class MotorChannel
   void loop();
 
   /**
-   * @defgroup pid_controller_management PID Controller Management
+   * @name PID Controller Management
    * @brief Functions for managing PID controllers, including getting and
    * setting parameters.
    * @{
@@ -168,10 +168,10 @@ class MotorChannel
    */
   void load_position_controller();
 
-  /** @} */  // end of pid_controller_management group
+    /** @} */  // end of pid_controller_management group
 
   /**
-   * @defgroup motor_command Motor Command
+   * @name Motor Command
    * @brief Functions for basic motor command operations like enable, disable,
    * and setting control modes.
    * @{
@@ -221,7 +221,7 @@ class MotorChannel
   /** @} */  // end of motor_command group
 
   /**
-   * @defgroup state_retrieval State Retrieval
+   * @name State Retrieval
    * @brief Functions for retrieving the current state of the motors.
    * @{
    */
