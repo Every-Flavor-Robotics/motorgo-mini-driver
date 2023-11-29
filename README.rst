@@ -4,8 +4,7 @@ MotorGo Mini Driver
 
 The MotorGo Mini is a 2-channel brushless motor controller designed to minimize the time to get a robot running. This codebase serves as a driver to interface with the motor controllers
 
-**Finish docs, link to product page,**
-
+**Finish docs, link to product page**
 .. end_intro
 
 Installation
