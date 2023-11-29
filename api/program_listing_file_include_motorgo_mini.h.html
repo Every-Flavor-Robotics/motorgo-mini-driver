@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File motorgo_mini.h &mdash; MotorGo Mini Driver  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MotorGo Mini Driver
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core_concepts/core_concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../common_issues.html">Common Issues</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MotorGo Mini Driver</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File motorgo_mini.h</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_include_motorgo_mini.h.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-motorgo-mini-h">
+<span id="program-listing-file-include-motorgo-mini-h"></span><h1>Program Listing for File motorgo_mini.h<a class="headerlink" href="#program-listing-for-file-motorgo-mini-h" title="Permalink to this headline"></a></h1>
+<p>↰ <a class="reference internal" href="file_include_motorgo_mini.h.html#file-include-motorgo-mini-h"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">include/motorgo_mini.h</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#ifndef MOTORGO_MINI_H</span>
+<span class="cp">#define MOTORGO_MINI_H</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;SPI.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;SimpleFOC.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;Wire.h&gt;</span>
+
+<span class="c1">// Including specific encoder and sensor classes for the MotorGo Mini</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;encoders/calibrated/CalibratedSensor.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;encoders/mt6701/MagneticSensorMT6701SSI.h&quot;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">MotorGo</span>
+<span class="p">{</span>
+
+<span class="k">enum</span><span class="w"> </span><span class="nc">ControlMode</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">None</span><span class="p">,</span>
+<span class="w">  </span><span class="n">Voltage</span><span class="p">,</span>
+<span class="w">  </span><span class="n">Velocity</span><span class="p">,</span>
+<span class="w">  </span><span class="n">Torque</span><span class="p">,</span>
+<span class="w">  </span><span class="n">Position</span><span class="p">,</span>
+<span class="w">  </span><span class="n">VelocityOpenLoop</span><span class="p">,</span>
+<span class="w">  </span><span class="n">PositionOpenLoop</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">PIDParameters</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="n">p</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="n">d</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="n">output_ramp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10000.0f</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="n">lpf_time_constant</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1f</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="n">limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10000.0f</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">typedef</span><span class="w"> </span><span class="k">union</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">__attribute__</span><span class="p">((</span><span class="n">packed</span><span class="p">))</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">p</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">d</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">output_ramp</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">lpf_time_constant</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">limit</span><span class="p">;</span>
+<span class="w">  </span><span class="p">};</span>
+
+<span class="w">  </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">raw</span><span class="p">[</span><span class="k">sizeof</span><span class="p">(</span>
+<span class="w">      </span><span class="n">PIDParameters</span><span class="p">)];</span>
+<span class="p">}</span><span class="w"> </span><span class="n">packed_pid_parameters_t</span><span class="p">;</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">MotorParameters</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">pole_pairs</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="n">power_supply_voltage</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="n">voltage_limit</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="n">current_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1000.0f</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="n">velocity_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1000.0f</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="n">calibration_voltage</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="c1">// Global variables documentation</span>
+<span class="k">extern</span><span class="w"> </span><span class="n">Commander</span><span class="w"> </span><span class="n">command</span><span class="p">;</span>
+
+<span class="k">extern</span><span class="w"> </span><span class="n">BLDCMotor</span><span class="w"> </span><span class="n">motor_ch0</span><span class="p">;</span>
+
+<span class="k">extern</span><span class="w"> </span><span class="n">BLDCMotor</span><span class="w"> </span><span class="n">motor_ch1</span><span class="p">;</span>
+
+<span class="k">extern</span><span class="w"> </span><span class="n">SPIClass</span><span class="w"> </span><span class="n">hspi</span><span class="p">;</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MotorGoMini</span>
+<span class="p">{</span>
+<span class="w"> </span><span class="k">public</span><span class="o">:</span>
+<span class="w">  </span><span class="n">MotorGoMini</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">init_ch0</span><span class="p">(</span><span class="n">MotorParameters</span><span class="w"> </span><span class="n">params</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">init_ch1</span><span class="p">(</span><span class="n">MotorParameters</span><span class="w"> </span><span class="n">params</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">init_ch0</span><span class="p">(</span><span class="n">MotorParameters</span><span class="w"> </span><span class="n">params</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">should_calibrate</span><span class="p">,</span>
+<span class="w">                </span><span class="kt">bool</span><span class="w"> </span><span class="n">enable_foc_studio</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">init_ch1</span><span class="p">(</span><span class="n">MotorParameters</span><span class="w"> </span><span class="n">params</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">should_calibrate</span><span class="p">,</span>
+<span class="w">                </span><span class="kt">bool</span><span class="w"> </span><span class="n">enable_foc_studio</span><span class="p">);</span>
+<span class="w">  </span><span class="c1">// end of motor_initialization group</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">loop_ch0</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">loop_ch1</span><span class="p">();</span>
+<span class="w">  </span><span class="c1">// end of control_loop group</span>
+
+<span class="w">  </span><span class="n">PIDParameters</span><span class="w"> </span><span class="nf">get_torque_controller_ch0</span><span class="p">();</span>
+
+<span class="w">  </span><span class="n">PIDParameters</span><span class="w"> </span><span class="nf">get_torque_controller_ch1</span><span class="p">();</span>
+
+<span class="w">  </span><span class="n">PIDParameters</span><span class="w"> </span><span class="nf">get_velocity_controller_ch0</span><span class="p">();</span>
+
+<span class="w">  </span><span class="n">PIDParameters</span><span class="w"> </span><span class="nf">get_velocity_controller_ch1</span><span class="p">();</span>
+
+<span class="w">  </span><span class="n">PIDParameters</span><span class="w"> </span><span class="nf">get_position_controller_ch0</span><span class="p">();</span>
+
+<span class="w">  </span><span class="n">PIDParameters</span><span class="w"> </span><span class="nf">get_position_controller_ch1</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_torque_controller_ch0</span><span class="p">(</span><span class="n">PIDParameters</span><span class="w"> </span><span class="n">params</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_torque_controller_ch1</span><span class="p">(</span><span class="n">PIDParameters</span><span class="w"> </span><span class="n">params</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_velocity_controller_ch0</span><span class="p">(</span><span class="n">PIDParameters</span><span class="w"> </span><span class="n">params</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_velocity_controller_ch1</span><span class="p">(</span><span class="n">PIDParameters</span><span class="w"> </span><span class="n">params</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_position_controller_ch0</span><span class="p">(</span><span class="n">PIDParameters</span><span class="w"> </span><span class="n">params</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_position_controller_ch1</span><span class="p">(</span><span class="n">PIDParameters</span><span class="w"> </span><span class="n">params</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">reset_torque_controller_ch0</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">reset_torque_controller_ch1</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">reset_velocity_controller_ch0</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">reset_velocity_controller_ch1</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">reset_position_controller_ch0</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">reset_position_controller_ch1</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">save_torque_controller_ch0</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">save_torque_controller_ch1</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">load_torque_controller_ch0</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">load_torque_controller_ch1</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">save_velocity_controller_ch0</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">save_velocity_controller_ch1</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">load_velocity_controller_ch0</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">load_velocity_controller_ch1</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">save_position_controller_ch0</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">save_position_controller_ch1</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">load_position_controller_ch0</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">load_position_controller_ch1</span><span class="p">();</span>
+<span class="w">  </span><span class="c1">// end of pid_controller_management group</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">enable_ch0</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">enable_ch1</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">disable_ch0</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">disable_ch1</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_control_mode_ch0</span><span class="p">(</span><span class="n">ControlMode</span><span class="w"> </span><span class="n">mode</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_control_mode_ch1</span><span class="p">(</span><span class="n">ControlMode</span><span class="w"> </span><span class="n">mode</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_target_torque_ch0</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="n">target</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_target_torque_ch1</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="n">target</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_target_velocity_ch0</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="n">target</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_target_velocity_ch1</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="n">target</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_target_position_ch0</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="n">target</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_target_position_ch1</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="n">target</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_target_voltage_ch0</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="n">target</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_target_voltage_ch1</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="n">target</span><span class="p">);</span>
+<span class="w">  </span><span class="c1">// end of motor_control group</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">zero_position_ch0</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">zero_position_ch1</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="nf">get_ch0_position</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="nf">get_ch0_velocity</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="nf">get_ch0_torque</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="nf">get_ch0_voltage</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="nf">get_ch1_position</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="nf">get_ch1_velocity</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="nf">get_ch1_torque</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="nf">get_ch1_voltage</span><span class="p">();</span>
+<span class="w">  </span><span class="c1">// end of state_retrieval group</span>
+
+<span class="w"> </span><span class="k">private</span><span class="o">:</span>
+<span class="w">  </span><span class="c1">// Encoder I2C bus</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">enc_sda</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">35</span><span class="p">;</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">enc_scl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">36</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// ch0 Motor and Encoder pins</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k_ch0_enc_cs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">37</span><span class="p">;</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k_ch0_gpio_uh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">18</span><span class="p">;</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k_ch0_gpio_ul</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span><span class="p">;</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k_ch0_gpio_vh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">17</span><span class="p">;</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k_ch0_gpio_vl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k_ch0_gpio_wh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span><span class="p">;</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k_ch0_gpio_wl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="p">;</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k_ch0_current_u</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="p">;</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k_ch0_current_w</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// ch1 Motor and Encoder pins</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k_ch1_enc_cs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">48</span><span class="p">;</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k_ch1_gpio_uh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span><span class="p">;</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k_ch1_gpio_ul</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">13</span><span class="p">;</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k_ch1_gpio_vh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k_ch1_gpio_vl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">21</span><span class="p">;</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k_ch1_gpio_wh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">11</span><span class="p">;</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k_ch1_gpio_wl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">14</span><span class="p">;</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k_ch1_current_u</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k_ch1_current_w</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// Additional motor and encoder parameters</span>
+<span class="w">  </span><span class="n">MotorParameters</span><span class="w"> </span><span class="n">motor_params_ch0</span><span class="p">;</span>
+<span class="w">  </span><span class="n">MotorParameters</span><span class="w"> </span><span class="n">motor_params_ch1</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// Store whether the parameters have been set</span>
+<span class="w">  </span><span class="c1">// If not, the motor will not run be disabled when a command is received</span>
+<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">pid_torque_ch0_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">pid_torque_ch1_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+
+<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">pid_velocity_ch0_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">pid_velocity_ch1_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+
+<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">pid_position_ch0_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">pid_position_ch1_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// Current targets</span>
+<span class="w">  </span><span class="c1">// Either velocity or torque will be used depending on the control mode</span>
+<span class="w">  </span><span class="c1">// Store both to avoid erroneous behaviors due to switching units</span>
+<span class="w">  </span><span class="c1">// when switching between control modes</span>
+<span class="w">  </span><span class="c1">// Set to None by default to require user to set a control mode</span>
+<span class="w">  </span><span class="n">ControlMode</span><span class="w"> </span><span class="n">control_mode_ch0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">None</span><span class="p">;</span>
+<span class="w">  </span><span class="n">ControlMode</span><span class="w"> </span><span class="n">control_mode_ch1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">None</span><span class="p">;</span>
+<span class="w">  </span><span class="c1">// Rad/s</span>
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="n">target_velocity_ch0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0f</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="n">target_velocity_ch1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0f</span><span class="p">;</span>
+<span class="w">  </span><span class="c1">// N*m</span>
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="n">target_torque_ch0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0f</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="n">target_torque_ch1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0f</span><span class="p">;</span>
+<span class="w">  </span><span class="c1">// Rad</span>
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="n">target_position_ch0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0f</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="n">target_position_ch1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0f</span><span class="p">;</span>
+<span class="w">  </span><span class="c1">// V</span>
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="n">target_voltage_ch0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0f</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="n">target_voltage_ch1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0f</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// Calibration parameters</span>
+<span class="w">  </span><span class="c1">// If should_calibrate is set to true, the motor will be calibrated on startup</span>
+<span class="w">  </span><span class="c1">// Else, the calibration will be loaded from EEPROM. If no calibration is</span>
+<span class="w">  </span><span class="c1">// found, the motor will be calibrated anyway and the calibration will be</span>
+<span class="w">  </span><span class="c1">// saved to EEPROM</span>
+<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">should_calibrate_ch0</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">should_calibrate_ch1</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// If enable_foc_studio is set to true, data will be written to serial</span>
+<span class="w">  </span><span class="c1">// to communicate with FOCStudio</span>
+<span class="w">  </span><span class="c1">// This significantly slows the control loop, enable only when necessary</span>
+<span class="w">  </span><span class="c1">// TODO: Enable &quot;offline&quot; tuning</span>
+<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">enable_foc_studio_ch0</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">enable_foc_studio_ch1</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// Encoder, motor, and driver instances</span>
+<span class="w">  </span><span class="c1">// MT6701Sensor encoder_ch0;</span>
+<span class="w">  </span><span class="n">MagneticSensorMT6701SSI</span><span class="w"> </span><span class="n">encoder_ch0</span><span class="p">;</span>
+<span class="w">  </span><span class="n">BLDCDriver6PWM</span><span class="w"> </span><span class="n">driver_ch0</span><span class="p">;</span>
+<span class="w">  </span><span class="n">CalibratedSensor</span><span class="w"> </span><span class="n">sensor_calibrated_ch0</span><span class="p">;</span>
+
+<span class="w">  </span><span class="n">MagneticSensorMT6701SSI</span><span class="w"> </span><span class="n">encoder_ch1</span><span class="p">;</span>
+<span class="w">  </span><span class="n">CalibratedSensor</span><span class="w"> </span><span class="n">sensor_calibrated_ch1</span><span class="p">;</span>
+<span class="w">  </span><span class="n">BLDCDriver6PWM</span><span class="w"> </span><span class="n">driver_ch1</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// Helper functions</span>
+<span class="w">  </span><span class="c1">// init_helper configures the motor and encoder</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">init_helper</span><span class="p">(</span><span class="n">MotorParameters</span><span class="w"> </span><span class="n">params</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">should_calibrate</span><span class="p">,</span>
+<span class="w">                   </span><span class="kt">bool</span><span class="w"> </span><span class="n">enable_foc_studio</span><span class="p">,</span><span class="w"> </span><span class="n">BLDCMotor</span><span class="o">&amp;</span><span class="w"> </span><span class="n">motor</span><span class="p">,</span>
+<span class="w">                   </span><span class="n">BLDCDriver6PWM</span><span class="o">&amp;</span><span class="w"> </span><span class="n">driver</span><span class="p">,</span><span class="w"> </span><span class="n">CalibratedSensor</span><span class="o">&amp;</span><span class="w"> </span><span class="n">sensor_calibrated</span><span class="p">,</span>
+<span class="w">                   </span><span class="n">MagneticSensorMT6701SSI</span><span class="o">&amp;</span><span class="w"> </span><span class="n">encoder</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">name</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// set_control_mode_helper sets parameters for each control_mode option</span>
+<span class="w">  </span><span class="c1">// Sets values for torque controller type and motion controller type</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_control_mode_helper</span><span class="p">(</span><span class="n">BLDCMotor</span><span class="o">&amp;</span><span class="w"> </span><span class="n">motor</span><span class="p">,</span><span class="w"> </span><span class="n">ControlMode</span><span class="w"> </span><span class="n">control_mode</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// Set correct targets</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_target_helper_ch0</span><span class="p">();</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_target_helper_ch1</span><span class="p">();</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">save_controller_helper</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">key</span><span class="p">,</span>
+<span class="w">                              </span><span class="k">const</span><span class="w"> </span><span class="n">packed_pid_parameters_t</span><span class="o">&amp;</span><span class="w"> </span><span class="n">packed_params</span><span class="p">);</span>
+<span class="w">  </span><span class="n">packed_pid_parameters_t</span><span class="w"> </span><span class="nf">load_controller_helper</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">key</span><span class="p">);</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_torque_controller_helper</span><span class="p">(</span><span class="n">BLDCMotor</span><span class="o">&amp;</span><span class="w"> </span><span class="n">motor</span><span class="p">,</span><span class="w"> </span><span class="n">PIDParameters</span><span class="w"> </span><span class="n">params</span><span class="p">);</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_velocity_controller_helper</span><span class="p">(</span><span class="n">BLDCMotor</span><span class="o">&amp;</span><span class="w"> </span><span class="n">motor</span><span class="p">,</span><span class="w"> </span><span class="n">PIDParameters</span><span class="w"> </span><span class="n">params</span><span class="p">);</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_position_controller_helper</span><span class="p">(</span><span class="n">BLDCMotor</span><span class="o">&amp;</span><span class="w"> </span><span class="n">motor</span><span class="p">,</span><span class="w"> </span><span class="n">PIDParameters</span><span class="w"> </span><span class="n">params</span><span class="p">);</span>
+<span class="p">};</span>
+<span class="p">}</span><span class="w">  </span><span class="c1">// namespace MotorGo</span>
+
+<span class="cp">#endif  </span><span class="c1">// MOTORGO_MINI_H</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Every Flavor Robotics LLC, MotorGo LLC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

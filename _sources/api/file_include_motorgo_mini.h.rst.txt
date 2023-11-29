@@ -1,0 +1,97 @@
+
+.. _file_include_motorgo_mini.h:
+
+File motorgo_mini.h
+===================
+
+|exhale_lsh| :ref:`Parent directory <dir_include>` (``include``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/motorgo_mini.h``)
+---------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_motorgo_mini.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``SPI.h``
+
+- ``SimpleFOC.h``
+
+- ``Wire.h``
+
+- ``encoders/calibrated/CalibratedSensor.h``
+
+- ``encoders/mt6701/MagneticSensorMT6701SSI.h``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_include_pid_manager.h`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_MotorGo`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structMotorGo_1_1MotorParameters`
+
+- :ref:`exhale_struct_structMotorGo_1_1PIDParameters`
+
+- :ref:`exhale_class_classMotorGo_1_1MotorGoMini`
+
+
+Enums
+-----
+
+
+- :ref:`exhale_enum_namespaceMotorGo_1af40038847c987db9ba0ecae79d54f493`
+
+
+Unions
+------
+
+
+- :ref:`exhale_union_unionMotorGo_1_1packed__pid__parameters__t`
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_namespaceMotorGo_1a8be4b90bb105d4efec0758f8b87d4860`
+
+- :ref:`exhale_variable_namespaceMotorGo_1aecbba03599f0847d7fb31d6e896b5c2d`
+
+- :ref:`exhale_variable_namespaceMotorGo_1a52c5d0163f6f46a26ac962499580acee`
+
+- :ref:`exhale_variable_namespaceMotorGo_1a9d1297a83fc8469ff03d31fa812dd862`
+

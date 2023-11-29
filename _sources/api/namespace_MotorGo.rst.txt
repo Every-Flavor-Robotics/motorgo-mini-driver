@@ -1,0 +1,68 @@
+
+.. _namespace_MotorGo:
+
+Namespace MotorGo
+=================
+
+
+< Include Wire library for I2C communication. 
+
+
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+
+
+
+Detailed Description
+--------------------
+
+< Include SPI library for serial communication. < Include SimpleFOC library for motor control. < Include header for calibrated sensors. Include header for MT6701 magnetic sensor. 
+
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structMotorGo_1_1MotorParameters`
+
+- :ref:`exhale_struct_structMotorGo_1_1PIDManagerConfig`
+
+- :ref:`exhale_struct_structMotorGo_1_1PIDParameters`
+
+- :ref:`exhale_class_classMotorGo_1_1MotorGoMini`
+
+- :ref:`exhale_class_classMotorGo_1_1PIDManager`
+
+
+Enums
+-----
+
+
+- :ref:`exhale_enum_namespaceMotorGo_1af40038847c987db9ba0ecae79d54f493`
+
+
+Unions
+------
+
+
+- :ref:`exhale_union_unionMotorGo_1_1packed__pid__parameters__t`
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_namespaceMotorGo_1a8be4b90bb105d4efec0758f8b87d4860`
+
+- :ref:`exhale_variable_namespaceMotorGo_1aecbba03599f0847d7fb31d6e896b5c2d`
+
+- :ref:`exhale_variable_namespaceMotorGo_1a52c5d0163f6f46a26ac962499580acee`
+
+- :ref:`exhale_variable_namespaceMotorGo_1a9d1297a83fc8469ff03d31fa812dd862`

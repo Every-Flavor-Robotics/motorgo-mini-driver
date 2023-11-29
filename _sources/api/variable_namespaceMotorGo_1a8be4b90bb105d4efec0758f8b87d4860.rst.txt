@@ -1,0 +1,14 @@
+.. _exhale_variable_namespaceMotorGo_1a8be4b90bb105d4efec0758f8b87d4860:
+
+Variable MotorGo::command
+=========================
+
+- Defined in :ref:`file_include_motorgo_mini.h`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: MotorGo::command
+   :project: MotorGo Mini Driver
