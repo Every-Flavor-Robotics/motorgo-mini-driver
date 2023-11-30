@@ -16,6 +16,7 @@ Below are detailed instructions for each of these steps, with code examples that
 
 .. toctree::
    :maxdepth: 3
+
    hardware_setup
    software_setup
    calibration
