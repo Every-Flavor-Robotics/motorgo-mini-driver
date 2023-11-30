@@ -1,12 +1,12 @@
-===========
-Calibration
+=================
+Motor Calibration
 ===========
 
 **Calibration Overview**
+
 This section outlines the encoder calibration process for the MotorGo, which is crucial for accurate rotor position mapping in relation to the encoder.
 
 The calibration step also automatically determines the direction of the motor. After calibration, any motor should spin the same direction when given the same command. However, if you flip the direction the motor is plugged in, you will have to re-calibrate!
-
 
 **Pre-requisites**
 
@@ -14,7 +14,7 @@ The calibration step also automatically determines the direction of the motor. A
 - *Software Setup*: The calibration step is performed through the provided software API.
 
 
-** Calibration Sketch **
+**Calibration Sketch**
 
 This sketch will run the calibration routine for channel 0 on the MotorGo. If you want to calibrate channel 1, simply change the function calls to ``init_ch1`` and ``loop_ch1``.
 
