@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calibration &mdash; MotorGo Mini Driver  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MotorGo Mini Driver
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core_concepts/core_concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../common_issues.html">Common Issues</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MotorGo Mini Driver</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Calibration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/getting_started/calibration.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="calibration">
+<h1>Calibration<a class="headerlink" href="#calibration" title="Permalink to this headline"></a></h1>
+<p><strong>Calibration Overview</strong>
+This section outlines the encoder calibration process for the MotorGo, which is crucial for accurate rotor position mapping in relation to the encoder.</p>
+<p>The calibration step also automatically determines the direction of the motor. After calibration, any motor should spin the same direction when given the same command. However, if you flip the direction the motor is plugged in, you will have to re-calibrate!</p>
+<p><strong>Pre-requisites</strong></p>
+<ul class="simple">
+<li><p><em>Encoder Installation</em>: Ensure that the encoder, along with its magnet, is correctly installed prior to calibration.</p></li>
+<li><p><em>Software Setup</em>: The calibration step is performed through the provided software API.</p></li>
+</ul>
+<p>** Calibration Sketch **</p>
+<p>This sketch will run the calibration routine for channel 0 on the MotorGo. If you want to calibrate channel 1, simply change the function calls to <code class="docutils literal notranslate"><span class="pre">init_ch1</span></code> and <code class="docutils literal notranslate"><span class="pre">loop_ch1</span></code>.</p>
+<ul class="simple">
+<li><p>The calibration sweep involves a slow, 360-degree rotation of the rotor in both directions.</p></li>
+<li><p>This process maps the rotor’s position to the encoder’s readings.</p></li>
+<li><p>The sweep is initiated every time the code is run. If you flash calibration code to the board, it will perform a calibration every time the board resets.</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// Include Arduino and motorgo mini driver library</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;Arduino.h&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;motorgo_mini.h&quot;</span>
+
+<span class="c1">////// MotorGo Variables //////</span>
+<span class="n">MotorGo</span><span class="o">::</span><span class="n">MotorGoMini</span><span class="o">*</span><span class="w"> </span><span class="n">motorgo_mini</span><span class="p">;</span>
+<span class="n">MotorGo</span><span class="o">::</span><span class="n">MotorParameters</span><span class="w"> </span><span class="n">motor_params_ch0</span><span class="p">;</span>
+
+<span class="c1">// Utility function to print at a maximum frequency</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">freq_println</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">str</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">freq</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">last_print_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">now</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">millis</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">now</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">last_print_time</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1000</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">freq</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+<span class="w">        </span><span class="n">last_print_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">now</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">setup</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Initialize serial port</span>
+<span class="w">    </span><span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">115200</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Setup the motor parameter</span>
+<span class="w">    </span><span class="c1">// These are the default parameters for the MotorGo brushless gimbal motor</span>
+<span class="w">    </span><span class="n">motor_params_ch0</span><span class="p">.</span><span class="n">pole_pairs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="p">;</span>
+<span class="w">    </span><span class="n">motor_params_ch0</span><span class="p">.</span><span class="n">power_supply_voltage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">motor_params_ch0</span><span class="p">.</span><span class="n">voltage_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">motor_params_ch0</span><span class="p">.</span><span class="n">current_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">300</span><span class="p">;</span>
+<span class="w">    </span><span class="n">motor_params_ch0</span><span class="p">.</span><span class="n">velocity_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">100.0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">motor_params_ch0</span><span class="p">.</span><span class="n">calibration_voltage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// Instantiate motorgo mini board</span>
+<span class="w">    </span><span class="n">motorgo_mini</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">MotorGo</span><span class="o">::</span><span class="n">MotorGoMini</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// Run calibration on Channel 0</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">calibrate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">enable_foc_studio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">motorgo_mini</span><span class="o">-&gt;</span><span class="n">init_ch0</span><span class="p">(</span><span class="n">motor_params_ch0</span><span class="p">,</span><span class="w"> </span><span class="n">calibrate</span><span class="p">,</span><span class="w"> </span><span class="n">enable_foc_studio</span><span class="p">);</span>
+
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">loop</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Call loop to update motor commands and encoder data</span>
+<span class="w">    </span><span class="n">motorgo_mini</span><span class="o">-&gt;</span><span class="n">loop_ch0</span><span class="p">();</span>
+
+<span class="w">    </span><span class="n">motorgo_mini</span><span class="o">-&gt;</span><span class="n">set_target_velocity_ch0</span><span class="p">(</span><span class="mf">10.0</span><span class="p">);</span>
+<span class="w">    </span><span class="n">motorgo_mini</span><span class="o">-&gt;</span><span class="n">set_target_velocity_ch1</span><span class="p">(</span><span class="mf">10.0</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Velocity - Ch0: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">motorgo_mini</span><span class="o">-&gt;</span><span class="n">get_ch0_velocity</span><span class="p">())</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="s">&quot; Ch1: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">motorgo_mini</span><span class="o">-&gt;</span><span class="n">get_ch1_velocity</span><span class="p">());</span>
+
+<span class="w">    </span><span class="n">freq_println</span><span class="p">(</span><span class="n">str</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Let’s break the code down line by line. You can segment all code for the MotorGo into three parts:</p>
+<ol class="arabic simple">
+<li><p>Define the MotorGo variables</p></li>
+<li><p>Initialize and configure the motor controllers</p></li>
+<li><p>Write motor commands and read encoder data</p></li>
+</ol>
+<p>To-do: finish this page.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Every Flavor Robotics LLC, MotorGo LLC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
