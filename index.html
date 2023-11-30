@@ -79,7 +79,47 @@
 <h1>Welcome to MotorGo Mini Driver’s documentation!<a class="headerlink" href="#welcome-to-motorgo-mini-driver-s-documentation" title="Permalink to this headline"></a></h1>
 <section id="motorgo-mini-driver">
 <h2>MotorGo Mini Driver<a class="headerlink" href="#motorgo-mini-driver" title="Permalink to this headline"></a></h2>
-<p>The MotorGo Mini is a 2-channel brushless motor controller designed to minimize the time to get a robot running. This codebase serves as a driver to interface with the motor controllers</p>
+<p>The ‘MotorGo Mini &lt;<a class="reference external" href="https://motorgo.net">https://motorgo.net</a>&gt;’_ is a 2-channel brushless motor controller and microcontroller combo designed to accelerate the process of robot prototype development. MotorGo Mini handles the low-level details of motor control, including power distribution, current sensing, encoder reading, PID controls, and communications, so that you can focus on the high-level details of your robot’s behavior.</p>
+<p>Key Hardware Features:
+- 2-channel brushless motor controller</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>2.1 A continuous current per channel</p></li>
+<li><p>Field Oriented Control (FOC)</p></li>
+<li><p>Current sensing</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>2-channel EncoderGo encoder support</dt><dd><ul>
+<li><p>14 bit resolution, 16384 counts per revolution</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>ESP32-S3 microcontroller</dt><dd><ul>
+<li><p>240 MHz dual-core processor</p></li>
+<li><p>Wifi and Bluetooh communication support</p></li>
+<li><p>8 MB flash memory</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>7-11 V input voltage</p></li>
+<li><p>Exposed 3.3 V, 5 V, and unregulated voltage rails</p></li>
+<li><p>2x QWIIC connectors for easy sensor integration</p></li>
+<li><p>8 GPIO (PWM) pin for additional sensor and motor integration</p></li>
+<li><p>USB-C port</p></li>
+</ul>
+<p>We’re really proud of the hardware we were able to cram onto this board, but the software integration is where the MotorGo Mini really starts to shine. Unlike other motor controllers, you can program the MotorGo Mini to do whatever you want using the Arduino IDE (or PlatformIO). This means that for most basic robots, you don’t need another Arduino, Raspberry Pi, or other microcontroller to control your robot. The MotorGo Mini can do it all. For more complex robots, the MotorGo can still offload much of the low-level computation from your main computers, so they have more headroom for the high-level tasks.</p>
+<p>Key Software Features:
+- Automatic wireless multi-board communication
+- Automatic motor pole pair discovery
+- Encoder magnet eccentricity compensation
+- PID Tuning via web interface
+- (Planned) ROS/ROS2 support</p>
+<p>The MotorGo Mini Driver is the software that runs on the ESP32 onboard to enable all of the features. Follow the Getting Started guide to get the driver up and running.</p>
 <p><strong>Finish docs, link to product page</strong>
 ..</p>
 <section id="introduction1">
