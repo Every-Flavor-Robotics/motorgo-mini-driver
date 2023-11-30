@@ -21,3 +21,4 @@ Below are detailed instructions for each of these steps, with code examples that
    software_setup
    calibration
    spinning_motors
+   tuning_pid

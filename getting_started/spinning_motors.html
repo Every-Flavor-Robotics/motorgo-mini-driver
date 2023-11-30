@@ -21,7 +21,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Core Concepts" href="../core_concepts/core_concepts.html" />
+    <link rel="next" title="Tuning PID Controllers" href="tuning_pid.html" />
     <link rel="prev" title="Motor Calibration" href="calibration.html" /> 
 </head>
 
@@ -50,8 +50,10 @@
 <li class="toctree-l2"><a class="reference internal" href="software_setup.html">Setting up Arduino or PlatformIO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="calibration.html">Motor Calibration</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Spinning Two Motors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tuning_pid.html">Tuning PID Controllers</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../example_projects/examples.html">Example Projects</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../core_concepts/core_concepts.html">Core Concepts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api_reference.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../common_issues.html">Common Issues</a></li>
@@ -84,7 +86,107 @@
              
   <section id="spinning-two-motors">
 <h1>Spinning Two Motors<a class="headerlink" href="#spinning-two-motors" title="Permalink to this headline"></a></h1>
-<p>We know why you’re here. Here you go.</p>
+<p><strong>Overview</strong></p>
+<p>This section explains how to operate the motors using the MotorGo system in various modes, including velocity, velocity open loop, position, position open loop, and torque modes. A crucial part of this process is enabling the motors and setting the desired control mode.</p>
+<p><em>Pre-requisites</em></p>
+<ul class="simple">
+<li><p>Calibration: Ensure that the motors have been calibrated as outlined in the previous section. Calibration can be performed during this step or previously, and then disabled if it has already been completed.</p></li>
+</ul>
+<p><strong>Motor Operation Process</strong></p>
+<p><em>Full Code Example:</em>
+The following code initializes both motor controller channels for the MotorGo brushless gimbal motor. It then enables the motors and configures them in velocity control mode with a basic PID controller. Finally, in the loop, the motors are commanded to run at 10 rad/s and the velocity is printed to the serial terminal.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;Arduino.h&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;motorgo_mini.h&quot;</span>
+
+<span class="n">MotorGo</span><span class="o">::</span><span class="n">MotorGoMini</span><span class="o">*</span><span class="w"> </span><span class="n">motorgo_mini</span><span class="p">;</span>
+<span class="n">MotorGo</span><span class="o">::</span><span class="n">MotorParameters</span><span class="w"> </span><span class="n">motor_params_ch0</span><span class="p">;</span>
+<span class="n">MotorGo</span><span class="o">::</span><span class="n">MotorParameters</span><span class="w"> </span><span class="n">motor_params_ch1</span><span class="p">;</span>
+<span class="n">MotorGo</span><span class="o">::</span><span class="n">PIDParameters</span><span class="w"> </span><span class="n">velocity_pid_params</span><span class="p">;</span>
+
+<span class="c1">// Function to print at a maximum frequency</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">freq_println</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">str</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">freq</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">last_print_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">now</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">millis</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">now</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">last_print_time</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1000</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">freq</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+<span class="w">        </span><span class="n">last_print_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">now</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">setup</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">115200</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Setup motor parameters</span>
+<span class="w">    </span><span class="n">motor_params_ch0</span><span class="p">.</span><span class="n">pole_pairs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="p">;</span>
+<span class="w">    </span><span class="n">motor_params_ch0</span><span class="p">.</span><span class="n">power_supply_voltage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">motor_params_ch0</span><span class="p">.</span><span class="n">voltage_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">motor_params_ch0</span><span class="p">.</span><span class="n">current_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">300</span><span class="p">;</span>
+<span class="w">    </span><span class="n">motor_params_ch0</span><span class="p">.</span><span class="n">velocity_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">100.0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">motor_params_ch0</span><span class="p">.</span><span class="n">calibration_voltage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0</span><span class="p">;</span>
+
+
+<span class="w">    </span><span class="n">motor_params_ch1</span><span class="p">.</span><span class="n">pole_pairs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="p">;</span>
+<span class="w">    </span><span class="n">motor_params_ch1</span><span class="p">.</span><span class="n">power_supply_voltage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">motor_params_ch1</span><span class="p">.</span><span class="n">voltage_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">motor_params_ch1</span><span class="p">.</span><span class="n">current_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">300</span><span class="p">;</span>
+<span class="w">    </span><span class="n">motor_params_ch1</span><span class="p">.</span><span class="n">velocity_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">100.0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">motor_params_ch1</span><span class="p">.</span><span class="n">calibration_voltage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// Instantiate motorgo mini board</span>
+<span class="w">    </span><span class="n">motorgo_mini</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">MotorGo</span><span class="o">::</span><span class="n">MotorGoMini</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// Setup Ch0 and Ch1 with FOCStudio disabled</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">calibrate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">enable_foc_studio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">motorgo_mini</span><span class="o">-&gt;</span><span class="n">init_ch0</span><span class="p">(</span><span class="n">motor_params_ch0</span><span class="p">,</span><span class="w"> </span><span class="n">calibrate</span><span class="p">,</span><span class="w"> </span><span class="n">enable_foc_studio</span><span class="p">);</span>
+<span class="w">    </span><span class="n">motorgo_mini</span><span class="o">-&gt;</span><span class="n">init_ch1</span><span class="p">(</span><span class="n">motor_params_ch1</span><span class="p">,</span><span class="w"> </span><span class="n">calibrate</span><span class="p">,</span><span class="w"> </span><span class="n">enable_foc_studio</span><span class="p">);</span>
+
+
+<span class="w">    </span><span class="c1">// Set velocity controller parameters</span>
+<span class="w">    </span><span class="c1">// Setup PID parameters</span>
+<span class="w">    </span><span class="n">velocity_pid_params</span><span class="p">.</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">velocity_pid_params</span><span class="p">.</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.01</span><span class="p">;</span>
+<span class="w">    </span><span class="n">velocity_pid_params</span><span class="p">.</span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">velocity_pid_params</span><span class="p">.</span><span class="n">output_ramp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10000.0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">velocity_pid_params</span><span class="p">.</span><span class="n">lpf_time_constant</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.11</span><span class="p">;</span>
+
+
+<span class="w">    </span><span class="n">motorgo_mini</span><span class="o">-&gt;</span><span class="n">set_velocity_controller_ch0</span><span class="p">(</span><span class="n">velocity_pid_params</span><span class="p">);</span>
+<span class="w">    </span><span class="n">motorgo_mini</span><span class="o">-&gt;</span><span class="n">set_velocity_controller_ch1</span><span class="p">(</span><span class="n">velocity_pid_params</span><span class="p">);</span>
+
+
+<span class="w">    </span><span class="c1">//   Set closed-loop velocity mode</span>
+<span class="w">    </span><span class="n">motorgo_mini</span><span class="o">-&gt;</span><span class="n">set_control_mode_ch0</span><span class="p">(</span><span class="n">MotorGo</span><span class="o">::</span><span class="n">ControlMode</span><span class="o">::</span><span class="n">Velocity</span><span class="p">);</span>
+<span class="w">    </span><span class="n">motorgo_mini</span><span class="o">-&gt;</span><span class="n">set_control_mode_ch1</span><span class="p">(</span><span class="n">MotorGo</span><span class="o">::</span><span class="n">ControlMode</span><span class="o">::</span><span class="n">Velocity</span><span class="p">);</span>
+
+
+<span class="w">    </span><span class="n">motorgo_mini</span><span class="o">-&gt;</span><span class="n">enable_ch0</span><span class="p">();</span>
+<span class="w">    </span><span class="n">motorgo_mini</span><span class="o">-&gt;</span><span class="n">enable_ch1</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">loop</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Run Ch0 and Ch1</span>
+<span class="w">    </span><span class="n">motorgo_mini</span><span class="o">-&gt;</span><span class="n">loop_ch0</span><span class="p">();</span>
+<span class="w">    </span><span class="n">motorgo_mini</span><span class="o">-&gt;</span><span class="n">loop_ch1</span><span class="p">();</span>
+
+
+<span class="w">    </span><span class="c1">// set target velocity (rad/s)</span>
+<span class="w">    </span><span class="n">motorgo_mini</span><span class="o">-&gt;</span><span class="n">set_target_velocity_ch0</span><span class="p">(</span><span class="mf">10.0</span><span class="p">);</span>
+<span class="w">    </span><span class="n">motorgo_mini</span><span class="o">-&gt;</span><span class="n">set_target_velocity_ch1</span><span class="p">(</span><span class="mf">10.0</span><span class="p">);</span>
+
+
+<span class="w">    </span><span class="c1">// print velocity in serial terminal</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Velocity - Ch0: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">motorgo_mini</span><span class="o">-&gt;</span><span class="n">get_ch0_velocity</span><span class="p">())</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="s">&quot; Ch1: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">motorgo_mini</span><span class="o">-&gt;</span><span class="n">get_ch1_velocity</span><span class="p">());</span>
+<span class="w">    </span><span class="n">freq_println</span><span class="p">(</span><span class="n">str</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </section>
 
 
@@ -92,7 +194,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="calibration.html" class="btn btn-neutral float-left" title="Motor Calibration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../core_concepts/core_concepts.html" class="btn btn-neutral float-right" title="Core Concepts" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="tuning_pid.html" class="btn btn-neutral float-right" title="Tuning PID Controllers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
