@@ -18,9 +18,9 @@ The calibration step also automatically determines the direction of the motor. A
 
 This sketch will run the calibration routine for channel 0 on the MotorGo. If you want to calibrate channel 1, simply change the function calls to ``init_ch1`` and ``loop_ch1``.
 
-* The calibration sweep involves a slow, 360-degree rotation of the rotor in both directions.
-* This process maps the rotor's position to the encoder's readings.
-* The sweep is initiated every time the code is run. If you flash calibration code to the board, it will perform a calibration every time the board resets.
+- The calibration sweep involves a slow, 360-degree rotation of the rotor in both directions.
+- This process maps the rotor's position to the encoder's readings.
+- The sweep is initiated every time the code is run. If you flash calibration code to the board, it will perform a calibration every time the board resets.
 
 .. code-block:: c++
 
