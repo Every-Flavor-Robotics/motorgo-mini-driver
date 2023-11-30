@@ -17,6 +17,7 @@ The following sections include the API documentation generated from the source c
    :maxdepth: 2
 
    getting_started/getting_started
+   example_projects/examples
    core_concepts/core_concepts
    api/api_reference
    common_issues
