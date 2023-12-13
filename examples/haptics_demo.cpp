@@ -11,8 +11,7 @@ MotorGo::MotorParameters motor_params_ch1;
 // declare PID manager object
 MotorGo::PIDManager pid_manager;
 
-// instantiate pid motorgo pid params
-
+// Instantiate pid motorgo pid params
 MotorGo::PIDParameters velocity_pid_params_ch0;
 MotorGo::PIDParameters velocity_pid_params_ch1;
 MotorGo::PIDParameters position_pid_params_ch0;
