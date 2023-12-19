@@ -44,7 +44,7 @@ void MotorGoGroupLeader::loop()
     if (all_registered)
     {
       // All devices are registered, enter run mode
-      state = LeaderState::Run;
+      enter_run_mode();
     }
   }
 
@@ -76,50 +76,17 @@ void MotorGoGroupLeader::discovery_receive_cb(const uint8_t* mac,
     Serial.println(beacon->device_name);
 
     // Register the new follower
-    ESPNowComms::register_device(mac);
-
-    devices[beacon->device_name] = sender_mac_str;
-
-    // Send acknowledgment
-    AckPayload ack;
-    strncpy(ack.message, "Registered", sizeof(ack.message));
-    ESPNowComms::message_t message;
-    message.data = (uint8_t*)&ack;
-    message.len = sizeof(ack);
-    ESPNowComms::send_data(mac, message);
+    if (ESPNowComms::register_device(mac))
+    {
+      // If registration is successful, save the mac address
+      devices[beacon->device_name] = sender_mac_str;
+    }
   }
 }
 
-void MotorGoGroupLeader::data_send_cb(const uint8_t* mac,
-                                      esp_now_send_status_t status)
+void MotorGoGroupLeader::run_send_cb(const uint8_t* mac,
+                                     esp_now_send_status_t status)
 {
-  //   if (status == ESP_NOW_SEND_SUCCESS)
-  //   {
-  //     // Convert the MAC address bytes to a human-readable string
-  //     String mac_str = "";
-  //     for (int i = 0; i < 6; ++i)
-  //     {
-  //       mac_str += String(mac[i], HEX);
-  //       if (i < 5)
-  //       {
-  //         mac_str += ":";
-  //       }
-  //     }
-
-  //     // Look up the device name by its MAC address
-  //     if (mac_to_name.find(mac_str) != mac_to_name.end())
-  //     {
-  //       String device_name = mac_to_name[mac_str];
-
-  //       //   // Check if the device is registered
-  //       //   if (registered_devices.find(device_name) !=
-  //       registered_devices.end())
-  //       //   {
-  //       //     // Update the last successful send time for the device
-  //       //     registered_devices[device_name].last_send_time = millis();
-  //       //   }
-  //     }
-  //   }
 }
 
 void MotorGoGroupLeader::enter_discovery_mode()
@@ -134,14 +101,14 @@ void MotorGoGroupLeader::enter_discovery_mode()
       { this->discovery_receive_cb(mac, data, len); });
 }
 
-// void MotorGoGroupLeader::enter_run_mode()
-// {
-//   state = RUN;
+void MotorGoGroupLeader::enter_run_mode()
+{
+  state = LeaderState::Run;
 
-//   // Set up callbacks correctly for send/receive
-//   esp_now_register_recv_cb(run_receive_cb);
-//   esp_now_register_send_cb(run_send_cb);
-// }
+  // Set up callbacks correctly for send/receive
+  //   esp_now_register_recv_cb(run_receive_cb);
+  esp_now_register_send_cb(run_send_cb);
+}
 
 void MotorGoGroupLeader::send_heartbeat(const String mac)
 {
@@ -153,7 +120,7 @@ void MotorGoGroupLeader::send_heartbeat(const String mac)
   ESPNowComms::message_t message;
   encode_message(heartbeat, message.data, &message.len);
   Serial.println(message.len);
-  Serial.println(message[0]);
+  Serial.println(message.data[0]);
 
   ESPNowComms::send_data(mac, message);
 }

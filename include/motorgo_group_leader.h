@@ -32,9 +32,10 @@ class MotorGoGroupLeader
   std::map<String, String> devices;
 
   void discovery_receive_cb(const uint8_t* mac, const uint8_t* data, int len);
-  static void data_send_cb(const uint8_t* mac, esp_now_send_status_t status);
+  static void run_send_cb(const uint8_t* mac, esp_now_send_status_t status);
 
   void enter_discovery_mode();
+  void enter_run_mode();
 
   void send_heartbeat(const String mac);
 };

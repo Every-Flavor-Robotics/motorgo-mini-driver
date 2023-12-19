@@ -95,7 +95,7 @@ bool ESPNowComms::register_device(const uint8_t* mac)
     // Copy mac address into registered_devices
     memcpy(ESPNowComms::registered_devices[mac_str].mac, mac, 6);
 
-    bool send_success = ESPNowComms::send_ack(mac);
+    return ESPNowComms::send_ack(mac);
   }
   else
   {
@@ -103,14 +103,16 @@ bool ESPNowComms::register_device(const uint8_t* mac)
     Serial.println("Device already registered");
     return false;
   }
-  return true;
 }
 
 bool ESPNowComms::send_ack(const uint8_t* mac)
 {
-  // Send ack to device
-  esp_err_t result = esp_now_send(mac, (uint8_t*)"ack", 4);
-  return result == ESP_OK;
+  // Send acknowledgment
+  // Create heartbeat message
+  HeartbeatMessage ack;
+  ESPNowComms::message_t message;
+  encode_message(ack, message.data, &message.len);
+  return ESPNowComms::send_data(mac, message);
 }
 
 // Send and Receive Callbacks

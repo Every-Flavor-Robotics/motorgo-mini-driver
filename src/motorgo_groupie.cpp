@@ -53,16 +53,14 @@ void MotorGoGroupie::register_device(const uint8_t* mac, const uint8_t* data,
 void MotorGoGroupie::discovery_receive_cb(const uint8_t* mac,
                                           const uint8_t* data, int len)
 {
-  Serial.println("Starting Decode");
   Serial.println(len);
   std::unique_ptr<MessageBase> decoded_msg = decode_message(data, len);
 
   //   Check if nullptr
   if (decoded_msg == nullptr)
   {
-    Serial.println("Failed to decode message");
+    return;
   }
-  Serial.println("Finished Decode");
   if (decoded_msg->type() == 0x01)
   {
     // Heartbeat message

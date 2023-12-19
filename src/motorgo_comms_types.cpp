@@ -24,8 +24,6 @@ std::unique_ptr<MessageBase> decode_message(const uint8_t* data, int len)
   uint8_t type = data[0];
   std::unique_ptr<MessageBase> msg;
 
-  Serial.println(type);
-
   switch (type)
   {
     case 0x01:
@@ -33,6 +31,7 @@ std::unique_ptr<MessageBase> decode_message(const uint8_t* data, int len)
       break;
     // Add more cases as needed
     default:
+      Serial.println("Bad message type, exiting");
       return nullptr;  // Unknown type
   }
 
@@ -46,19 +45,16 @@ void encode_message(const MessageBase& msg, uint8_t*& output_data, int* len)
   msg.encode(data);
   *len = msg.length();
 
-  if (!data)
-  {
-    *len = 0;
-    output_data = nullptr;
-    return;
-  }
-
   // Allocate memory for the type byte + data
   output_data = new uint8_t[*len + 1];
 
   // Set the type and copy the data
   output_data[0] = msg.type();
-  memcpy(output_data + 1, data, *len);
+
+  if (*len > 0)
+  {
+    memcpy(output_data + 1, data, *len);
+  }
 
   delete[] data;
 
