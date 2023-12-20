@@ -40,6 +40,7 @@ bool ESPNowComms::send_data(const String mac, const message_t& message)
     Serial.println("Device not registered");
     return false;
   }
+
   // Send data to device
   esp_err_t result =
       esp_now_send(registered_devices[mac].mac, message.data, message.len);

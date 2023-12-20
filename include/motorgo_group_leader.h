@@ -23,6 +23,7 @@ class MotorGoGroupLeader
   // Init takes in a vector of device names to register
   void init(std::vector<String> device_names);
   void loop();
+  void send_message(const String device_name, const MessageBase& message);
 
  private:
   LeaderState state = LeaderState::Uninitialized;

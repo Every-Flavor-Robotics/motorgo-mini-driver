@@ -26,4 +26,15 @@ void setup()
   leader.init(device_names);
 }
 
-void loop() { leader.loop(); }
+void loop()
+{
+  leader.loop();
+
+  CommandMessage message;
+  message.command = 10;
+  message.enabled = false;
+
+  leader.send_message("Follower_1", message);
+
+  delay(100);
+}
