@@ -22,15 +22,11 @@ void MotorGoGroupie::loop()
 {
   if (state == GroupieState::Discovery)
   {
-    BeaconPayload beacon_payload;
-    strncpy(beacon_payload.device_name, device_name.c_str(),
-            sizeof(beacon_payload.device_name));
+    BeaconMessage beacon_message;
+    beacon_message.set_device_name(device_name);
 
     ESPNowComms::message_t message;
-    message.data = (uint8_t*)&beacon_payload;
-    message.len = sizeof(beacon_payload);
-
-    Serial.println("Sending beacon");
+    encode_message(beacon_message, message.data, &message.len);
 
     ESPNowComms::send_data(broadcast_address, message);
 
@@ -79,6 +75,13 @@ void MotorGoGroupie::run_receive_cb(const uint8_t* mac, const uint8_t* data,
   {
     // Heartbeat message
     Serial.println("Received heartbeat in run");
+  }
+  else if (decoded_msg->type() == 0x03)
+  {
+    // Command message
+    CommandMessage* command = static_cast<CommandMessage*>(decoded_msg.get());
+    latest_command.command = command->command;
+    latest_command.enabled = command->enabled;
   }
 }
 
@@ -132,3 +135,7 @@ void MotorGoGroupie::enter_run_mode()
   //   esp_now_register_recv_cb(run_receive_cb);
   //   esp_now_register_send_cb(run_send_cb);
 }
+
+float MotorGoGroupie::get_command() { return latest_command.command; }
+
+float MotorGoGroupie::get_enabled() { return latest_command.enabled; }

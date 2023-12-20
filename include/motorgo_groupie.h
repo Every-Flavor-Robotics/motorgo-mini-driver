@@ -23,6 +23,8 @@ class MotorGoGroupie
   void init(std::string device_name);
   void loop();
   void register_device(const uint8_t* mac, const uint8_t* data, int len);
+  float get_command();
+  float get_enabled();
 
  private:
   std::string device_name;
@@ -38,7 +40,7 @@ class MotorGoGroupie
   void enter_discovery_mode();
   void enter_run_mode();
 
-  void send_ack(const uint8_t* mac);
+  CommandMessage latest_command;
 };
 
 #endif  // MOTOR_GO_GROUPIE_H

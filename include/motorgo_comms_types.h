@@ -42,6 +42,40 @@ class HeartbeatMessage : public MessageBase
   int length() const override;
 };
 
+class BeaconMessage : public MessageBase
+{
+ public:
+  uint8_t type() const override { return 0x02; }
+  BeaconMessage();
+
+  void encode(uint8_t* data) const override;
+
+  void decode(const uint8_t* data, int len) override;
+
+  int length() const override;
+
+  void set_device_name(std::string name);
+
+  char device_name[20];
+};
+
+class CommandMessage : public MessageBase
+{
+ public:
+  uint8_t type() const override { return 0x03; }
+  CommandMessage() {}
+  CommandMessage(const uint8_t* data, int len) { decode(data, len); }
+
+  void encode(uint8_t* data) const override;
+
+  void decode(const uint8_t* data, int len) override;
+
+  int length() const override;
+
+  float command;
+  bool enabled;
+};
+
 template <typename T, typename... Args>
 std::unique_ptr<T> make_unique(Args&&... args);
 
@@ -49,15 +83,15 @@ std::unique_ptr<MessageBase> decode_message(const uint8_t* data, int len);
 
 void encode_message(const MessageBase& msg, uint8_t*& output_data, int* len);
 
-struct BeaconPayload
-{
-  char device_name[20];
-};
+// struct BeaconPayload
+// {
+//   char device_name[20];
+// };
 
-struct AckPayload
-{
-  char message[20];
-};
+// struct AckPayload
+// {
+//   char message[20];
+// };
 
 enum class LeaderState
 {

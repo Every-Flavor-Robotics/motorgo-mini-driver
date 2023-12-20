@@ -61,17 +61,36 @@ void MotorGoGroupLeader::loop()
   }
 }
 
+void MotorGoGroupLeader::send_message(const String device_name,
+                                      const MessageBase& message)
+{
+  // Send message to device
+  ESPNowComms::message_t esp_now_message;
+  encode_message(message, esp_now_message.data, &esp_now_message.len);
+
+  ESPNowComms::send_data(devices[device_name], esp_now_message);
+}
+
 void MotorGoGroupLeader::discovery_receive_cb(const uint8_t* mac,
                                               const uint8_t* data, int len)
 {
   Serial.println("Received discovery message");
-  BeaconPayload* beacon = (BeaconPayload*)data;
 
-  String sender_mac_str = ESPNowComms::mac_to_string(mac);
+  std::unique_ptr<MessageBase> decoded_msg = decode_message(data, len);
+
+  //   Check if nullptr or if message is not a beacon
+  if (decoded_msg == nullptr || decoded_msg->type() != 0x02)
+  {
+    return;
+  }
+
+  //   Cast to BeaconMessage
+  BeaconMessage* beacon = static_cast<BeaconMessage*>(decoded_msg.get());
 
   //   Check if device is in device_names
   if (devices.find(beacon->device_name) != devices.end())
   {
+    String sender_mac_str = ESPNowComms::mac_to_string(mac);
     Serial.print("Received beacon from ");
     Serial.println(beacon->device_name);
 
@@ -105,9 +124,9 @@ void MotorGoGroupLeader::enter_run_mode()
 {
   state = LeaderState::Run;
 
-  // Set up callbacks correctly for send/receive
-  //   esp_now_register_recv_cb(run_receive_cb);
-  esp_now_register_send_cb(run_send_cb);
+  ESPNowComms::set_data_send_callback(
+      [this](const uint8_t* mac, esp_now_send_status_t status)
+      { this->run_send_cb(mac, status); });
 }
 
 void MotorGoGroupLeader::send_heartbeat(const String mac)
@@ -119,8 +138,6 @@ void MotorGoGroupLeader::send_heartbeat(const String mac)
 
   ESPNowComms::message_t message;
   encode_message(heartbeat, message.data, &message.len);
-  Serial.println(message.len);
-  Serial.println(message.data[0]);
 
   ESPNowComms::send_data(mac, message);
 }
