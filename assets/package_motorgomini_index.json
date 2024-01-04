@@ -1,0 +1,29 @@
+{
+    "packages": [
+        {
+            "name": "motorgo-mini-v1",
+            "maintainer": "MotorGo LLC",
+            "websiteURL": "https://motorgo.com",
+            "email": "support@motorgo.com",
+            "platforms": [
+                {
+                    "name": "MotorGo Mini V1",
+                    "architecture": "esp32",
+                    "version": "1.0",
+                    "category": "Contributed",
+                    "url": "https://github.com/Every-Flavor-Robotics/motorgo-mini-driver/raw/feature-18/arduino-ide/assets/motorgomini_v1-1.0.zip",
+                    "archiveFileName": "motorgomini_v1-1.0.zip",
+                    "checksum": "SHA-256:b8927acbbc063d3c59afebbe3ab41c075c4b1c89aa9d2b4de93497e98c6d7267",
+                    "size": "80003286",
+                    "boards": [
+                        {
+                            "name": "MotorGo Mini V1"
+                        }
+                    ],
+                    "toolsDependencies": []
+                }
+            ],
+            "tools": []
+        }
+    ]
+}
