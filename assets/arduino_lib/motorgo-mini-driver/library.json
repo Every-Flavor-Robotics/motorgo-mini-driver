@@ -1,0 +1,35 @@
+{
+    "name": "MotorGo-Mini-Driver",
+    "version": "0.0.1",
+    "description": "The MotorGo Mini driver provides an API to interface with the motor controllers on the MotorGo Mini board.",
+    "keywords": "motor, controller, brushless",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Roam-Studios/motorgo-mini-driver"
+    },
+    "authors": [
+        {
+            "name": "Swapnil Pande",
+            "email": "swapnil.pande98@gmail.com",
+            "url": "https://www.swapnilpande.me"
+        }
+    ],
+    "license": "MIT",
+    "frameworks": "arduino",
+    "platforms": "esp32-s3-motorgo-mini",
+    "dependencies": [
+        {
+            "owner": "askuric",
+            "name": "Simple FOC",
+            "version": "^2.3.0"
+        },
+        {
+            "name": "SimpleFOCDrivers",
+            "version": "https://github.com/Roam-Studios/Arduino-FOC-drivers.git#ccw-bug-fix"
+        },
+        {
+            "name": "ESP-Options",
+            "version": "https://github.com/Roam-Studios/esp-options.git"
+        }
+    ]
+}
