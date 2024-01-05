@@ -21,15 +21,27 @@
         {
             "owner": "askuric",
             "name": "Simple FOC",
-            "version": "^2.3.0"
+            "version": "^2.3.2"
         },
         {
             "name": "SimpleFOCDrivers",
-            "version": "https://github.com/Roam-Studios/Arduino-FOC-drivers.git#ccw-bug-fix"
+            "version": "https://github.com/Every-Flavor-Robotics/Arduino-FOC-drivers.git"
         },
         {
             "name": "ESP-Options",
             "version": "https://github.com/Roam-Studios/esp-options.git"
+        },
+        {
+            "name": "Wire",
+            "version": "*"
+        },
+        {
+            "name": "SPI",
+            "version": "*"
+        },
+        {
+            "name": "Preferences",
+            "version": "*"
         }
     ]
 }
