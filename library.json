@@ -29,7 +29,11 @@
         },
         {
             "name": "ESP-Options",
-            "version": "https://github.com/Roam-Studios/esp-options.git"
+            "version": "https://github.com/Every-Flavor-Robotics/esp-options.git"
+        },
+        {
+            "name": "ESPWifiConfig",
+            "version": "https://github.com/Every-Flavor-Robotics/esp-wifi-config.git#feature/configurable-manager"
         },
         {
             "name": "Wire",
@@ -41,6 +45,10 @@
         },
         {
             "name": "Preferences",
+            "version": "*"
+        },
+        {
+            "name": "FS",
             "version": "*"
         },
         {
