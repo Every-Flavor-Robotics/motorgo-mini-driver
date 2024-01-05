@@ -43,5 +43,9 @@
             "name": "Preferences",
             "version": "*"
         }
+        {
+            "name": "Arduino_JSON",
+            "version": "https://github.com/arduino-libraries/Arduino_JSON.git"
+        }
     ]
 }
