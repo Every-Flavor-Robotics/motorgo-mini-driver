@@ -3,8 +3,6 @@
 #include <esp_now.h>
 #include <motorgo_group_leader.h>
 
-#include <map>
-
 MotorGoGroupLeader leader;
 
 void setup()
