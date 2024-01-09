@@ -94,7 +94,7 @@ class PIDManager
   // update the controller
   void add_controller(String name, PIDParameters& params,
                       std::function<void()> update_controller_callback);
-  void init();
+  void init(String wifi_ssid, String wifi_password);
 
  private:
   //  Vector of params
