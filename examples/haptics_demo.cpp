@@ -4,6 +4,10 @@
 #include "motorgo_mini.h"
 #include "pid_manager.h"
 
+// UPDATE THESE VALUES
+String WIFI_SSID = "YOUR_SSID";
+String WIFI_PASSWORD = "YOUR_PASSWORD";
+
 MotorGo::MotorGoMini* motorgo_mini;
 MotorGo::MotorParameters motor_params_ch0;
 MotorGo::MotorParameters motor_params_ch1;
@@ -122,7 +126,7 @@ void setup()
   enable_motors.set_post_callback(enable_motors_callback);
 
   // initialize the PID manager
-  pid_manager.init();
+  pid_manager.init(WIFI_SSID, WIFI_PASSWORD);
 
   //   Set closed-loop position mode
   motorgo_mini->set_control_mode_ch0(MotorGo::ControlMode::Position);

@@ -8,6 +8,10 @@
 #include "pid_manager.h"
 #include "sensorgo_mpu6050.h"
 
+// UPDATE THESE VALUES
+String WIFI_SSID = "YOUR_SSID";
+String WIFI_PASSWORD = "YOUR_PASSWORD";
+
 MotorGo::MotorGoMini* motorgo_mini;
 MotorGo::MotorParameters motor_params_ch0;
 MotorGo::MotorParameters motor_params_ch1;
@@ -207,7 +211,7 @@ void setup()
   enable_motors.set_post_callback(enable_motors_callback);
 
   // initialize the PID manager
-  pid_manager.init();
+  pid_manager.init(WIFI_SSID, WIFI_PASSWORD);
 
   initial_angle_ch0 = motorgo_mini->get_ch0_position();
   initial_angle_ch1 = motorgo_mini->get_ch1_position();

@@ -30,7 +30,7 @@ void MotorGo::PIDManager::add_controller(
   configs.push_back(config);
 }
 
-void MotorGo::PIDManager::init()
+void MotorGo::PIDManager::init(String wifi_ssid, String wifi_password)
 {
   Serial.println("Initializing PIDManager");
   for (auto& config : configs)
@@ -48,7 +48,7 @@ void MotorGo::PIDManager::init()
       [this]() { return schema; }, "/pid/schema",
       "Description of available PID controllers");
 
-  ESPWifiConfig::WebServer::getInstance().start();
+  ESPWifiConfig::WebServer::getInstance().start(wifi_ssid, wifi_password);
 
   //   Display URL to access webserver. http://{ip_address}:{port}
   Serial.println("Webserver available at:");
