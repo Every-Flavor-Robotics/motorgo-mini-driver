@@ -172,32 +172,6 @@ class MotorGoMini
   float get_ch1_voltage();
 
  private:
-  // Encoder I2C bus
-  const int enc_sda = 35;
-  const int enc_scl = 36;
-
-  // ch0 Motor and Encoder pins
-  const int k_ch0_enc_cs = 37;
-  const int k_ch0_gpio_uh = 18;
-  const int k_ch0_gpio_ul = 15;
-  const int k_ch0_gpio_vh = 17;
-  const int k_ch0_gpio_vl = 5;
-  const int k_ch0_gpio_wh = 16;
-  const int k_ch0_gpio_wl = 6;
-  const int k_ch0_current_u = 7;
-  const int k_ch0_current_w = 4;
-
-  // ch1 Motor and Encoder pins
-  const int k_ch1_enc_cs = 48;
-  const int k_ch1_gpio_uh = 9;
-  const int k_ch1_gpio_ul = 13;
-  const int k_ch1_gpio_vh = 10;
-  const int k_ch1_gpio_vl = 21;
-  const int k_ch1_gpio_wh = 11;
-  const int k_ch1_gpio_wl = 14;
-  const int k_ch1_current_u = 8;
-  const int k_ch1_current_w = 12;
-
   // Additional motor and encoder parameters
   MotorParameters motor_params_ch0;
   MotorParameters motor_params_ch1;

@@ -23,20 +23,20 @@ void do_target_ch1(char* cmd)
 }
 
 MotorGo::MotorGoMini::MotorGoMini()
-    : encoder_ch0(MagneticSensorMT6701SSI(k_ch0_enc_cs)),
-      driver_ch0(BLDCDriver6PWM(k_ch0_gpio_uh, k_ch0_gpio_ul, k_ch0_gpio_vh,
-                                k_ch0_gpio_vl, k_ch0_gpio_wh, k_ch0_gpio_wl)),
+    : encoder_ch0(MagneticSensorMT6701SSI(CH0_ENC_CS)),
+      driver_ch0(BLDCDriver6PWM(CH0_GPIO_UH, CH0_GPIO_UL, CH0_GPIO_VH,
+                                CH0_GPIO_VL, CH0_GPIO_WH, CH0_GPIO_WL)),
       sensor_calibrated_ch0(CalibratedSensor(encoder_ch0)),
-      encoder_ch1(MagneticSensorMT6701SSI(k_ch1_enc_cs)),
+      encoder_ch1(MagneticSensorMT6701SSI(CH1_ENC_CS)),
       sensor_calibrated_ch1(CalibratedSensor(encoder_ch1)),
-      driver_ch1(BLDCDriver6PWM(k_ch1_gpio_uh, k_ch1_gpio_ul, k_ch1_gpio_vh,
-                                k_ch1_gpio_vl, k_ch1_gpio_wh, k_ch1_gpio_wl))
+      driver_ch1(BLDCDriver6PWM(CH1_GPIO_UH, CH1_GPIO_UL, CH1_GPIO_VH,
+                                CH1_GPIO_VL, CH1_GPIO_WH, CH1_GPIO_WL))
 {
   // Set current sensing pins to input
-  pinMode(k_ch0_current_u, INPUT);
-  pinMode(k_ch0_current_w, INPUT);
-  pinMode(k_ch1_current_u, INPUT);
-  pinMode(k_ch1_current_w, INPUT);
+  pinMode(CH0_CURRENT_U, INPUT);
+  pinMode(CH0_CURRENT_W, INPUT);
+  pinMode(CH1_CURRENT_U, INPUT);
+  pinMode(CH1_CURRENT_W, INPUT);
 }
 
 void MotorGo::MotorGoMini::init_helper(MotorParameters params,
@@ -120,7 +120,7 @@ void MotorGo::MotorGoMini::init_ch0(MotorParameters params,
   if (!hspi_initialized)
   {
     hspi_initialized = true;
-    MotorGo::hspi.begin(enc_scl, enc_sda, 45, 46);
+    MotorGo::hspi.begin(ENC_SCL, ENC_SDA, 45, 46);
   }
 
   this->should_calibrate_ch0 = should_calibrate;
@@ -151,7 +151,7 @@ void MotorGo::MotorGoMini::init_ch1(MotorParameters params,
   if (!hspi_initialized)
   {
     hspi_initialized = true;
-    MotorGo::hspi.begin(enc_scl, enc_sda, 45, 46);
+    MotorGo::hspi.begin(ENC_SCL, ENC_SDA, 45, 46);
   }
 
   this->should_calibrate_ch1 = should_calibrate;
@@ -192,12 +192,6 @@ void MotorGo::MotorGoMini::loop_ch0()
     MotorGo::motor_ch0.monitor();
     // MotorGo::motor_ch1.monitor();
   }
-
-  // Print u and w currents
-  //   Serial.print("Current u: ");
-  //   Serial.print(analogRead(k_ch0_current_u));
-  //   Serial.print(" Current w: ");
-  //   Serial.println(analogRead(k_ch0_current_w));
 }
 
 void MotorGo::MotorGoMini::loop_ch1()
