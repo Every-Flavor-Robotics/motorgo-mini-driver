@@ -29,20 +29,20 @@ void setup()
   delay(3000);
 
   // Setup motor parameters
-  motor_params_ch0.pole_pairs = 11;
-  motor_params_ch0.power_supply_voltage = 10.0;
+  motor_params_ch0.pole_pairs = 7;
+  motor_params_ch0.power_supply_voltage = 5.0;
   motor_params_ch0.voltage_limit = 5.0;
   motor_params_ch0.current_limit = 300;
   motor_params_ch0.velocity_limit = 100.0;
-  motor_params_ch0.calibration_voltage = 1.0;
+  motor_params_ch0.calibration_voltage = 2.0;
   motor_params_ch0.reversed = false;
 
-  motor_params_ch1.pole_pairs = 11;
-  motor_params_ch1.power_supply_voltage = 10.0;
+  motor_params_ch1.pole_pairs = 7;
+  motor_params_ch1.power_supply_voltage = 5.0;
   motor_params_ch1.voltage_limit = 5.0;
   motor_params_ch1.current_limit = 300;
   motor_params_ch1.velocity_limit = 100.0;
-  motor_params_ch1.calibration_voltage = 1.0;
+  motor_params_ch1.calibration_voltage = 2.0;
   motor_params_ch1.reversed = true;
 
   // Instantiate motorgo mini board
@@ -55,17 +55,17 @@ void setup()
 
   // Set velocity controller parameters
   // Setup PID parameters
-  velocity_pid_params_ch0.p = 0.5;
-  velocity_pid_params_ch0.i = 0.0;
+  velocity_pid_params_ch0.p = 1.6;
+  velocity_pid_params_ch0.i = 0.01;
   velocity_pid_params_ch0.d = 0.0;
   velocity_pid_params_ch0.output_ramp = 10000.0;
-  velocity_pid_params_ch0.lpf_time_constant = 0.05;
+  velocity_pid_params_ch0.lpf_time_constant = 0.11;
 
-  velocity_pid_params_ch1.p = 0.5;
-  velocity_pid_params_ch1.i = 0.0;
+  velocity_pid_params_ch1.p = 1.5;
+  velocity_pid_params_ch1.i = 0.01;
   velocity_pid_params_ch1.d = 0.0;
   velocity_pid_params_ch1.output_ramp = 10000.0;
-  velocity_pid_params_ch1.lpf_time_constant = 0.05;
+  velocity_pid_params_ch1.lpf_time_constant = 0.11;
 
   motorgo_mini->set_velocity_controller_ch0(velocity_pid_params_ch0);
   motorgo_mini->set_velocity_controller_ch1(velocity_pid_params_ch1);
