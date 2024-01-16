@@ -336,9 +336,8 @@ void setup()
 
   // Setup Ch0 with FOCStudio enabled
   bool calibrate = false;
-  bool enable_foc_studio = false;
-  motorgo_mini->init_ch0(motor_params_ch0, calibrate, enable_foc_studio);
-  motorgo_mini->init_ch1(motor_params_ch1, calibrate, enable_foc_studio);
+  motorgo_mini->init_ch0(motor_params_ch0, calibrate);
+  motorgo_mini->init_ch1(motor_params_ch1, calibrate);
 
   // Set velocity controller parameters
   // Setup PID parameters

@@ -6,21 +6,11 @@
 SPIClass MotorGo::hspi = SPIClass(HSPI);
 bool hspi_initialized = false;
 
-Commander MotorGo::command = Commander(Serial);
 // TODO: Motors are currently instantiated with a default number of pole pairs
 // This is not great design, would be better to not initialize motors
 // until the user calls init_ch0() or init_ch1()
 BLDCMotor MotorGo::motor_ch0 = BLDCMotor(3);
 BLDCMotor MotorGo::motor_ch1 = BLDCMotor(3);
-
-void do_target_ch0(char* cmd)
-{
-  MotorGo::command.motor(&MotorGo::motor_ch0, cmd);
-}
-void do_target_ch1(char* cmd)
-{
-  MotorGo::command.motor(&MotorGo::motor_ch1, cmd);
-}
 
 MotorGo::MotorGoMini::MotorGoMini()
     : encoder_ch0(MagneticSensorMT6701SSI(CH0_ENC_CS)),
@@ -40,8 +30,7 @@ MotorGo::MotorGoMini::MotorGoMini()
 }
 
 void MotorGo::MotorGoMini::init_helper(MotorParameters params,
-                                       bool should_calibrate,
-                                       bool enable_foc_studio, BLDCMotor& motor,
+                                       bool should_calibrate, BLDCMotor& motor,
                                        BLDCDriver6PWM& driver,
                                        CalibratedSensor& sensor_calibrated,
                                        MagneticSensorMT6701SSI& encoder,
@@ -66,14 +55,6 @@ void MotorGo::MotorGoMini::init_helper(MotorParameters params,
   motor.foc_modulation = FOCModulationType::SpaceVectorPWM;
   motor.voltage_limit = params.voltage_limit;
   motor.current_limit = params.current_limit;
-
-  // FOCStudio options
-  if (enable_foc_studio)
-  {
-    // use monitoring
-    motor.monitor_variables = _MON_TARGET | _MON_VEL | _MON_ANGLE;
-    motor.useMonitoring(Serial);
-  }
 
   // Initialize motor
   motor.init();
@@ -104,17 +85,16 @@ void MotorGo::MotorGoMini::init_helper(MotorParameters params,
 
 void MotorGo::MotorGoMini::init_ch0(MotorParameters params)
 {
-  init_ch0(params, false, false);
+  init_ch0(params, false);
 }
 
 void MotorGo::MotorGoMini::init_ch1(MotorParameters params)
 {
-  init_ch1(params, false, false);
+  init_ch1(params, false);
 }
 
 void MotorGo::MotorGoMini::init_ch0(MotorParameters params,
-                                    bool should_calibrate,
-                                    bool enable_foc_studio)
+                                    bool should_calibrate)
 {
   //   Guard to prevent multiple initializations, which could cause a crash
   if (!hspi_initialized)
@@ -124,28 +104,19 @@ void MotorGo::MotorGoMini::init_ch0(MotorParameters params,
   }
 
   this->should_calibrate_ch0 = should_calibrate;
-  this->enable_foc_studio_ch0 = enable_foc_studio;
 
   //   Save motor parameters
   motor_params_ch0 = params;
 
   // Initialize motors
-  init_helper(params, should_calibrate, enable_foc_studio, MotorGo::motor_ch0,
-              driver_ch0, sensor_calibrated_ch0, encoder_ch0, "ch0");
-
-  // add command to commander
-  if (enable_foc_studio)
-  {
-    Serial.println("Channel 0: Enabling FOC Studio. Command: 0");
-    MotorGo::command.add('0', do_target_ch0, (char*)"target");
-  }
+  init_helper(params, should_calibrate, MotorGo::motor_ch0, driver_ch0,
+              sensor_calibrated_ch0, encoder_ch0, "ch0");
 
   disable_ch0();
 }
 
 void MotorGo::MotorGoMini::init_ch1(MotorParameters params,
-                                    bool should_calibrate,
-                                    bool enable_foc_studio)
+                                    bool should_calibrate)
 {
   //   Guard to prevent multiple initializations, which could cause a crash
   if (!hspi_initialized)
@@ -155,21 +126,13 @@ void MotorGo::MotorGoMini::init_ch1(MotorParameters params,
   }
 
   this->should_calibrate_ch1 = should_calibrate;
-  this->enable_foc_studio_ch1 = enable_foc_studio;
 
   //   Save motor parameters
   motor_params_ch1 = params;
 
   // Initialize motors
-  init_helper(params, should_calibrate, enable_foc_studio, MotorGo::motor_ch1,
-              driver_ch1, sensor_calibrated_ch1, encoder_ch1, "ch1");
-
-  // add command to commander
-  if (enable_foc_studio)
-  {
-    Serial.println("Channel 1: Enabling FOC Studio. Command: 1");
-    MotorGo::command.add('1', do_target_ch1, (char*)"target");
-  }
+  init_helper(params, should_calibrate, MotorGo::motor_ch1, driver_ch1,
+              sensor_calibrated_ch1, encoder_ch1, "ch1");
 
   disable_ch1();
 }
@@ -181,17 +144,6 @@ void MotorGo::MotorGoMini::loop_ch0()
 
   // this function can be run at much lower frequency than loopFOC()
   MotorGo::motor_ch0.move();
-  //   MotorGo::motor_ch1.move();
-
-  // Monitoring, use only if necessary as it slows loop down significantly
-  if (enable_foc_studio_ch0)
-  {
-    // user communication
-    MotorGo::command.run();
-
-    MotorGo::motor_ch0.monitor();
-    // MotorGo::motor_ch1.monitor();
-  }
 }
 
 void MotorGo::MotorGoMini::loop_ch1()
@@ -202,16 +154,6 @@ void MotorGo::MotorGoMini::loop_ch1()
   // this function can be run at much lower frequency than loopFOC()
   MotorGo::motor_ch1.move();
   //   MotorGo::motor_ch1.move();
-
-  // Monitoring, use only if necessary as it slows loop down significantly
-  if (enable_foc_studio_ch1)
-  {
-    // user communication
-    MotorGo::command.run();
-
-    MotorGo::motor_ch1.monitor();
-    // MotorGo::motor_ch1.monitor();
-  }
 }
 
 ////// Helper Functions
@@ -295,45 +237,42 @@ void MotorGo::MotorGoMini::set_target_helper_ch0()
 
 void MotorGo::MotorGoMini::set_target_helper_ch1()
 {
-  if (!enable_foc_studio_ch1)
+  // Switch command based on current control mode
+  switch (control_mode_ch1)
   {
-    // Switch command based on current control mode
-    switch (control_mode_ch1)
-    {
-      case MotorGo::ControlMode::Voltage:
-        motor_ch1.move(target_voltage_ch1);
-        break;
-      case MotorGo::ControlMode::Torque:
-        //   Disable motor if PID params not set
-        if (!pid_torque_ch1_enabled)
-        {
-          disable_ch1();
-        }
-        motor_ch1.move(target_torque_ch1);
-        break;
-      case MotorGo::ControlMode::Velocity:
-        //  Disable motor if PID params not set
-        if (!pid_velocity_ch1_enabled)
-        {
-          disable_ch1();
-        }
-        motor_ch1.move(target_velocity_ch1);
-        break;
-      case MotorGo::ControlMode::Position:
-        //  Disable motor if PID params not set
-        if (!pid_position_ch1_enabled)
-        {
-          disable_ch1();
-        }
-        motor_ch1.move(target_position_ch1);
-        break;
-      case MotorGo::ControlMode::VelocityOpenLoop:
-        motor_ch1.move(target_velocity_ch1);
-        break;
-      case MotorGo::ControlMode::PositionOpenLoop:
-        motor_ch1.move(target_position_ch1);
-        break;
-    }
+    case MotorGo::ControlMode::Voltage:
+      motor_ch1.move(target_voltage_ch1);
+      break;
+    case MotorGo::ControlMode::Torque:
+      //   Disable motor if PID params not set
+      if (!pid_torque_ch1_enabled)
+      {
+        disable_ch1();
+      }
+      motor_ch1.move(target_torque_ch1);
+      break;
+    case MotorGo::ControlMode::Velocity:
+      //  Disable motor if PID params not set
+      if (!pid_velocity_ch1_enabled)
+      {
+        disable_ch1();
+      }
+      motor_ch1.move(target_velocity_ch1);
+      break;
+    case MotorGo::ControlMode::Position:
+      //  Disable motor if PID params not set
+      if (!pid_position_ch1_enabled)
+      {
+        disable_ch1();
+      }
+      motor_ch1.move(target_position_ch1);
+      break;
+    case MotorGo::ControlMode::VelocityOpenLoop:
+      motor_ch1.move(target_velocity_ch1);
+      break;
+    case MotorGo::ControlMode::PositionOpenLoop:
+      motor_ch1.move(target_position_ch1);
+      break;
   }
 }
 

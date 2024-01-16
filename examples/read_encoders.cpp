@@ -41,9 +41,9 @@ void setup()
   // Instantiate motorgo mini board
   motorgo_mini = new MotorGo::MotorGoMini();
 
-  // Setup Ch0 with FOCStudio enabled
-  motorgo_mini->init_ch0(motor_params_ch0, false, false);
-  motorgo_mini->init_ch1(motor_params_ch1, false, false);
+  // Setup Ch0
+  motorgo_mini->init_ch0(motor_params_ch0, false);
+  motorgo_mini->init_ch1(motor_params_ch1, false);
 }
 
 void loop()

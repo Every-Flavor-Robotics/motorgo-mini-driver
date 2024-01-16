@@ -63,7 +63,7 @@ struct MotorParameters
 // TODO: These are global because the SimpleFOC commander API doesn't
 // support lambdas to save state in for the callback Need to decide if this
 // is the best solution, or if there is something better we can do
-extern Commander command;
+// TODO: Update architecture now that simpleFOC studio support is removed.
 extern BLDCMotor motor_ch0;
 extern BLDCMotor motor_ch1;
 extern SPIClass hspi;
@@ -79,10 +79,8 @@ class MotorGoMini
   void init_ch1(MotorParameters params);
 
   // Init motors and encoders, optionally calibrating and/or enabling FOCStudio
-  void init_ch0(MotorParameters params, bool should_calibrate,
-                bool enable_foc_studio);
-  void init_ch1(MotorParameters params, bool should_calibrate,
-                bool enable_foc_studio);
+  void init_ch0(MotorParameters params, bool should_calibrate);
+  void init_ch1(MotorParameters params, bool should_calibrate);
 
   // Run control loop, should be called at fixed frequency
   void loop_ch0();
@@ -215,13 +213,6 @@ class MotorGoMini
   bool should_calibrate_ch0;
   bool should_calibrate_ch1;
 
-  // If enable_foc_studio is set to true, data will be written to serial
-  // to communicate with FOCStudio
-  // This significantly slows the control loop, enable only when necessary
-  // TODO: Enable "offline" tuning
-  bool enable_foc_studio_ch0;
-  bool enable_foc_studio_ch1;
-
   // Encoder, motor, and driver instances
   // MT6701Sensor encoder_ch0;
   MagneticSensorMT6701SSI encoder_ch0;
@@ -235,8 +226,8 @@ class MotorGoMini
   // Helper functions
   // init_helper configures the motor and encoder
   void init_helper(MotorParameters params, bool should_calibrate,
-                   bool enable_foc_studio, BLDCMotor& motor,
-                   BLDCDriver6PWM& driver, CalibratedSensor& sensor_calibrated,
+                   BLDCMotor& motor, BLDCDriver6PWM& driver,
+                   CalibratedSensor& sensor_calibrated,
                    MagneticSensorMT6701SSI& encoder, const char* name);
 
   // set_control_mode_helper sets parameters for each control_mode option
