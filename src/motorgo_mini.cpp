@@ -29,7 +29,7 @@ MotorGo::MotorGoMini::MotorGoMini()
   pinMode(CH1_CURRENT_W, INPUT);
 }
 
-void MotorGo::MotorGoMini::init_helper(MotorParameters params,
+void MotorGo::MotorGoMini::init_helper(MotorParameters& params,
                                        bool should_calibrate, BLDCMotor& motor,
                                        BLDCDriver6PWM& driver,
                                        CalibratedSensor& sensor_calibrated,
@@ -109,8 +109,28 @@ void MotorGo::MotorGoMini::init_ch0(MotorParameters params,
   motor_params_ch0 = params;
 
   // Initialize motors
-  init_helper(params, should_calibrate, MotorGo::motor_ch0, driver_ch0,
-              sensor_calibrated_ch0, encoder_ch0, "ch0");
+  init_helper(motor_params_ch0, should_calibrate, MotorGo::motor_ch0,
+              driver_ch0, sensor_calibrated_ch0, encoder_ch0, "ch0");
+
+  // Set direction of motor
+  // Motor will spin counter-clockwise when viewed from the front if reversed is
+  // false Motor will spin clockwise when viewed from the front if reversed is
+  // true
+  // Multiply by sensor direction to correctly handle the motor being plugged
+  //   in any configuration
+  if (params.reversed)
+  {
+    // Direction enum is defined with looking at the motor from the back.
+    // motor_direction_ch0 = Direction::CCW * motor_ch0.sensor_direction;
+    // Add cast
+    motor_direction_ch0 =
+        static_cast<Direction>(Direction::CCW * motor_ch0.sensor_direction);
+  }
+  else
+  {
+    motor_direction_ch0 =
+        static_cast<Direction>(Direction::CW * motor_ch0.sensor_direction);
+  }
 
   disable_ch0();
 }
@@ -131,9 +151,26 @@ void MotorGo::MotorGoMini::init_ch1(MotorParameters params,
   motor_params_ch1 = params;
 
   // Initialize motors
-  init_helper(params, should_calibrate, MotorGo::motor_ch1, driver_ch1,
-              sensor_calibrated_ch1, encoder_ch1, "ch1");
+  init_helper(motor_params_ch1, should_calibrate, MotorGo::motor_ch1,
+              driver_ch1, sensor_calibrated_ch1, encoder_ch1, "ch1");
 
+  // Set direction of motor
+  // Motor will spin counter-clockwise when viewed from the front if reversed is
+  // false Motor will spin clockwise when viewed from the front if reversed is
+  // true
+  // Multiply by sensor direction to correctly handle the motor being plugged
+  //   in any configuration
+  if (params.reversed)
+  {
+    // Direction enum is defined with looking at the motor from the back.
+    motor_direction_ch1 =
+        static_cast<Direction>(Direction::CCW * motor_ch1.sensor_direction);
+  }
+  else
+  {
+    motor_direction_ch1 =
+        static_cast<Direction>(Direction::CW * motor_ch1.sensor_direction);
+  }
   disable_ch1();
 }
 
@@ -666,46 +703,46 @@ void MotorGo::MotorGoMini::set_control_mode_ch1(
 
 void MotorGo::MotorGoMini::set_target_velocity_ch0(float target)
 {
-  target_velocity_ch0 = target;
+  target_velocity_ch0 = target * motor_direction_ch0;
   set_target_helper_ch0();
 }
 void MotorGo::MotorGoMini::set_target_velocity_ch1(float target)
 {
-  target_velocity_ch1 = target;
+  target_velocity_ch1 = target * motor_direction_ch1;
   set_target_helper_ch1();
 }
 
 void MotorGo::MotorGoMini::set_target_torque_ch0(float target)
 {
-  target_torque_ch0 = target;
+  target_torque_ch0 = target * motor_direction_ch0;
   set_target_helper_ch0();
 }
 void MotorGo::MotorGoMini::set_target_torque_ch1(float target)
 {
-  target_torque_ch1 = target;
+  target_torque_ch1 = target * motor_direction_ch1;
   set_target_helper_ch1();
 }
 
 void MotorGo::MotorGoMini::set_target_position_ch0(float target)
 {
-  target_position_ch0 = target;
+  target_position_ch0 = target * motor_direction_ch0;
   set_target_helper_ch0();
 }
 void MotorGo::MotorGoMini::set_target_position_ch1(float target)
 {
-  target_position_ch1 = target;
+  target_position_ch1 = target * motor_direction_ch1;
   set_target_helper_ch1();
 }
 
 void MotorGo::MotorGoMini::set_target_voltage_ch0(float target)
 {
-  target_voltage_ch0 = target;
+  target_voltage_ch0 = target * motor_direction_ch0;
   set_target_helper_ch0();
 }
 
 void MotorGo::MotorGoMini::set_target_voltage_ch1(float target)
 {
-  target_voltage_ch1 = target;
+  target_voltage_ch1 = target * motor_direction_ch1;
   set_target_helper_ch1();
 }
 
@@ -722,28 +759,28 @@ void MotorGo::MotorGoMini::zero_position_ch1()
 // Getters
 float MotorGo::MotorGoMini::get_ch0_position()
 {
-  return MotorGo::motor_ch0.shaftAngle();
+  return MotorGo::motor_ch0.shaftAngle() * motor_direction_ch0;
 }
 float MotorGo::MotorGoMini::get_ch0_velocity()
 {
-  return MotorGo::motor_ch0.shaftVelocity();
+  return MotorGo::motor_ch0.shaftVelocity() * motor_direction_ch0;
 }
 float MotorGo::MotorGoMini::get_ch0_voltage()
 {
-  return MotorGo::motor_ch0.voltage.q;
+  return MotorGo::motor_ch0.voltage.q * motor_direction_ch0;
 }
 
 float MotorGo::MotorGoMini::get_ch1_position()
 {
-  return MotorGo::motor_ch1.shaftAngle();
+  return MotorGo::motor_ch1.shaftAngle() * motor_direction_ch1;
 }
 float MotorGo::MotorGoMini::get_ch1_velocity()
 {
-  return MotorGo::motor_ch1.shaftVelocity();
+  return MotorGo::motor_ch1.shaftVelocity() * motor_direction_ch1;
 }
 float MotorGo::MotorGoMini::get_ch1_voltage()
 {
-  return MotorGo::motor_ch1.voltage.q;
+  return MotorGo::motor_ch1.voltage.q * motor_direction_ch1;
 }
 
 // TODO: Implement get torque
