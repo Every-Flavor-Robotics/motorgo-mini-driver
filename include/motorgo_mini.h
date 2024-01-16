@@ -63,7 +63,7 @@ struct MotorParameters
 // TODO: These are global because the SimpleFOC commander API doesn't
 // support lambdas to save state in for the callback Need to decide if this
 // is the best solution, or if there is something better we can do
-// TODO: Update architecture now that simpleFOC studio support is removed. 
+// TODO: Update architecture now that simpleFOC studio support is removed.
 extern BLDCMotor motor_ch0;
 extern BLDCMotor motor_ch1;
 extern SPIClass hspi;
@@ -213,7 +213,6 @@ class MotorGoMini
   bool should_calibrate_ch0;
   bool should_calibrate_ch1;
 
-
   // Encoder, motor, and driver instances
   // MT6701Sensor encoder_ch0;
   MagneticSensorMT6701SSI encoder_ch0;
@@ -227,8 +226,8 @@ class MotorGoMini
   // Helper functions
   // init_helper configures the motor and encoder
   void init_helper(MotorParameters params, bool should_calibrate,
-                   BLDCMotor& motor,
-                   BLDCDriver6PWM& driver, CalibratedSensor& sensor_calibrated,
+                   BLDCMotor& motor, BLDCDriver6PWM& driver,
+                   CalibratedSensor& sensor_calibrated,
                    MagneticSensorMT6701SSI& encoder, const char* name);
 
   // set_control_mode_helper sets parameters for each control_mode option

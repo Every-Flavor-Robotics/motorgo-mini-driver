@@ -12,8 +12,6 @@ bool hspi_initialized = false;
 BLDCMotor MotorGo::motor_ch0 = BLDCMotor(3);
 BLDCMotor MotorGo::motor_ch1 = BLDCMotor(3);
 
-
-
 MotorGo::MotorGoMini::MotorGoMini()
     : encoder_ch0(MagneticSensorMT6701SSI(CH0_ENC_CS)),
       driver_ch0(BLDCDriver6PWM(CH0_GPIO_UH, CH0_GPIO_UL, CH0_GPIO_VH,
@@ -32,8 +30,7 @@ MotorGo::MotorGoMini::MotorGoMini()
 }
 
 void MotorGo::MotorGoMini::init_helper(MotorParameters params,
-                                       bool should_calibrate,
-                                       BLDCMotor& motor,
+                                       bool should_calibrate, BLDCMotor& motor,
                                        BLDCDriver6PWM& driver,
                                        CalibratedSensor& sensor_calibrated,
                                        MagneticSensorMT6701SSI& encoder,
@@ -58,7 +55,6 @@ void MotorGo::MotorGoMini::init_helper(MotorParameters params,
   motor.foc_modulation = FOCModulationType::SpaceVectorPWM;
   motor.voltage_limit = params.voltage_limit;
   motor.current_limit = params.current_limit;
-
 
   // Initialize motor
   motor.init();
@@ -113,8 +109,8 @@ void MotorGo::MotorGoMini::init_ch0(MotorParameters params,
   motor_params_ch0 = params;
 
   // Initialize motors
-  init_helper(params, should_calibrate, MotorGo::motor_ch0,
-              driver_ch0, sensor_calibrated_ch0, encoder_ch0, "ch0");
+  init_helper(params, should_calibrate, MotorGo::motor_ch0, driver_ch0,
+              sensor_calibrated_ch0, encoder_ch0, "ch0");
 
   disable_ch0();
 }
@@ -135,8 +131,8 @@ void MotorGo::MotorGoMini::init_ch1(MotorParameters params,
   motor_params_ch1 = params;
 
   // Initialize motors
-  init_helper(params, should_calibrate, MotorGo::motor_ch1,
-              driver_ch1, sensor_calibrated_ch1, encoder_ch1, "ch1");
+  init_helper(params, should_calibrate, MotorGo::motor_ch1, driver_ch1,
+              sensor_calibrated_ch1, encoder_ch1, "ch1");
 
   disable_ch1();
 }
@@ -148,7 +144,6 @@ void MotorGo::MotorGoMini::loop_ch0()
 
   // this function can be run at much lower frequency than loopFOC()
   MotorGo::motor_ch0.move();
-
 }
 
 void MotorGo::MotorGoMini::loop_ch1()
@@ -159,7 +154,6 @@ void MotorGo::MotorGoMini::loop_ch1()
   // this function can be run at much lower frequency than loopFOC()
   MotorGo::motor_ch1.move();
   //   MotorGo::motor_ch1.move();
-
 }
 
 ////// Helper Functions
@@ -243,42 +237,42 @@ void MotorGo::MotorGoMini::set_target_helper_ch0()
 
 void MotorGo::MotorGoMini::set_target_helper_ch1()
 {
-    // Switch command based on current control mode
-    switch (control_mode_ch1)
-    {
-      case MotorGo::ControlMode::Voltage:
-        motor_ch1.move(target_voltage_ch1);
-        break;
-      case MotorGo::ControlMode::Torque:
-        //   Disable motor if PID params not set
-        if (!pid_torque_ch1_enabled)
-        {
-          disable_ch1();
-        }
-        motor_ch1.move(target_torque_ch1);
-        break;
-      case MotorGo::ControlMode::Velocity:
-        //  Disable motor if PID params not set
-        if (!pid_velocity_ch1_enabled)
-        {
-          disable_ch1();
-        }
-        motor_ch1.move(target_velocity_ch1);
-        break;
-      case MotorGo::ControlMode::Position:
-        //  Disable motor if PID params not set
-        if (!pid_position_ch1_enabled)
-        {
-          disable_ch1();
-        }
-        motor_ch1.move(target_position_ch1);
-        break;
-      case MotorGo::ControlMode::VelocityOpenLoop:
-        motor_ch1.move(target_velocity_ch1);
-        break;
-      case MotorGo::ControlMode::PositionOpenLoop:
-        motor_ch1.move(target_position_ch1);
-        break;
+  // Switch command based on current control mode
+  switch (control_mode_ch1)
+  {
+    case MotorGo::ControlMode::Voltage:
+      motor_ch1.move(target_voltage_ch1);
+      break;
+    case MotorGo::ControlMode::Torque:
+      //   Disable motor if PID params not set
+      if (!pid_torque_ch1_enabled)
+      {
+        disable_ch1();
+      }
+      motor_ch1.move(target_torque_ch1);
+      break;
+    case MotorGo::ControlMode::Velocity:
+      //  Disable motor if PID params not set
+      if (!pid_velocity_ch1_enabled)
+      {
+        disable_ch1();
+      }
+      motor_ch1.move(target_velocity_ch1);
+      break;
+    case MotorGo::ControlMode::Position:
+      //  Disable motor if PID params not set
+      if (!pid_position_ch1_enabled)
+      {
+        disable_ch1();
+      }
+      motor_ch1.move(target_position_ch1);
+      break;
+    case MotorGo::ControlMode::VelocityOpenLoop:
+      motor_ch1.move(target_velocity_ch1);
+      break;
+    case MotorGo::ControlMode::PositionOpenLoop:
+      motor_ch1.move(target_position_ch1);
+      break;
   }
 }
 
