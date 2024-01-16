@@ -61,7 +61,7 @@ void setup()
   velocity_pid_params_ch0.output_ramp = 10000.0;
   velocity_pid_params_ch0.lpf_time_constant = 0.11;
 
-  velocity_pid_params_ch1.p = 1.5;
+  velocity_pid_params_ch1.p = 1.6;
   velocity_pid_params_ch1.i = 0.01;
   velocity_pid_params_ch1.d = 0.0;
   velocity_pid_params_ch1.output_ramp = 10000.0;
@@ -91,6 +91,4 @@ void loop()
                " Ch1: " + String(motorgo_mini->get_ch1_velocity());
 
   freq_println(str, 10);
-
-  vTaskDelay(1 / portTICK_PERIOD_MS);
 }
