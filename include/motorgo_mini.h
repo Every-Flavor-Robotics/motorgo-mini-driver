@@ -58,6 +58,7 @@ struct MotorParameters
   float current_limit = 1000.0f;
   float velocity_limit = 1000.0f;
   float calibration_voltage;
+  bool reversed = false;
 };
 
 // TODO: These are global because the SimpleFOC commander API doesn't
@@ -173,6 +174,8 @@ class MotorGoMini
   // Additional motor and encoder parameters
   MotorParameters motor_params_ch0;
   MotorParameters motor_params_ch1;
+  Direction motor_direction_ch0;
+  Direction motor_direction_ch1;
 
   // Store whether the parameters have been set
   // If not, the motor will not run be disabled when a command is received
@@ -225,7 +228,7 @@ class MotorGoMini
 
   // Helper functions
   // init_helper configures the motor and encoder
-  void init_helper(MotorParameters params, bool should_calibrate,
+  void init_helper(MotorParameters& params, bool should_calibrate,
                    BLDCMotor& motor, BLDCDriver6PWM& driver,
                    CalibratedSensor& sensor_calibrated,
                    MagneticSensorMT6701SSI& encoder, const char* name);
