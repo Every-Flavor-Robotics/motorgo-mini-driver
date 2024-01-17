@@ -9,8 +9,8 @@
 #include "sensorgo_mpu6050.h"
 
 // UPDATE THESE VALUES
-String WIFI_SSID = "YOUR_SSID";
-String WIFI_PASSWORD = "YOUR_PASSWORD";
+String WIFI_SSID = "WIFI_SSID";
+String WIFI_PASSWORD = "WIFI_PASSWORD";
 
 MotorGo::MotorGoMini motorgo_mini;
 MotorGo::MotorChannel& motor_left = motorgo_mini.ch0;
@@ -52,6 +52,18 @@ PIDController steering_controller(steering_controller_params.p,
                                   steering_controller_params.d,
                                   steering_controller_params.output_ramp,
                                   steering_controller_params.limit);
+
+/*
+// declare and configure custom balance setpoint controller object
+MotorGo::PIDParameters balance_point_params;
+LowPassFilter balance_point_lpf(balance_point_params.lpf_time_constant);
+PIDController balance_point_controller(balance_point_params.p,
+                                  balance_point_params.i,
+                                  balance_point_params.d,
+                                  balance_point_params.output_ramp,
+                                  balance_point_params.limit);
+
+*/
 
 bool motors_enabled = false;
 ESPWifiConfig::Configurable<bool> enable_motors(motors_enabled, "/enable",
@@ -208,6 +220,22 @@ void setup()
         }
       });
 
+  /*
+  // make a balance point controller, where p is the balance point.
+  pid_manager.add_controller(
+    "/balance point", balance_point_params,
+    []()
+    {
+      balance_point_controller.P = balance_point_params.p;
+      balance_point_controller.I = balance_point_params.i;
+      balance_point_controller.D = balance_point_params.d;
+      balance_point_controller.output_ramp =
+          balance_point_params.output_ramp;
+      balance_point_controller.limit = balance_point_params.limit;
+      balancing_lpf.Tf = balance_point_params.lpf_time_constant;
+      balance_point_controller.reset();
+    });
+  */
   enable_motors.set_post_callback(enable_motors_callback);
 
   // initialize the PID manager
@@ -229,27 +257,34 @@ void loop()
   if (mpu.data_ready())
   {
     //  Roll is actually pitch for the balance bot
-    float pitch = mpu.get_roll();
+    float pitch = mpu.get_pitch();
 
     // Print pitch using frequency print
     freq_println("Pitch: " + String(pitch, 5), 10);
 
     float wheel_velocity =
-        (motor_left.get_velocity() - motor_right.get_velocity()) / 2;
+        (motor_left.get_velocity() + motor_right.get_velocity()) / 2;
 
     float ch0_pos = motor_left.get_position() - initial_angle_left;
-    float ch1_pos = -(motor_right.get_position() - initial_angle_right);
+    float ch1_pos = motor_right.get_position() - initial_angle_right;
 
     float velocity_command = velocity_controller(wheel_velocity);
     float balance_command = balancing_controller(pitch - pitch_zero);
     float steering_command = steering_controller(ch0_pos - ch1_pos);
 
+    // update zero pitch with balance point p
+    // pitch_zero = balance_point_controller.P;
+
     // Print balance_command
-    freq_println("Balancing error: " + String(pitch - pitch_zero, 5), 10);
+    // freq_println("Balancing error: " + String(pitch - pitch_zero, 5), 10);
 
     // Combine controller outputs to compute motor commands
     float command_ch0 = balance_command - steering_command - velocity_command;
     float command_ch1 = balance_command + steering_command - velocity_command;
+
+    // optional print statement for each wheel position
+    // freq_println("ch0_pos: "+String(ch0_pos) + " | ch1_pos:
+    // "+String(ch1_pos), 10);
 
     // Set target voltage
     motor_left.set_target_voltage(command_ch0);
