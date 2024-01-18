@@ -68,6 +68,7 @@ struct MotorParameters
 extern BLDCMotor motor_ch0;
 extern BLDCMotor motor_ch1;
 extern InlineCurrentSense current_sense_ch0;
+extern InlineCurrentSense current_sense_ch1;
 extern SPIClass hspi;
 
 class MotorGoMini
@@ -232,7 +233,8 @@ class MotorGoMini
   void init_helper(MotorParameters& params, bool should_calibrate,
                    BLDCMotor& motor, BLDCDriver6PWM& driver,
                    CalibratedSensor& sensor_calibrated,
-                   MagneticSensorMT6701SSI& encoder, const char* name);
+                   MagneticSensorMT6701SSI& encoder,
+                   InlineCurrentSense& current_sense, char* name);
 
   // set_control_mode_helper sets parameters for each control_mode option
   // Sets values for torque controller type and motion controller type

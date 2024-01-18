@@ -11,8 +11,13 @@ bool hspi_initialized = false;
 // until the user calls init_ch0() or init_ch1()
 BLDCMotor MotorGo::motor_ch0 = BLDCMotor(3);
 BLDCMotor MotorGo::motor_ch1 = BLDCMotor(3);
-InlineCurrentSense MotorGo::current_sense_ch0 =
-    InlineCurrentSense(0.003, 200, 7, _NC, 4);
+InlineCurrentSense MotorGo::current_sense_ch0 = InlineCurrentSense(
+    CURRENT_SENSE_RESISTANCE_mOHM / 1000, CURRENT_SENSE_AMP_GAIN, CH0_CURRENT_U,
+    _NC, CH0_CURRENT_W);
+
+InlineCurrentSense MotorGo::current_sense_ch1 = InlineCurrentSense(
+    CURRENT_SENSE_RESISTANCE_mOHM / 1000, CURRENT_SENSE_AMP_GAIN, CH1_CURRENT_U,
+    _NC, CH1_CURRENT_W);
 
 MotorGo::MotorGoMini::MotorGoMini()
     : encoder_ch0(MagneticSensorMT6701SSI(CH0_ENC_CS)),
@@ -29,6 +34,12 @@ MotorGo::MotorGoMini::MotorGoMini()
   pinMode(CH0_CURRENT_W, INPUT);
   pinMode(CH1_CURRENT_U, INPUT);
   pinMode(CH1_CURRENT_W, INPUT);
+
+  //   Run analog read on all pins to initialize ADC
+  analogRead(CH0_CURRENT_U);
+  analogRead(CH0_CURRENT_W);
+  analogRead(CH1_CURRENT_U);
+  analogRead(CH1_CURRENT_W);
 }
 
 void MotorGo::MotorGoMini::init_helper(MotorParameters& params,
@@ -36,6 +47,7 @@ void MotorGo::MotorGoMini::init_helper(MotorParameters& params,
                                        BLDCDriver6PWM& driver,
                                        CalibratedSensor& sensor_calibrated,
                                        MagneticSensorMT6701SSI& encoder,
+                                       InlineCurrentSense& current_sense,
                                        const char* name)
 {
   // Reconfigure number of pole pairs
@@ -79,17 +91,16 @@ void MotorGo::MotorGoMini::init_helper(MotorParameters& params,
   // Link the calibrated sensor to the motor
   motor.linkSensor(&sensor_calibrated);
 
-  Serial.println("Starting Current Sense init");
   // init current sense
-  if (current_sense_ch0.init())
-    Serial.println("Current sense init success!");
-  else
+  if (!current_sense.init())
   {
-    Serial.println("Current sense init failed!");
+    String error = "Current sense init failed for ";
+    error += name;
+    Serial.println(error);
     return;
   }
 
-  motor_ch0.linkCurrentSense(&current_sense_ch0);
+  motor.linkCurrentSense(&current_sense);
 
   // Init FOC
   motor.initFOC();
