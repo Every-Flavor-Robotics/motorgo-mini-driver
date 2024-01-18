@@ -9,8 +9,8 @@
 #include "sensorgo_mpu6050.h"
 
 // UPDATE THESE VALUES
-String WIFI_SSID = "WIFI_SSID";
-String WIFI_PASSWORD = "WIFI_PASSWORD";
+String WIFI_SSID = "YOUR_SSID";
+String WIFI_PASSWORD = "YOUR_PASSWORD";
 
 MotorGo::MotorGoMini motorgo_mini;
 MotorGo::MotorChannel& motor_left = motorgo_mini.ch0;
