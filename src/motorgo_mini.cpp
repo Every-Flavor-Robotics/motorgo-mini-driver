@@ -137,7 +137,8 @@ void MotorGo::MotorGoMini::init_ch0(MotorParameters params,
 
   // Initialize motors
   init_helper(motor_params_ch0, should_calibrate, MotorGo::motor_ch0,
-              driver_ch0, sensor_calibrated_ch0, encoder_ch0, "ch0");
+              driver_ch0, sensor_calibrated_ch0, encoder_ch0, current_sense_ch0,
+              "ch0");
 
   // Set direction of motor
   // Motor will spin counter-clockwise when viewed from the front if reversed is
@@ -179,7 +180,8 @@ void MotorGo::MotorGoMini::init_ch1(MotorParameters params,
 
   // Initialize motors
   init_helper(motor_params_ch1, should_calibrate, MotorGo::motor_ch1,
-              driver_ch1, sensor_calibrated_ch1, encoder_ch1, "ch1");
+              driver_ch1, sensor_calibrated_ch1, encoder_ch1, current_sense_ch1,
+              "ch1");
 
   // Set direction of motor
   // Motor will spin counter-clockwise when viewed from the front if reversed is

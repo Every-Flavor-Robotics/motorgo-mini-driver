@@ -234,7 +234,7 @@ class MotorGoMini
                    BLDCMotor& motor, BLDCDriver6PWM& driver,
                    CalibratedSensor& sensor_calibrated,
                    MagneticSensorMT6701SSI& encoder,
-                   InlineCurrentSense& current_sense, char* name);
+                   InlineCurrentSense& current_sense, const char* name);
 
   // set_control_mode_helper sets parameters for each control_mode option
   // Sets values for torque controller type and motion controller type
