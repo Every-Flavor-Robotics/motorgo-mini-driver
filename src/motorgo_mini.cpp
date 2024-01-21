@@ -6,18 +6,24 @@
 SPIClass MotorGo::hspi = SPIClass(HSPI);
 bool hspi_initialized = false;
 
+void do_target_ch0(char* cmd)
+{
+  MotorGo::command.motor(&MotorGo::motor_ch0, cmd);
+}
+
+Commander MotorGo::command = Commander(Serial);
 // TODO: Motors are currently instantiated with a default number of pole pairs
 // This is not great design, would be better to not initialize motors
 // until the user calls init_ch0() or init_ch1()
 BLDCMotor MotorGo::motor_ch0 = BLDCMotor(3);
 BLDCMotor MotorGo::motor_ch1 = BLDCMotor(3);
 InlineCurrentSense MotorGo::current_sense_ch0 = InlineCurrentSense(
-    CURRENT_SENSE_RESISTANCE_mOHM / 1000, CURRENT_SENSE_AMP_GAIN, CH0_CURRENT_U,
-    _NC, CH0_CURRENT_W);
+    CURRENT_SENSE_RESISTANCE_mOHM / 1000.0f, CURRENT_SENSE_AMP_GAIN,
+    CH0_CURRENT_U, _NC, CH0_CURRENT_W);
 
 InlineCurrentSense MotorGo::current_sense_ch1 = InlineCurrentSense(
-    CURRENT_SENSE_RESISTANCE_mOHM / 1000, CURRENT_SENSE_AMP_GAIN, CH1_CURRENT_U,
-    _NC, CH1_CURRENT_W);
+    CURRENT_SENSE_RESISTANCE_mOHM / 1000.0f, CURRENT_SENSE_AMP_GAIN,
+    CH1_CURRENT_U, _NC, CH1_CURRENT_W);
 
 MotorGo::MotorGoMini::MotorGoMini()
     : encoder_ch0(MagneticSensorMT6701SSI(CH0_ENC_CS)),
@@ -52,6 +58,11 @@ void MotorGo::MotorGoMini::init_helper(MotorParameters& params,
 {
   // Reconfigure number of pole pairs
   motor.pole_pairs = params.pole_pairs;
+  // Set motor control parameters
+  motor.foc_modulation = FOCModulationType::SpaceVectorPWM;
+  motor.voltage_limit = params.voltage_limit;
+  motor.current_limit = params.current_limit;
+  motor.voltage_sensor_align = 8;
 
   // Init encoder
   encoder.init(&MotorGo::hspi);
@@ -65,12 +76,7 @@ void MotorGo::MotorGoMini::init_helper(MotorParameters& params,
   driver.init();
   motor.linkDriver(&driver);
 
-  current_sense_ch0.linkDriver(&driver_ch0);
-
-  // Set motor control parameters
-  motor.foc_modulation = FOCModulationType::SpaceVectorPWM;
-  motor.voltage_limit = params.voltage_limit;
-  motor.current_limit = params.current_limit;
+  current_sense.linkDriver(&driver);
 
   // Initialize motor
   motor.init();
@@ -139,6 +145,11 @@ void MotorGo::MotorGoMini::init_ch0(MotorParameters params,
   init_helper(motor_params_ch0, should_calibrate, MotorGo::motor_ch0,
               driver_ch0, sensor_calibrated_ch0, encoder_ch0, current_sense_ch0,
               "ch0");
+
+  MotorGo::command.add('0', do_target_ch0, (char*)"target");
+  MotorGo::motor_ch0.monitor_variables =
+      _MON_TARGET | _MON_VEL | _MON_ANGLE | _MON_CURR_Q | _MON_CURR_D;
+  MotorGo::motor_ch0.useMonitoring(Serial);
 
   // Set direction of motor
   // Motor will spin counter-clockwise when viewed from the front if reversed is
@@ -210,6 +221,13 @@ void MotorGo::MotorGoMini::loop_ch0()
 
   // this function can be run at much lower frequency than loopFOC()
   MotorGo::motor_ch0.move();
+
+  // Monitoring, use only if necessary as it slows loop down significantly
+  // user communication
+  MotorGo::command.run();
+
+  MotorGo::motor_ch0.monitor();
+  // MotorGo::motor_ch1.monitor();
 }
 
 void MotorGo::MotorGoMini::loop_ch1()

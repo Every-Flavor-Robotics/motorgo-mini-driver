@@ -70,6 +70,7 @@ extern BLDCMotor motor_ch1;
 extern InlineCurrentSense current_sense_ch0;
 extern InlineCurrentSense current_sense_ch1;
 extern SPIClass hspi;
+extern Commander command;
 
 class MotorGoMini
 {
