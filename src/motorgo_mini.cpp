@@ -59,7 +59,7 @@ void MotorGo::MotorGoMini::init_helper(MotorParameters& params,
   // Reconfigure number of pole pairs
   motor.pole_pairs = params.pole_pairs;
   // Set motor control parameters
-  motor.foc_modulation = FOCModulationType::SpaceVectorPWM;
+  motor.foc_modulation = FOCModulationType::Trapezoid_120;
   motor.voltage_limit = params.voltage_limit;
   motor.current_limit = params.current_limit;
   motor.voltage_sensor_align = 8;
@@ -227,7 +227,6 @@ void MotorGo::MotorGoMini::loop_ch0()
   MotorGo::command.run();
 
   MotorGo::motor_ch0.monitor();
-  // MotorGo::motor_ch1.monitor();
 }
 
 void MotorGo::MotorGoMini::loop_ch1()
