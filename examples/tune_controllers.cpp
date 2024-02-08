@@ -6,7 +6,10 @@
 #include "readable.h"
 #include "web_server.h"
 
-MotorGo::MotorGoMini* motorgo_mini;
+MotorGo::MotorGoMini motorgo_mini;
+MotorGo::MotorChannel& motor_ch0 = motorgo_mini.ch0;
+MotorGo::MotorChannel& motor_ch1 = motorgo_mini.ch1;
+
 MotorGo::MotorParameters motor_params_ch0;
 MotorGo::MotorParameters motor_params_ch1;
 
@@ -117,36 +120,36 @@ ESPWifiConfig::Configurable<float> position_lpf_ch1(
 
 bool save_pid_params_ch0()
 {
-  motorgo_mini->save_position_controller_ch0();
-  motorgo_mini->save_velocity_controller_ch0();
-  motorgo_mini->save_torque_controller_ch0();
+  motor_ch0.save_position_controller();
+  motor_ch0.save_velocity_controller();
+  motor_ch0.save_torque_controller();
 
   return true;
 }
 
 bool save_pid_params_ch1()
 {
-  motorgo_mini->save_position_controller_ch1();
-  motorgo_mini->save_velocity_controller_ch1();
-  motorgo_mini->save_torque_controller_ch1();
+  motor_ch1.save_position_controller();
+  motor_ch1.save_velocity_controller();
+  motor_ch1.save_torque_controller();
 
   return true;
 }
 
 bool load_pid_params_ch0()
 {
-  motorgo_mini->load_position_controller_ch0();
-  motorgo_mini->load_velocity_controller_ch0();
-  motorgo_mini->load_torque_controller_ch0();
+  motor_ch0.load_position_controller();
+  motor_ch0.load_velocity_controller();
+  motor_ch0.load_torque_controller();
 
   return true;
 }
 
 bool load_pid_params_ch1()
 {
-  motorgo_mini->load_position_controller_ch1();
-  motorgo_mini->load_velocity_controller_ch1();
-  motorgo_mini->load_torque_controller_ch1();
+  motor_ch1.load_position_controller();
+  motor_ch1.load_velocity_controller();
+  motor_ch1.load_torque_controller();
 
   return true;
 }
@@ -169,76 +172,76 @@ bool load_pid_params_ch1()
 
 void get_pid_params_ch0()
 {
-  position_pid_params_ch0 = motorgo_mini->get_position_controller_ch0();
-  velocity_pid_params_ch0 = motorgo_mini->get_velocity_controller_ch0();
-  current_pid_params_ch0 = motorgo_mini->get_torque_controller_ch0();
+  position_pid_params_ch0 = motor_ch0.get_position_controller();
+  velocity_pid_params_ch0 = motor_ch0.get_velocity_controller();
+  current_pid_params_ch0 = motor_ch0.get_torque_controller();
 }
 
 void get_pid_params_ch1()
 {
-  position_pid_params_ch1 = motorgo_mini->get_position_controller_ch1();
-  velocity_pid_params_ch1 = motorgo_mini->get_velocity_controller_ch1();
-  current_pid_params_ch1 = motorgo_mini->get_torque_controller_ch1();
+  position_pid_params_ch1 = motor_ch1.get_position_controller();
+  velocity_pid_params_ch1 = motor_ch1.get_velocity_controller();
+  current_pid_params_ch1 = motor_ch1.get_torque_controller();
 }
 
 void position_pid_update_ch0(float value)
 {
-  motorgo_mini->disable_ch0();
-  motorgo_mini->set_position_controller_ch0(position_pid_params_ch0);
+  motor_ch0.disable();
+  motor_ch0.set_position_controller(position_pid_params_ch0);
 
   //   Reset position, velocity, and torque controllers;
-  motorgo_mini->reset_position_controller_ch0();
-  motorgo_mini->reset_velocity_controller_ch0();
-  motorgo_mini->reset_torque_controller_ch0();
+  motor_ch0.reset_position_controller();
+  motor_ch0.reset_velocity_controller();
+  motor_ch0.reset_torque_controller();
 }
 
 void position_pid_update_ch1(float value)
 {
-  motorgo_mini->disable_ch1();
-  motorgo_mini->set_position_controller_ch1(position_pid_params_ch1);
+  motor_ch1.disable();
+  motor_ch1.set_position_controller(position_pid_params_ch1);
 
   //   Reset position, velocity, and torque controllers;
-  motorgo_mini->reset_position_controller_ch1();
-  motorgo_mini->reset_velocity_controller_ch1();
-  motorgo_mini->reset_torque_controller_ch1();
+  motor_ch1.reset_position_controller();
+  motor_ch1.reset_velocity_controller();
+  motor_ch1.reset_torque_controller();
 }
 
 void velocity_pid_update_ch0(float value)
 {
-  motorgo_mini->disable_ch0();
-  motorgo_mini->set_velocity_controller_ch0(velocity_pid_params_ch0);
+  motor_ch0.disable();
+  motor_ch0.set_velocity_controller(velocity_pid_params_ch0);
 
   //   Reset velocity and torque controllers;
-  motorgo_mini->reset_velocity_controller_ch0();
-  motorgo_mini->reset_torque_controller_ch0();
+  motor_ch0.reset_velocity_controller();
+  motor_ch0.reset_torque_controller();
 }
 
 void velocity_pid_update_ch1(float value)
 {
-  motorgo_mini->disable_ch1();
-  motorgo_mini->set_velocity_controller_ch1(velocity_pid_params_ch1);
+  motor_ch1.disable();
+  motor_ch1.set_velocity_controller(velocity_pid_params_ch1);
 
   //   Reset velocity and torque controllers;
-  motorgo_mini->reset_velocity_controller_ch1();
-  motorgo_mini->reset_torque_controller_ch1();
+  motor_ch1.reset_velocity_controller();
+  motor_ch1.reset_torque_controller();
 }
 
 void current_pid_update_ch0(float value)
 {
-  motorgo_mini->disable_ch0();
-  motorgo_mini->set_torque_controller_ch0(current_pid_params_ch0);
+  motor_ch0.disable();
+  motor_ch0.set_torque_controller(current_pid_params_ch0);
 
   //   Reset torque controller;
-  motorgo_mini->reset_torque_controller_ch0();
+  motor_ch0.reset_torque_controller();
 }
 
 void current_pid_update_ch1(float value)
 {
-  motorgo_mini->disable_ch1();
-  motorgo_mini->set_torque_controller_ch1(current_pid_params_ch1);
+  motor_ch1.disable();
+  motor_ch1.set_torque_controller(current_pid_params_ch1);
 
   //   Reset torque controller;
-  motorgo_mini->reset_torque_controller_ch1();
+  motor_ch1.reset_torque_controller();
 }
 
 // Function to print at a maximum frequency
@@ -331,13 +334,10 @@ void setup()
   motor_params_ch1.velocity_limit = 100.0;
   motor_params_ch1.calibration_voltage = 2.0;
 
-  // Instantiate motorgo mini board
-  motorgo_mini = new MotorGo::MotorGoMini();
-
   // Setup Ch0 with FOCStudio enabled
   bool calibrate = false;
-  motorgo_mini->init_ch0(motor_params_ch0, calibrate);
-  motorgo_mini->init_ch1(motor_params_ch1, calibrate);
+  motor_ch0.init(motor_params_ch0, calibrate);
+  motor_ch1.init(motor_params_ch1, calibrate);
 
   // Set velocity controller parameters
   // Setup PID parameters
@@ -353,12 +353,12 @@ void setup()
   velocity_pid_params_ch1.output_ramp = 10000.0;
   velocity_pid_params_ch1.lpf_time_constant = 0.1;
 
-  motorgo_mini->set_velocity_controller_ch0(velocity_pid_params_ch0);
-  motorgo_mini->set_velocity_controller_ch1(velocity_pid_params_ch1);
+  motor_ch0.set_velocity_controller(velocity_pid_params_ch0);
+  motor_ch1.set_velocity_controller(velocity_pid_params_ch1);
 
   //   Set closed-loop velocity mode
-  motorgo_mini->set_control_mode_ch0(MotorGo::ControlMode::Velocity);
-  motorgo_mini->set_control_mode_ch1(MotorGo::ControlMode::Velocity);
+  motor_ch0.set_control_mode(MotorGo::ControlMode::Velocity);
+  motor_ch1.set_control_mode(MotorGo::ControlMode::Velocity);
 
   //   Print url: http://{IP_ADDRESS}:PORT
   Serial.print("Please connect to http://");
@@ -373,11 +373,11 @@ void setup()
 void loop()
 {
   // Run Ch0
-  motorgo_mini->loop_ch0();
-  motorgo_mini->loop_ch1();
+  motor_ch0.loop();
+  motor_ch1.loop();
 
-  motorgo_mini->set_target_velocity_ch0(10.0);
-  motorgo_mini->set_target_velocity_ch1(10.0);
+  motor_ch0.set_target_velocity(10.0);
+  motor_ch1.set_target_velocity(10.0);
 
   //   String str = "Velocity - Ch0: " +
   //   String(motorgo_mini->get_ch0_velocity()) +
