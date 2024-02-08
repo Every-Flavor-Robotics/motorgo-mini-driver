@@ -50,8 +50,8 @@ void setup()
 
   // Setup Ch0
   bool calibrate = false;
-  motor_left.init(motor_params_ch0, calibrate, "ch0");
-  motor_right.init(motor_params_ch1, calibrate, "ch1");
+  motor_left.init(motor_params_ch0, calibrate);
+  motor_right.init(motor_params_ch1, calibrate);
 
   // Set velocity controller parameters
   // Setup PID parameters

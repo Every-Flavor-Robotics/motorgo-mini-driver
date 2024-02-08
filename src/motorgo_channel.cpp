@@ -1,8 +1,10 @@
 #include "motorgo_channel.h"
 
 // MotorChannel class constructor
-MotorGo::MotorChannel::MotorChannel(BLDCChannelParameters params)
-    : motor(BLDCMotor(0)),  // Placeholder value, will be set in init
+MotorGo::MotorChannel::MotorChannel(BLDCChannelParameters params,
+                                    const char* name)
+    : name(name),
+      motor(BLDCMotor(0)),  // Placeholder value, will be set in init
       driver(BLDCDriver6PWM(params.uh, params.ul, params.vh, params.vl,
                             params.wh, params.wl)),
       encoder(MagneticSensorMT6701SSI(params.enc_cs)),
@@ -24,8 +26,7 @@ MotorGo::MotorChannel::MotorChannel(BLDCChannelParameters params)
   }
 }
 
-void MotorGo::MotorChannel::init(MotorParameters params, bool should_calibrate,
-                                 const char* name)
+void MotorGo::MotorChannel::init(MotorParameters params, bool should_calibrate)
 {
   // Save motor parameters
   motor_params = params;
@@ -101,10 +102,10 @@ void MotorGo::MotorChannel::init(MotorParameters params, bool should_calibrate,
   disable();
 }
 
-void MotorGo::MotorChannel::init(MotorParameters params, const char* name)
+void MotorGo::MotorChannel::init(MotorParameters params)
 {
   // Call the other init function with should_calibrate set to false
-  init(params, false, name);
+  init(params, false);
 }
 
 void MotorGo::MotorChannel::loop()

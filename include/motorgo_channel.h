@@ -17,16 +17,16 @@ namespace MotorGo
 class MotorChannel
 {
  public:
-  MotorChannel(BLDCChannelParameters params);
+  MotorChannel(BLDCChannelParameters params, const char* name);
   MotorChannel(const MotorChannel&) = delete;  // Delete copy constructor
   MotorChannel& operator=(const MotorChannel&) =
       delete;  // Delete copy assignment operator
 
   // Init motors and encoders, calibration is automatically loaded
-  void init(MotorParameters params, const char* name);
+  void init(MotorParameters params);
 
   // Init motors and encoders, optionally calibrating
-  void init(MotorParameters params, bool should_calibrate, const char* name);
+  void init(MotorParameters params, bool should_calibrate);
 
   // Run control loop, call as fast as possible
   void loop();
@@ -80,6 +80,10 @@ class MotorChannel
   float get_voltage();
 
  private:
+  //    Motor name
+  //   Used to store calibration parameters in EEPROM
+  const char* name;
+
   // Encoder, motor, and driver instances
   BLDCMotor motor;
   BLDCDriver6PWM driver;
