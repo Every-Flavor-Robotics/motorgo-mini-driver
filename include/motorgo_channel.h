@@ -9,74 +9,10 @@
 
 #include "encoders/calibrated/CalibratedSensor.h"
 #include "encoders/mt6701/MagneticSensorMT6701SSI.h"
+#include "motorgo_common.h"
 
 namespace MotorGo
 {
-
-// Define NOT_SET as 255
-#define NOT_SET 255
-
-struct BLDCChannelParameters
-{
-  uint8_t uh;
-  uint8_t ul;
-  uint8_t vh;
-  uint8_t vl;
-  uint8_t wh;
-  uint8_t wl;
-  uint8_t current_u;
-  uint8_t current_v;
-  uint8_t current_w;
-  uint8_t enc_cs;
-};
-
-// Control config struct
-enum ControlMode
-{
-  None,
-  Voltage,
-  Velocity,
-  Torque,
-  Position,
-  VelocityOpenLoop,
-  PositionOpenLoop
-};
-
-struct PIDParameters
-{
-  float p;
-  float i;
-  float d;
-  float output_ramp = 10000.0f;
-  float lpf_time_constant = 0.1f;
-  float limit = 10000.0f;
-};
-
-typedef union
-{
-  struct __attribute__((packed))
-  {
-    float p;
-    float i;
-    float d;
-    float output_ramp;
-    float lpf_time_constant;
-    float limit;
-  };
-
-  uint8_t raw[sizeof(PIDParameters)];
-} packed_pid_parameters_t;
-
-struct MotorParameters
-{
-  int pole_pairs;
-  float power_supply_voltage;
-  float voltage_limit;
-  float current_limit = 1000.0f;
-  float velocity_limit = 1000.0f;
-  float calibration_voltage;
-  bool reversed = false;
-};
 
 class MotorChannel
 {
@@ -84,10 +20,10 @@ class MotorChannel
   MotorChannel(BLDCChannelParameters params);
 
   // Init motors and encoders, calibration is automatically loaded
-  void init(MotorParameters params);
+  void init(MotorParameters params, const char* name);
 
   // Init motors and encoders, optionally calibrating
-  void init(MotorParameters params, bool should_calibrate);
+  void init(MotorParameters params, bool should_calibrate, const char* name);
 
   // Run control loop, call as fast as possible
   void loop();

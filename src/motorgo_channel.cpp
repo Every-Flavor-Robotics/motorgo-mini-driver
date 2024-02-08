@@ -1,8 +1,8 @@
-#include "motor_channel.h"
+#include "motorgo_channel.h"
 
 // MotorChannel class constructor
 MotorGo::MotorChannel::MotorChannel(BLDCChannelParameters params)
-    : motor(BLDCMotor(3)),
+    : motor(BLDCMotor(0)),  // Placeholder value, will be set in init
       driver(BLDCDriver6PWM(params.uh, params.ul, params.vh, params.vl,
                             params.wh, params.wl)),
       encoder(MagneticSensorMT6701SSI(params.enc_cs)),
@@ -10,15 +10,15 @@ MotorGo::MotorChannel::MotorChannel(BLDCChannelParameters params)
 {
   // Set current sensing pins to input
   //   If params.current_u is not set (255), set the pin mode to INPUT
-  if (params.current_u != NOT_SET)
+  if (params.current_u != GPIO_NOT_SET)
   {
     pinMode(params.current_u, INPUT);
   }
-  if (params.current_v != NOT_SET)
+  if (params.current_v != GPIO_NOT_SET)
   {
     pinMode(params.current_v, INPUT);
   }
-  if (params.current_w != NOT_SET)
+  if (params.current_w != GPIO_NOT_SET)
   {
     pinMode(params.current_w, INPUT);
   }
@@ -27,19 +27,12 @@ MotorGo::MotorChannel::MotorChannel(BLDCChannelParameters params)
 void MotorGo::MotorChannel::init(MotorParameters params, bool should_calibrate,
                                  const char* name)
 {
-  //   Guard to prevent multiple initializations, which could cause a crash
-  if (!hspi_initialized)
-  {
-    hspi_initialized = true;
-    MotorGo::hspi.begin(ENC_SCL, ENC_SDA, 45, 46);
-  }
-
   // Save motor parameters
   motor_params = params;
   this->should_calibrate = should_calibrate;
 
-  // Reconfigure number of pole pairs
-  motor.pole_pairs = motor_params.pole_pairs;
+  // Set the correct number of pole pairs
+  motor.pole_pairs = params.pole_pairs;
 
   // Init encoder
   encoder.init(&MotorGo::hspi);
@@ -106,6 +99,12 @@ void MotorGo::MotorChannel::init(MotorParameters params, bool should_calibrate,
 
   // Set the motor to be disabled
   disable();
+}
+
+void MotorGo::MotorChannel::init(MotorParameters params, const char* name)
+{
+  // Call the other init function with should_calibrate set to false
+  init(params, false, name);
 }
 
 void MotorGo::MotorChannel::loop()
@@ -297,11 +296,6 @@ void MotorGo::MotorChannel::reset_torque_controller()
 void MotorGo::MotorChannel::reset_velocity_controller()
 {
   motor.PID_velocity.reset();
-}
-
-void MotorGo::MotorChannel::reset_position_controller()
-{
-  motor.P_angle.reset();
 }
 
 void MotorGo::MotorChannel::reset_position_controller()
