@@ -106,7 +106,8 @@ void setup()
     Serial.println("Failed to find MPU6050 chip");
     //   Restart the board
     Serial.println("Restarting to try again...");
-    Serial.println("------------------------------------") ESP.restart();
+    Serial.println("------------------------------------");
+    ESP.restart();
   }
 
   Serial.println("Calibrating IMU in 3 seconds, do not move robot");
@@ -133,9 +134,6 @@ void setup()
   motor_params_right.current_limit = 300;
   motor_params_right.velocity_limit = 100.0;
   motor_params_right.calibration_voltage = 2.0;
-
-  // Instantiate motorgo mini board
-  motorgo_mini = new MotorGo::MotorGoMini();
 
   // Setup Ch0
   bool calibrate = false;
