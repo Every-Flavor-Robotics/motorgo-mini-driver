@@ -12,15 +12,15 @@ MotorGo::MotorChannel::MotorChannel(BLDCChannelParameters params,
 {
   // Set current sensing pins to input
   //   If params.current_u is not set (255), set the pin mode to INPUT
-  if (params.current_u != GPIO_NOT_SET)
+  if (params.current_u != MOTORGO_GPIO_NOT_SET)
   {
     pinMode(params.current_u, INPUT);
   }
-  if (params.current_v != GPIO_NOT_SET)
+  if (params.current_v != MOTORGO_GPIO_NOT_SET)
   {
     pinMode(params.current_v, INPUT);
   }
-  if (params.current_w != GPIO_NOT_SET)
+  if (params.current_w != MOTORGO_GPIO_NOT_SET)
   {
     pinMode(params.current_w, INPUT);
   }
