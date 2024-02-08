@@ -11,13 +11,6 @@ namespace MotorGo
 
 class MotorGoMini
 {
- public:
-  MotorGoMini();
-
-  // Define the two motor channels on the MotorGo Mini
-  MotorChannel ch0;
-  MotorChannel ch1;
-
  private:
   BLDCChannelParameters ch0_params = {
       .uh = CH0_GPIO_UH,
@@ -44,6 +37,13 @@ class MotorGoMini
       .current_w = CH1_CURRENT_W,
       .enc_cs = CH1_ENC_CS,
   };
+
+ public:
+  MotorGoMini();
+
+  // Define the two motor channels on the MotorGo Mini
+  MotorChannel ch0;
+  MotorChannel ch1;
 };
 }  // namespace MotorGo
 
