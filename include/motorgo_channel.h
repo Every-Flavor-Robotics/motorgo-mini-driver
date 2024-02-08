@@ -18,6 +18,9 @@ class MotorChannel
 {
  public:
   MotorChannel(BLDCChannelParameters params);
+  MotorChannel(const MotorChannel&) = delete;  // Delete copy constructor
+  MotorChannel& operator=(const MotorChannel&) =
+      delete;  // Delete copy assignment operator
 
   // Init motors and encoders, calibration is automatically loaded
   void init(MotorParameters params, const char* name);
