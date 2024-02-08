@@ -3,8 +3,8 @@
 #include "motorgo_mini.h"
 
 MotorGo::MotorGoMini motorgo_mini;
-MotorGo::MotorChannel motor_left;
-MotorGo::MotorChannel motor_right;
+MotorGo::MotorChannel& motor_left = motorgo_mini.ch0;
+MotorGo::MotorChannel& motor_right = motorgo_mini.ch1;
 
 MotorGo::MotorParameters motor_params_ch0;
 MotorGo::MotorParameters motor_params_ch1;
@@ -49,9 +49,9 @@ void setup()
   motor_params_ch1.reversed = true;
 
   // Setup Ch0
-  bool calibrate = true;
-  motor_left.init(motor_params_ch0, calibrate, "motor_left");
-  motor_right.init(motor_params_ch1, calibrate, "motor_gith");
+  bool calibrate = false;
+  motor_left.init(motor_params_ch0, calibrate, "ch0");
+  motor_right.init(motor_params_ch1, calibrate, "ch1");
 
   // Set velocity controller parameters
   // Setup PID parameters
