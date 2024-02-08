@@ -3,6 +3,9 @@
 #include "motorgo_mini.h"
 
 MotorGo::MotorGoMini motorgo_mini;
+MotorGo::MotorChannel motor_left;
+MotorGo::MotorChannel motor_right;
+
 MotorGo::MotorParameters motor_params_ch0;
 MotorGo::MotorParameters motor_params_ch1;
 
@@ -46,9 +49,9 @@ void setup()
   motor_params_ch1.reversed = true;
 
   // Setup Ch0
-  bool calibrate = false;
-  motorgo_mini.ch0.init(motor_params_ch0, calibrate, "ch0");
-  motorgo_mini.ch1.init(motor_params_ch1, calibrate, "ch1");
+  bool calibrate = true;
+  motor_left.init(motor_params_ch0, calibrate, "motor_left");
+  motor_right.init(motor_params_ch1, calibrate, "motor_gith");
 
   // Set velocity controller parameters
   // Setup PID parameters
@@ -64,28 +67,28 @@ void setup()
   velocity_pid_params_ch1.output_ramp = 10000.0;
   velocity_pid_params_ch1.lpf_time_constant = 0.11;
 
-  motorgo_mini.ch0.set_velocity_controller(velocity_pid_params_ch0);
-  motorgo_mini.ch1.set_velocity_controller(velocity_pid_params_ch1);
+  motor_left.set_velocity_controller(velocity_pid_params_ch0);
+  motor_right.set_velocity_controller(velocity_pid_params_ch1);
 
   //   Set closed-loop velocity mode
-  motorgo_mini.ch0.set_control_mode(MotorGo::ControlMode::Velocity);
-  motorgo_mini.ch1.set_control_mode(MotorGo::ControlMode::Velocity);
+  motor_left.set_control_mode(MotorGo::ControlMode::Velocity);
+  motor_right.set_control_mode(MotorGo::ControlMode::Velocity);
 
   //   Enable motors
-  motorgo_mini.ch0.enable();
-  motorgo_mini.ch1.enable();
+  motor_left.enable();
+  motor_right.enable();
 }
 
 void loop()
 {
-  motorgo_mini.ch0.loop();
-  motorgo_mini.ch1.loop();
+  motor_left.loop();
+  motor_right.loop();
 
-  motorgo_mini.ch0.set_target_velocity(10.0);
-  motorgo_mini.ch1.set_target_velocity(10.0);
+  motor_left.set_target_velocity(10.0);
+  motor_right.set_target_velocity(10.0);
 
-  String str = "Velocity - Ch0: " + String(motorgo_mini.ch0.get_velocity()) +
-               " Ch1: " + String(motorgo_mini.ch1.get_velocity());
+  String str = "Velocity - Ch0: " + String(motor_left.get_velocity()) +
+               " Ch1: " + String(motor_right.get_velocity());
 
   freq_println(str, 10);
 }
