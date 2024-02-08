@@ -12,9 +12,12 @@
 String WIFI_SSID = "YOUR_SSID";
 String WIFI_PASSWORD = "YOUR_PASSWORD";
 
-MotorGo::MotorGoMini* motorgo_mini;
-MotorGo::MotorParameters motor_params_ch0;
-MotorGo::MotorParameters motor_params_ch1;
+MotorGo::MotorGoMini motorgo_mini;
+MotorGo::MotorChannel& motor_left = motorgo_mini.ch0;
+MotorGo::MotorChannel& motor_right = motorgo_mini.ch1;
+
+MotorGo::MotorParameters motor_params_left;
+MotorGo::MotorParameters motor_params_right;
 
 // declare PID manager object
 MotorGo::PIDManager pid_manager;
@@ -56,22 +59,22 @@ ESPWifiConfig::Configurable<bool> enable_motors(motors_enabled, "/enable",
 
 SensorGoMPU6050 mpu;
 float pitch_zero = 0.0092;
-float initial_angle_ch0;
-float initial_angle_ch1;
+float initial_angle_left;
+float initial_angle_right;
 
 void enable_motors_callback(bool value)
 {
   if (value)
   {
     Serial.println("Enabling motors");
-    motorgo_mini->enable_ch0();
-    motorgo_mini->enable_ch1();
+    motor_left.enable();
+    motor_right.enable();
   }
   else
   {
     Serial.println("Disabling motors");
-    motorgo_mini->disable_ch0();
-    motorgo_mini->disable_ch1();
+    motor_left.disable();
+    motor_right.disable();
   }
 }
 
@@ -117,31 +120,31 @@ void setup()
   mpu.calibrate();
 
   // Setup motor parameters
-  motor_params_ch0.pole_pairs = 7;
-  motor_params_ch0.power_supply_voltage = 5.0;
-  motor_params_ch0.voltage_limit = 5.0;
-  motor_params_ch0.current_limit = 300;
-  motor_params_ch0.velocity_limit = 100.0;
-  motor_params_ch0.calibration_voltage = 2.0;
+  motor_params_left.pole_pairs = 7;
+  motor_params_left.power_supply_voltage = 5.0;
+  motor_params_left.voltage_limit = 5.0;
+  motor_params_left.current_limit = 300;
+  motor_params_left.velocity_limit = 100.0;
+  motor_params_left.calibration_voltage = 2.0;
 
-  motor_params_ch1.pole_pairs = 7;
-  motor_params_ch1.power_supply_voltage = 5.0;
-  motor_params_ch1.voltage_limit = 5.0;
-  motor_params_ch1.current_limit = 300;
-  motor_params_ch1.velocity_limit = 100.0;
-  motor_params_ch1.calibration_voltage = 2.0;
+  motor_params_right.pole_pairs = 7;
+  motor_params_right.power_supply_voltage = 5.0;
+  motor_params_right.voltage_limit = 5.0;
+  motor_params_right.current_limit = 300;
+  motor_params_right.velocity_limit = 100.0;
+  motor_params_right.calibration_voltage = 2.0;
 
   // Instantiate motorgo mini board
   motorgo_mini = new MotorGo::MotorGoMini();
 
   // Setup Ch0
   bool calibrate = false;
-  motorgo_mini->init_ch0(motor_params_ch0, calibrate);
-  motorgo_mini->init_ch1(motor_params_ch1, calibrate);
+  motor_left.init(motor_params_left, calibrate);
+  motor_right.init(motor_params_right, calibrate);
 
   //   Set closed-loop position mode
-  motorgo_mini->set_control_mode_ch0(MotorGo::ControlMode::Voltage);
-  motorgo_mini->set_control_mode_ch1(MotorGo::ControlMode::Voltage);
+  motor_left.set_control_mode(MotorGo::ControlMode::Voltage);
+  motor_right.set_control_mode(MotorGo::ControlMode::Voltage);
 
   // wrap controller params into a configurable object, pass anonymous function
   // to allow board to update controller values after receiving input over wifi.
@@ -183,13 +186,13 @@ void setup()
       {
         if (motors_enabled)
         {
-          motorgo_mini->disable_ch0();
-          motorgo_mini->disable_ch1();
+          motor_left.disable();
+          motor_right.disable();
         }
 
         // Compute new initial angle
-        initial_angle_ch0 = motorgo_mini->get_ch0_position();
-        initial_angle_ch1 = motorgo_mini->get_ch1_position();
+        initial_angle_left = motor_left.get_position();
+        initial_angle_right = motor_right.get_position();
 
         steering_controller.P = steering_controller_params.p;
         steering_controller.I = steering_controller_params.i;
@@ -202,8 +205,8 @@ void setup()
 
         if (motors_enabled)
         {
-          motorgo_mini->enable_ch0();
-          motorgo_mini->enable_ch1();
+          motor_left.enable();
+          motor_right.enable();
         }
       });
 
@@ -212,8 +215,8 @@ void setup()
   // initialize the PID manager
   pid_manager.init(WIFI_SSID, WIFI_PASSWORD);
 
-  initial_angle_ch0 = motorgo_mini->get_ch0_position();
-  initial_angle_ch1 = motorgo_mini->get_ch1_position();
+  initial_angle_left = motor_left.get_position();
+  initial_angle_right = motor_right.get_position();
 
   // Normally, we'd enable the motors here. However, since the GUI can enable,
   // leave them disabled so the robot doesn't run away
@@ -234,11 +237,10 @@ void loop()
     freq_println("Pitch: " + String(pitch, 5), 10);
 
     float wheel_velocity =
-        (motorgo_mini->get_ch0_velocity() - motorgo_mini->get_ch1_velocity()) /
-        2;
+        (motor_left.get_velocity() - motor_right.get_velocity()) / 2;
 
-    float ch0_pos = motorgo_mini->get_ch0_position() - initial_angle_ch0;
-    float ch1_pos = -(motorgo_mini->get_ch1_position() - initial_angle_ch1);
+    float ch0_pos = motor_left.get_position() - initial_angle_left;
+    float ch1_pos = -(motor_right.get_position() - initial_angle_right);
 
     float velocity_command = velocity_controller(wheel_velocity);
     float balance_command = balancing_controller(pitch - pitch_zero);
@@ -252,11 +254,11 @@ void loop()
     float command_ch1 = balance_command + steering_command - velocity_command;
 
     // Set target voltage
-    motorgo_mini->set_target_voltage_ch0(command_ch0);
-    motorgo_mini->set_target_voltage_ch1(command_ch1);
+    motor_left.set_target_voltage(command_ch0);
+    motor_right.set_target_voltage(command_ch1);
   }
 
   // Run Ch0
-  motorgo_mini->loop_ch0();
-  motorgo_mini->loop_ch1();
+  motor_left.loop();
+  motor_right.loop();
 }
