@@ -22,11 +22,7 @@ MotorGo::MotorParameters motor_params_right;
 // declare PID manager object
 MotorGo::PIDManager pid_manager;
 
-// declare two pre-built PID controller objects for individual motor velocity
-// control
-// MotorGo::PIDParameters velocity_pid_params;
-
-// MotorGo::PIDParameters velocity_controller_params;
+// declare and configure custom velocity controller object
 MotorGo::PIDParameters velocity_controller_params;
 LowPassFilter velocity_lpf(velocity_controller_params.lpf_time_constant);
 PIDController velocity_controller(velocity_controller_params.p,
@@ -53,24 +49,29 @@ PIDController steering_controller(steering_controller_params.p,
                                   steering_controller_params.output_ramp,
                                   steering_controller_params.limit);
 
-/*
+// declare a balance point controller, where p is the balance point.
+// NOTE: THIS IS NOT A PID CONTROLLER. This hack lets you set the balance point
+// of your robot over wifi without needing to re-flash the code.
 // declare and configure custom balance setpoint controller object
+// to use this hack, make sure to
+// 1) instantiate this controller in setup
+// 2) update the balance point in the control loop
 MotorGo::PIDParameters balance_point_params;
 LowPassFilter balance_point_lpf(balance_point_params.lpf_time_constant);
 PIDController balance_point_controller(balance_point_params.p,
-                                  balance_point_params.i,
-                                  balance_point_params.d,
-                                  balance_point_params.output_ramp,
-                                  balance_point_params.limit);
+                                       balance_point_params.i,
+                                       balance_point_params.d,
+                                       balance_point_params.output_ramp,
+                                       balance_point_params.limit);
 
-*/
-
+// configure wifi communications
 bool motors_enabled = false;
 ESPWifiConfig::Configurable<bool> enable_motors(motors_enabled, "/enable",
                                                 "Enable motors");
 
+// declare IMU, initial zero pitch (balance point), and steering initial angles
 SensorGoMPU6050 mpu;
-float pitch_zero = 0.0092;
+float pitch_zero = 0.0;
 float initial_angle_left;
 float initial_angle_right;
 
@@ -90,7 +91,7 @@ void enable_motors_callback(bool value)
   }
 }
 
-// Function to print at a maximum frequency
+// Helper function to print at a maximum frequency
 void freq_println(String str, int freq)
 {
   static unsigned long last_print_time = 0;
@@ -122,6 +123,7 @@ void setup()
     ESP.restart();
   }
 
+  // prepare to calibrate IMU
   Serial.println("Calibrating IMU in 3 seconds, do not move robot");
   Serial.println("3...");
   delay(1000);
@@ -147,12 +149,12 @@ void setup()
   motor_params_right.velocity_limit = 100.0;
   motor_params_right.calibration_voltage = 2.0;
 
-  // Setup Ch0
+  // Setup both motor channels
   bool calibrate = false;
   motor_left.init(motor_params_left, calibrate);
   motor_right.init(motor_params_right, calibrate);
 
-  //   Set closed-loop position mode
+  // Set motor control mode to voltage control
   motor_left.set_control_mode(MotorGo::ControlMode::Voltage);
   motor_right.set_control_mode(MotorGo::ControlMode::Voltage);
 
@@ -220,27 +222,32 @@ void setup()
         }
       });
 
-  /*
-  // make a balance point controller, where p is the balance point.
+  // instantiate a balance point controller, where p is the balance point.
+  // NOTE: THIS IS NOT A PID CONTROLLER. This hack lets you set the balance
+  // point of your robot over wifi without needing to re-flash the code. to use
+  // this hack, make sure to 1) declare the controller above beefore setup 2)
+  // update the balance point of the robot in the loop
   pid_manager.add_controller(
-    "/balance point", balance_point_params,
-    []()
-    {
-      balance_point_controller.P = balance_point_params.p;
-      balance_point_controller.I = balance_point_params.i;
-      balance_point_controller.D = balance_point_params.d;
-      balance_point_controller.output_ramp =
-          balance_point_params.output_ramp;
-      balance_point_controller.limit = balance_point_params.limit;
-      balancing_lpf.Tf = balance_point_params.lpf_time_constant;
-      balance_point_controller.reset();
-    });
-  */
+      "/balance point", balance_point_params,
+      []()
+      {
+        balance_point_controller.P = balance_point_params.p;
+        balance_point_controller.I = balance_point_params.i;
+        balance_point_controller.D = balance_point_params.d;
+        balance_point_controller.output_ramp = balance_point_params.output_ramp;
+        balance_point_controller.limit = balance_point_params.limit;
+        balancing_lpf.Tf = balance_point_params.lpf_time_constant;
+        balance_point_controller.reset();
+      });
+
   enable_motors.set_post_callback(enable_motors_callback);
 
   // initialize the PID manager
   pid_manager.init(WIFI_SSID, WIFI_PASSWORD);
 
+  // update steering initial positions to current motor positions.
+  // steering controller will try to hold this steering state until steering
+  // controller is updated.
   initial_angle_left = motor_left.get_position();
   initial_angle_right = motor_right.get_position();
 
@@ -256,26 +263,37 @@ void loop()
   // Else, just keep running the controllers
   if (mpu.data_ready())
   {
-    //  Roll is actually pitch for the balance bot
+    //  Roll is actually pitch for the balance bot IMU
     float pitch = mpu.get_pitch();
 
-    // Print pitch using frequency print
+    // Optional print statment: print pitch using frequency print
     freq_println("Pitch: " + String(pitch, 5), 10);
 
+    // calculate average wheel velocity for the velocity controller
     float wheel_velocity =
         (motor_left.get_velocity() + motor_right.get_velocity()) / 2;
 
+    // read motor positions against initial measured angle - for steering
+    // controller
     float ch0_pos = motor_left.get_position() - initial_angle_left;
     float ch1_pos = motor_right.get_position() - initial_angle_right;
 
+    // calculate control signals by calling each PID controller
+    // each controller function call aims to make the input term 0 with the
+    // command value calculated. Commands are calculated based on the PID gains
+    // and time constant specified in the web app.
     float velocity_command = velocity_controller(wheel_velocity);
     float balance_command = balancing_controller(pitch - pitch_zero);
     float steering_command = steering_controller(ch0_pos - ch1_pos);
 
     // update zero pitch with balance point p
-    // pitch_zero = balance_point_controller.P;
+    // NOTE: THIS IS NOT A PID CONTROLLER. This hack lets you set the balance
+    // point of your robot over wifi without needing to re-flash the code. To
+    // use this hack, 1) declare the controller before setup 2) instantiate the
+    // controller in setup 3) uncomment the line below:
+    pitch_zero = balance_point_controller.P;
 
-    // Print balance_command
+    // Optional print statement: balance_command
     // freq_println("Balancing error: " + String(pitch - pitch_zero, 5), 10);
 
     // Combine controller outputs to compute motor commands
@@ -286,12 +304,12 @@ void loop()
     // freq_println("ch0_pos: "+String(ch0_pos) + " | ch1_pos:
     // "+String(ch1_pos), 10);
 
-    // Set target voltage
+    // Set target voltage for each motor
     motor_left.set_target_voltage(command_ch0);
     motor_right.set_target_voltage(command_ch1);
   }
 
-  // Run Ch0
+  // the loop function does the actual motor control.
   motor_left.loop();
   motor_right.loop();
 }
