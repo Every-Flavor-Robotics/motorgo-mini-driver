@@ -2,7 +2,10 @@
 
 #include "motorgo_mini.h"
 
-MotorGo::MotorGoMini* motorgo_mini;
+MotorGo::MotorGoMini motorgo_mini;
+MotorGo::MotorChannel& motor_ch0 = motorgo_mini.ch0;
+MotorGo::MotorChannel& motor_ch1 = motorgo_mini.ch1;
+
 MotorGo::MotorParameters motor_params_ch0;
 MotorGo::MotorParameters motor_params_ch1;
 
@@ -38,22 +41,19 @@ void setup()
   motor_params_ch1.velocity_limit = 100.0;
   motor_params_ch1.calibration_voltage = 2.0;
 
-  // Instantiate motorgo mini board
-  motorgo_mini = new MotorGo::MotorGoMini();
-
   // Setup Ch0
-  motorgo_mini->init_ch0(motor_params_ch0, false);
-  motorgo_mini->init_ch1(motor_params_ch1, false);
+  motor_ch0.init(motor_params_ch0, false);
+  motor_ch1.init(motor_params_ch1, false);
 }
 
 void loop()
 {
   // Run Ch0
-  motorgo_mini->loop_ch0();
-  motorgo_mini->loop_ch1();
+  motor_ch0.loop();
+  motor_ch1.loop();
 
-  String str = "Velocity - Ch0: " + String(motorgo_mini->get_ch0_velocity()) +
-               " Ch1: " + String(motorgo_mini->get_ch1_velocity());
+  String str = "Velocity - Ch0: " + String(motor_ch0.get_velocity()) +
+               " Ch1: " + String(motor_ch1.get_velocity());
 
   freq_println(str, 10);
 }
