@@ -10,6 +10,6 @@ void MotorGo::init_encoder_spi()
   if (!hspi_initialized)
   {
     hspi_initialized = true;
-    MotorGo::hspi.begin(ENC_SCL, ENC_SDA, 45, -1);
+    MotorGo::hspi.begin(ENC_SCL, ENC_SDA, ENC_MOSI);
   }
 }
