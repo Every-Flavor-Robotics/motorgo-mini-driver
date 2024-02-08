@@ -9,9 +9,6 @@
 namespace MotorGo
 {
 
-// Define NOT_SET as 255
-#define GPIO_NOT_SET 255
-
 struct BLDCChannelParameters
 {
   uint8_t uh;
