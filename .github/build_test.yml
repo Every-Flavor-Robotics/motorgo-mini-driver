@@ -1,0 +1,32 @@
+name: PlatformIO Build Test
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - auto-build
+  pull_request:
+    branches:
+      - main
+      - dev
+      - auto-build
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+      - name: Install PlatformIO
+        run: pip install platformio
+      - name: Build Examples
+        run: |
+          examples=$(find examples -name "platformio.ini" -exec dirname {} \;)
+          for example in $examples; do
+            echo "Building example: $example"
+            platformio ci --project-dir $example --lib="."
+          done
