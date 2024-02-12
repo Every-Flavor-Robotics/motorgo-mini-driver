@@ -34,6 +34,7 @@ jobs:
       - name: Run setup_platformio.py script
         run: |
           cd motorgo-arduino/board_definitions
+          ls ~/.platformio/packages/
           python setup_platformio.py
       - name: Build Examples
         run: |
