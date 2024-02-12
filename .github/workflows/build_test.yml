@@ -25,8 +25,8 @@ jobs:
         run: pip install platformio
       - name: Build Examples
         run: |
-          examples=$(find examples -name "platformio.ini" -exec dirname {} \;)
-          for example in $examples; do
-            echo "Building example: $example"
-            platformio ci --project-dir $example --lib="."
+          examples=$(find examples -name "platformio.ini")
+          for exampleConf in $examples; do
+            echo "Building example with configuration: $exampleConf"
+            platformio ci --project-conf="$exampleConf" --lib="."
           done
