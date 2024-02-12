@@ -23,6 +23,16 @@ jobs:
           python-version: "3.x"
       - name: Install PlatformIO
         run: pip install platformio
+      - name: Checkout motorgo-arduino repository
+        uses: actions/checkout@v2
+        with:
+          repository: "Every-Flavor-Robotics/motorgo-arduino"
+          ref: "dev"
+          path: "motorgo-arduino"
+      - name: Run setup_platformio.py script
+        run: |
+          cd motorgo-arduino/board_definitions
+          python setup_platformio.py
       - name: Build Examples
         run: |
           examples=$(find examples -name "platformio.ini")
