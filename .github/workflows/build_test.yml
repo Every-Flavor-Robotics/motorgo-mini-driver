@@ -23,6 +23,8 @@ jobs:
           python-version: "3.x"
       - name: Install PlatformIO
         run: pip install platformio
+      - name: Install Espressif 32 Platform
+        run: pio pkg install --global --platform "platformio/espressif32@^6.5.0"
       - name: Checkout motorgo-arduino repository
         uses: actions/checkout@v2
         with:
