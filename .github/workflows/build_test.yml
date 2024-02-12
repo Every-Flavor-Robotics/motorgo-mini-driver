@@ -27,6 +27,8 @@ jobs:
         run: |
           examples=$(find examples -name "platformio.ini")
           for exampleConf in $examples; do
+            exampleDir=$(dirname "$exampleConf")
+            srcFiles=$(find "$exampleDir/src" -name "*.cpp")
             echo "Building example with configuration: $exampleConf"
-            platformio ci --project-conf="$exampleConf" --lib="."
+            platformio ci --project-conf="$exampleConf" --lib="." $srcFiles
           done
