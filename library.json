@@ -33,7 +33,7 @@
         },
         {
             "name": "ESPWifiConfig",
-            "version": "https://github.com/Every-Flavor-Robotics/esp-wifi-config.git#bug-4/wifi-begin-str"
+            "version": "https://github.com/Every-Flavor-Robotics/esp-wifi-config.git#0.1"
         },
         {
             "name": "Wire",
