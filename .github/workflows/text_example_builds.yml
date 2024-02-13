@@ -5,12 +5,10 @@ on:
     branches:
       - main
       - dev
-      - auto-build
   pull_request:
     branches:
       - main
       - dev
-      - auto-build
 
 jobs:
   build:
