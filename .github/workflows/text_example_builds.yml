@@ -1,0 +1,47 @@
+name: PlatformIO Example Project Builds
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+      - name: Install PlatformIO
+        run: pip install platformio
+      - name: Install Espressif 32 Platform
+        run: |
+          pio pkg install --global --platform "platformio/espressif32@^6.5.0"
+          pio pkg install --global --tool "platformio/framework-arduinoespressif32"
+      - name: Checkout motorgo-arduino repository
+        uses: actions/checkout@v2
+        with:
+          repository: "Every-Flavor-Robotics/motorgo-arduino"
+          ref: "main"
+          path: "motorgo-arduino"
+      - name: Run setup_platformio.py script
+        run: |
+          cd motorgo-arduino/board_definitions
+          ls ~/.platformio/packages/
+          python setup_platformio.py
+      - name: Build Examples
+        run: |
+          examples=$(find examples -name "platformio.ini")
+          for exampleConf in $examples; do
+            exampleDir=$(dirname "$exampleConf")
+            srcFiles=$(find "$exampleDir/src" -name "*.cpp")
+            echo "Building example with configuration: $exampleConf"
+            platformio ci --project-conf="$exampleConf" --lib="." $srcFiles
+          done
