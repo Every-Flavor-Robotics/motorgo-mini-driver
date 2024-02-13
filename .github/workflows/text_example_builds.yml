@@ -19,12 +19,14 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: "3.x"
-      - name: Install PlatformIO
-        run: pip install platformio
+      - name: Install Pip Dependencies
+        run: pip install platformio click
       - name: Install Espressif 32 Platform
         run: |
           pio pkg install --global --platform "platformio/espressif32@^6.5.0"
           pio pkg install --global --tool "platformio/framework-arduinoespressif32"
+      - name: Make update_driver_version executable
+        run: chmod +x .github/scripts/update_platformio_deps.py
       - name: Checkout motorgo-arduino repository
         uses: actions/checkout@v2
         with:
@@ -36,6 +38,7 @@ jobs:
           cd motorgo-arduino/board_definitions
           ls ~/.platformio/packages/
           python setup_platformio.py
+
       - name: Build Examples
         run: |
           examples=$(find examples -name "platformio.ini")
@@ -43,5 +46,9 @@ jobs:
             exampleDir=$(dirname "$exampleConf")
             srcFiles=$(find "$exampleDir/src" -name "*.cpp")
             echo "Building example with configuration: $exampleConf"
+
+            # Update the motorgo-mini-driver path in platformio.ini
+            python .github/scripts/update_platformio_deps.py "$exampleConf" "./"
+
             platformio ci --project-conf="$exampleConf" --lib="." $srcFiles
           done
