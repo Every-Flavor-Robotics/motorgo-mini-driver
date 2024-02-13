@@ -1,4 +1,4 @@
-name: PlatformIO Build Test
+name: PlatformIO Example Project Builds
 
 on:
   push:
