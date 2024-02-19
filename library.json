@@ -33,7 +33,7 @@
         },
         {
             "name": "ESPWifiConfig",
-            "version": "https://github.com/Every-Flavor-Robotics/esp-wifi-config.git#0.1"
+            "version": "https://github.com/Every-Flavor-Robotics/esp-wifi-config.git"
         },
         {
             "name": "Wire",
@@ -53,7 +53,8 @@
         },
         {
             "name": "Arduino_JSON",
-            "version": "https://github.com/arduino-libraries/Arduino_JSON.git"
+            "version": "0.2.0",
+            "repository": "https://github.com/ardu`ino-libraries/Arduino_JSON.git"
         }
     ]
 }
