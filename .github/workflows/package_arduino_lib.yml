@@ -11,10 +11,12 @@ jobs:
 
     steps:
       # Checkout the current repository
-      - uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
       # Checkout the motorgo-arduino repository
-      - uses: actions/checkout@v3
+      - name: Checkout motorgo-arduino Repository
+        uses: actions/checkout@v4
         with:
           repository: Every-Flavor-Robotics/motorgo-arduino
 
@@ -29,7 +31,7 @@ jobs:
           REPO_NAME: ${{ github.repository }} # Set environment variable
         run: |
           python .github/scripts/package_arduino_lib.py library.json $REPO_NAME \
-            --output_dir /github/workspace/motorgo-arduino/arduino_library \
+            --output_dir $GITHUB_WORKSPACE/motorgo-arduino/arduino_library \
             --storage_dir ./tmp
 
       # Stage Package Files
