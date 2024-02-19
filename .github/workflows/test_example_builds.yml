@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: "3.x"
       - name: Install Pip Dependencies
-        run: pip install platformio click platformio
+        run: pip install platformio click
       - name: Install Espressif 32 Platform
         run: |
           pio pkg install --global --platform "platformio/espressif32@^6.5.0"

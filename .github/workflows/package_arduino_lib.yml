@@ -24,7 +24,7 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: "3.x"
-      - run: pip install click
+      - run: pip install click platformio
 
       # Run your packaging script
       - name: Build Arduino Package
