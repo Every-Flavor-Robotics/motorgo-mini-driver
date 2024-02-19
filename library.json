@@ -54,7 +54,7 @@
         {
             "name": "Arduino_JSON",
             "version": "0.2.0",
-            "repository": "https://github.com/ardu`ino-libraries/Arduino_JSON.git"
+            "repository": "https://github.com/arduino-libraries/Arduino_JSON.git"
         }
     ]
 }
