@@ -1,8 +1,8 @@
 name: Package Arduino Library and Submit PR
 
 on:
-  push:
-    branches: [main, feature-63/auto-build-arduino]
+  pull_request:
+    branches: [main]
 
 jobs:
   build_package:
@@ -35,28 +35,7 @@ jobs:
             --output-dir $GITHUB_WORKSPACE/motorgo-arduino/arduino_library \
             --storage-dir ./tmp
 
-      # Stage Package Files
-      # - name: Stage and Commit Package Files
-      #   run: |
-      #     cd $GITHUB_WORKSPACE/motorgo-arduino  # Move into the 'motorgo-arduino' directory
-
-      #     mkdir -p ~/.ssh
-      #     echo "${{ secrets.MOTORGO_ARD_DEPLOY_KEY }}" > ~/.ssh/id_rsa
-      #     chmod 600 ~/.ssh/id_rsa  # Set secure permissions
-      #     git remote set-url origin git@github.com:Every-Flavor-Robotics/motorgo-arduino.git # Use Git's SSH URL
-
-      #     # Branch Creation (Adjust naming logic as needed)
-      #     # Branch name should be tied to commit hash
-      #     branch_name="auto-package-update/$GITHUB_SHA"
-      #     git checkout -b $branch_name
-
-      #     git add -A  # Stage all changes
-      #     git config user.name github-actions
-      #     git config user.email github-actions@github.com
-      #     git commit -m "Automated Arduino library package update"
-      #     git push origin $branch_name  # Push the new branch
-
-      # # Open Pull Request
+      # Open Pull Request
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
