@@ -5,7 +5,6 @@ import click
 import shutil
 from typing import Optional, List
 import os
-import json
 import fnmatch
 import glob
 

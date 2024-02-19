@@ -1,7 +1,6 @@
 name: Package Arduino Library and Submit PR
 
 on:
-  # Adjust triggers - this example will run on pushes to the 'main' branch
   push:
     branches: [main, feature-63/auto-build-arduino]
 
@@ -21,10 +20,11 @@ jobs:
           repository: Every-Flavor-Robotics/motorgo-arduino
           path: motorgo-arduino
 
-      # Setup Python (Assuming your script requires Python)
+      # Setup Python
       - uses: actions/setup-python@v4
         with:
-          python-version: "3.x" # Adjust if needed
+          python-version: "3.x"
+      - run: pip install click
 
       # Run your packaging script
       - name: Build Arduino Package
