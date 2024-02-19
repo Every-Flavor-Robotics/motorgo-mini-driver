@@ -1,0 +1,59 @@
+name: Package Arduino Library and Submit PR
+
+on:
+  # Adjust triggers - this example will run on pushes to the 'main' branch
+  push:
+    branches: [main, feature-63/auto-build-arduino]
+
+jobs:
+  build_package:
+    runs-on: ubuntu-latest # Runner environment
+
+    steps:
+      # Checkout the current repository
+      - uses: actions/checkout@v3
+
+      # Checkout the motorgo-arduino repository
+      - uses: actions/checkout@v3
+        with:
+          repository: Every-Flavor-Robotics/motorgo-arduino
+
+      # Setup Python (Assuming your script requires Python)
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.x" # Adjust if needed
+
+      # Run your packaging script
+      - name: Build Arduino Package
+        env:
+          REPO_NAME: ${{ github.repository }} # Set environment variable
+        run: |
+          python .github/scripts/package_arduino_lib.py library.json $REPO_NAME \
+            --output_dir /github/workspace/motorgo-arduino/arduino_library \
+            --storage_dir ./tmp
+
+      # Stage Package Files
+      - name: Stage and Commit Package Files
+        run: |
+          cd ../motorgo-arduino  # Move into the 'motorgo-arduino' directory
+
+          # Branch Creation (Adjust naming logic as needed)
+          # Branch name should be tied to commit hash
+          branch_name="auto-package-update/$GITHUB_SHA"
+          git checkout -b $branch_name
+
+          git add -A  # Stage all changes
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git commit -m "Automated Arduino library package update"
+          git push origin $branch_name  # Push the new branch
+
+      # # Open Pull Request
+      # - name: Create Pull Request
+      #   uses: peter-evans/create-pull-request@v4
+      #   with:
+      #     title: Automated Arduino Package Update
+      #     body: |
+      #       Automated update of the Arduino library package
+      #       Please review changes.
+      #     base: main # The branch to open the PR against
