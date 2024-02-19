@@ -3,14 +3,24 @@ import subprocess
 import json
 import click
 import shutil
-from typing import Optional
+from typing import Optional, List
 import os
 import json
 import fnmatch
 import glob
 
 # Iterate over installed dependency directories and package
-def check_platform(lib_dir, safe = True):
+def check_platform(lib_dir: str, safe: bool = True) -> bool:
+    """Checks if the library supports the 'espressif32' platform.
+
+    Args:
+        lib_dir (str): The path to the library directory.
+        safe (bool, optional): If True, returns False if the library.json file does not exist.
+                               If False, returns True in that case. Defaults to True.
+
+    Returns:
+        bool: True if the library supports the 'espressif32' platform, False otherwise.
+    """
     library_json_path = os.path.join(lib_dir, "library.json")
 
     if not os.path.exists(library_json_path):
@@ -162,25 +172,13 @@ def copy_source_files(pio_lib_path, package_output_dir):
     copy_directory(include_dir, output_src_dir)
     copy_directory(src_dir, output_src_dir)
 
-@click.command()
-@click.argument('path_to_library_json', type=click.Path(exists=True))
-@click.option('--storage-dir', default="./temp_deps", help="The directory to install the dependencies to.")
-@click.option('--output-dir', default="./output", help="Output directory for packaging the driver.")  # New Click option
-@click.argument('repo_name')  # The argument to receive the repository name
-def install_pio_dependencies(path_to_library_json, storage_dir, output_dir, repo_name):
-    """Installs dependencies specified in a PlatformIO library.json file.
+def install_pio_dependencies(storage_dir: str, dependencies: List[dict]) -> None:
+    """Installs dependencies using PlatformIO package manager.
 
     Args:
-        path_to_library_json (str): Path to the library.json file.
+        storage_dir (str): The directory to install the dependencies to.
+        dependencies (list): List of dependencies to install.
     """
-
-    with open(path_to_library_json, 'r') as f:
-        data = json.load(f)
-
-    dependencies = data.get("dependencies", [])
-    if not dependencies:
-        print("No dependencies found in library.json")
-        return
 
     # Create the storage directory if it doesn't exist
     if not os.path.exists(storage_dir):
@@ -213,15 +211,31 @@ def install_pio_dependencies(path_to_library_json, storage_dir, output_dir, repo
         # Print in Green
         print(f"\033[92mDependencies installed successfully!\033[0m")
 
+@click.command()
+@click.argument('path_to_library_json', type=click.Path(exists=True))
+@click.option('--storage-dir', default="./temp_deps", help="The directory to install the dependencies to.")
+@click.option('--output-dir', default="./output", help="Output directory for packaging the driver.")  # New Click option
+@click.argument('repo_name')  # The argument to receive the repository name
+def package_arduino_lib(path_to_library_json, storage_dir, output_dir, repo_name):
+    """Installs dependencies specified in a PlatformIO library.json file.
+
+    Args:
+        path_to_library_json (str): Path to the library.json file.
+    """
+
+    with open(path_to_library_json, 'r') as f:
+        data = json.load(f)
+
+    install_pio_dependencies(storage_dir, data.get("dependencies", []))
+
     # Packaging Logic
     package_output_dir = os.path.join(output_dir, repo_name)
     os.makedirs(package_output_dir, exist_ok=True)  # Ensure the main output directory exists
 
-
-
     # Iterate over installed dependency directories and package
     for lib_dir in os.listdir(storage_dir):
         lib_path = os.path.join(storage_dir, lib_dir)
+        # Confirm that the library is an ESP32 PlatformIO library
         if os.path.isdir(lib_path) and check_platform(lib_path, safe = False):
             copy_source_files(lib_path, package_output_dir)
         else:
@@ -239,8 +253,6 @@ def install_pio_dependencies(path_to_library_json, storage_dir, output_dir, repo
     if os.path.exists(examples_dir):
         ignore_patterns = ['.*']  # Ignore directories starting with "."
         copy_directory(examples_dir, os.path.join(package_output_dir, "examples"), ignore_patterns)
-
-
 
         # Rename .cpp files to .ino files
         for file_path in glob.glob(os.path.join(package_output_dir, "examples", "**", "*.cpp"), recursive=True):
@@ -263,9 +275,15 @@ def install_pio_dependencies(path_to_library_json, storage_dir, output_dir, repo
     shutil.copy2(path_to_library_json, package_output_dir)
     shutil.copy2(os.path.join(current_repo_path, "library.properties"), package_output_dir)
 
+    # Create a zip file of the package_output_dir, put it in the output_dir
+    shutil.make_archive(package_output_dir, 'zip', package_output_dir)
+
+    print(f'\033[92mPackage zipped to: {package_output_dir}.zip\033[0m')
+
+
 
 if __name__ == "__main__":
-    install_pio_dependencies()
+    package_arduino_lib()
 
 
 
