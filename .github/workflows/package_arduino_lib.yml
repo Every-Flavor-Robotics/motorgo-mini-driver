@@ -61,7 +61,8 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.MOTORGO_ARDUINO_KEY }}
-          path: /$GITHUB_WORKSPACE/motorgo-arduino
+          # /$GITHUB_WORKSPACE/motorgo-arduino
+          path: /${{ github.workspace }}/motorgo-arduino
           commit-message: Automated Arduino Package Update
           branch: auto-package-update/$GITHUB_SHA
           title: Arduino Library Update to $GITHUB_SHA
