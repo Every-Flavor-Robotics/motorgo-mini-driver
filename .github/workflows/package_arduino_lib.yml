@@ -30,6 +30,7 @@ jobs:
         env:
           REPO_NAME: ${{ github.repository }} # Set environment variable
         run: |
+          cd $GITHUB_WORKSPACE/$REPO_NAME  # Move into the repository directory
           python .github/scripts/package_arduino_lib.py library.json $REPO_NAME \
             --output_dir $GITHUB_WORKSPACE/motorgo-arduino/arduino_library \
             --storage_dir ./tmp
