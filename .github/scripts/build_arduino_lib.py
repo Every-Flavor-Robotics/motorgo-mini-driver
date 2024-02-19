@@ -6,6 +6,8 @@ import shutil
 from typing import Optional
 import os
 import json
+import fnmatch
+import glob
 
 # Iterate over installed dependency directories and package
 def check_platform(lib_dir, safe = True):
@@ -113,19 +115,35 @@ def format_dependency_string(dependency: dict) -> Optional[str]:
         print(f'Warning: Invalid dependency format: {dependency}')
         return None
 
-def merge_directories(src, dst):
-    if not os.path.exists(src):
-        print("\033[93mWarning: Source directory '{}' does not exist.\033[0m".format(src))
+def copy_directory(src_dir, dst_dir, ignore_patterns = []):
+    """
+    Recursively copies a directory, ignoring files and directories that match the given patterns.
+
+    Args:
+        src_dir (str): Source directory path.
+        dst_dir (str): Destination directory path.
+        ignore_patterns (list): List of patterns to ignore.
+
+    Returns:
+        None
+    """
+    os.makedirs(dst_dir, exist_ok=True)
+
+    if not os.path.exists(src_dir):
+        print("\033[93mWarning: Source directory '{}' does not exist.\033[0m".format(src_dir))
         return
 
-    for item in os.listdir(src):
-        src_path = os.path.join(src, item)
-        dst_path = os.path.join(dst, item)
+    for item in os.listdir(src_dir):
+        src_path = os.path.join(src_dir, item)
+        dst_path = os.path.join(dst_dir, item)
+
+        if any(fnmatch.fnmatch(item, pattern) for pattern in ignore_patterns):
+            continue
 
         if os.path.isdir(src_path):
-            shutil.copytree(src_path, dst_path, dirs_exist_ok=True)  # Merge nested directories
+            copy_directory(src_path, dst_path, ignore_patterns)
         else:
-            shutil.copy2(src_path, dst_path)  # Copy individual files
+            shutil.copy2(src_path, dst_path)
 
 def copy_source_files(pio_lib_path, package_output_dir):
     """Copies source files from a PlatformIO-style library into an output directory.
@@ -141,9 +159,8 @@ def copy_source_files(pio_lib_path, package_output_dir):
 
     os.makedirs(output_src_dir, exist_ok=True)  # Ensure 'src' output directory exists
 
-    merge_directories(include_dir, output_src_dir)
-    merge_directories(src_dir, output_src_dir)
-
+    copy_directory(include_dir, output_src_dir)
+    copy_directory(src_dir, output_src_dir)
 
 @click.command()
 @click.argument('path_to_library_json', type=click.Path(exists=True))
@@ -215,11 +232,37 @@ def install_pio_dependencies(path_to_library_json, storage_dir, output_dir, repo
     current_repo_path = os.path.dirname(path_to_library_json)
     copy_source_files(current_repo_path, package_output_dir)
 
+    print(f'\033[92mDependencies installed and packaged into: {package_output_dir}\033[0m')
+
+    # Copy examples directory
+    examples_dir = os.path.join(current_repo_path, "examples")
+    if os.path.exists(examples_dir):
+        ignore_patterns = ['.*']  # Ignore directories starting with "."
+        copy_directory(examples_dir, os.path.join(package_output_dir, "examples"), ignore_patterns)
+
+
+
+        # Rename .cpp files to .ino files
+        for file_path in glob.glob(os.path.join(package_output_dir, "examples", "**", "*.cpp"), recursive=True):
+            if "src" in os.path.dirname(file_path):
+                # Move into parent of src, and rename to .ino
+                new_file_path = os.path.join(os.path.dirname(os.path.dirname(file_path)), os.path.basename(file_path).replace(".cpp", ".ino"))
+            else:
+                new_file_path = os.path.join(os.path.dirname(file_path), os.path.basename(file_path).replace(".cpp", ".ino"))
+
+            os.rename(file_path, new_file_path)
+
+    # Delete src directory in examples
+    for src_dir in glob.glob(os.path.join(package_output_dir, "examples", "**", "src"), recursive=True):
+        shutil.rmtree(src_dir)
+
+    print(f'\033[92mExamples copied to: {os.path.join(package_output_dir, "examples")}\033[0m'
+            if os.path.exists(examples_dir) else f'\033[93mNo examples found in: {examples_dir}\033[0m')
+
     # Copy library.json and library.properties to root of the output_dir
     shutil.copy2(path_to_library_json, package_output_dir)
     shutil.copy2(os.path.join(current_repo_path, "library.properties"), package_output_dir)
 
-    print(f'\033[92mDependencies installed and packaged into: {package_output_dir}\033[0m')
 
 if __name__ == "__main__":
     install_pio_dependencies()
