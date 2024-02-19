@@ -1,5 +1,5 @@
 {
-    "name": "MotorGo-Mini-Driver",
+    "name": "MotorGo Mini Driver",
     "version": "0.0.1",
     "description": "The MotorGo Mini driver provides an API to interface with the motor controllers on the MotorGo Mini board.",
     "keywords": "motor, controller, brushless",
@@ -33,7 +33,7 @@
         },
         {
             "name": "ESPWifiConfig",
-            "version": "https://github.com/Every-Flavor-Robotics/esp-wifi-config.git#0.1"
+            "version": "https://github.com/Every-Flavor-Robotics/esp-wifi-config.git"
         },
         {
             "name": "Wire",
@@ -53,7 +53,8 @@
         },
         {
             "name": "Arduino_JSON",
-            "version": "https://github.com/arduino-libraries/Arduino_JSON.git"
+            "version": "0.2.0",
+            "repository": "https://github.com/arduino-libraries/Arduino_JSON.git"
         }
     ]
 }
