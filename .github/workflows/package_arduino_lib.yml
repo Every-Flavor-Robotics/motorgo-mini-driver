@@ -19,6 +19,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: Every-Flavor-Robotics/motorgo-arduino
+          path: motorgo-arduino
 
       # Setup Python (Assuming your script requires Python)
       - uses: actions/setup-python@v4
@@ -30,7 +31,6 @@ jobs:
         env:
           REPO_NAME: ${{ github.repository }} # Set environment variable
         run: |
-          cd $GITHUB_WORKSPACE/motorgo-mini-driver  # Move into the repository directory
           python .github/scripts/package_arduino_lib.py library.json motorgo-mini-driver \
             --output_dir $GITHUB_WORKSPACE/motorgo-arduino/arduino_library \
             --storage_dir ./tmp
@@ -38,7 +38,7 @@ jobs:
       # Stage Package Files
       - name: Stage and Commit Package Files
         run: |
-          cd ../motorgo-arduino  # Move into the 'motorgo-arduino' directory
+          cd $GITHUB_WORKSPACE/motorgo-arduino  # Move into the 'motorgo-arduino' directory
 
           # Branch Creation (Adjust naming logic as needed)
           # Branch name should be tied to commit hash
