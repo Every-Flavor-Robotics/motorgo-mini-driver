@@ -32,8 +32,8 @@ jobs:
           REPO_NAME: ${{ github.repository }} # Set environment variable
         run: |
           python .github/scripts/package_arduino_lib.py library.json motorgo-mini-driver \
-            --output_dir $GITHUB_WORKSPACE/motorgo-arduino/arduino_library \
-            --storage_dir ./tmp
+            --output-dir $GITHUB_WORKSPACE/motorgo-arduino/arduino_library \
+            --storage-dir ./tmp
 
       # Stage Package Files
       - name: Stage and Commit Package Files
