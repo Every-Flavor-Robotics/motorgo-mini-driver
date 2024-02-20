@@ -49,7 +49,7 @@ void MotorGo::PIDManager::init(String wifi_ssid, String wifi_password)
       "Description of available PID controllers");
 
   ESPWifiConfig::WebServer::getInstance().start(wifi_ssid, wifi_password,
-                                                LED_NETWORK);
+                                                LED_STATUS);
 
   //   Display URL to access webserver. http://{ip_address}:{port}
   Serial.println("Webserver available at:");
