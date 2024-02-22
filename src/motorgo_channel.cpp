@@ -60,17 +60,23 @@ void MotorGo::MotorChannel::init(MotorParameters params, bool should_calibrate)
   if (should_calibrate)
   {
     sensor_calibrated.calibrate(motor, name);
+    calibration_loaded = true;
   }
   // Use calibration data if it exists
-  else if (!sensor_calibrated.loadCalibrationData(motor, name))
+  else if (sensor_calibrated.loadCalibrationData(motor, name))
+  {
+    // Set flag to indicate that calibration data was loaded
+    calibration_loaded = true;
+  }
+  else
   {
     // If no data was found, issue a warning that only open-loop control will
     // be available
-    // Include name of motor
     Serial.print("WARNING: No calibration data found for ");
     Serial.print(name);
     Serial.println("... Motor will only be usable in open-loop control modes");
-    Serial.println("Set should_calibrate to true to calibrate the motor.")
+    Serial.println("Set should_calibrate to true to calibrate the motor.");
+    calibration_loaded = false;
   }
 
   // Link the calibrated sensor to the motor
@@ -265,7 +271,9 @@ void MotorGo::MotorChannel::set_torque_controller(MotorGo::PIDParameters params)
   motor.PID_current_q.limit = params.limit;
   motor.LPF_current_q.Tf = params.lpf_time_constant;
 
-  pid_torque_enabled = true;
+  //   If calibration data is loaded, enable the torque controller
+  //   Else, keep the torque controller disabled
+  pid_torque_enabled = calibration_loaded;
 }
 
 void MotorGo::MotorChannel::set_velocity_controller(
@@ -278,7 +286,9 @@ void MotorGo::MotorChannel::set_velocity_controller(
   motor.PID_velocity.limit = params.limit;
   motor.LPF_velocity.Tf = params.lpf_time_constant;
 
-  pid_velocity_enabled = true;
+  //   If calibration data is loaded, enable the velocity controller
+  //   Else, keep the velocity controller disabled
+  pid_velocity_enabled = calibration_loaded;
 }
 
 void MotorGo::MotorChannel::set_position_controller(
@@ -291,7 +301,9 @@ void MotorGo::MotorChannel::set_position_controller(
   motor.P_angle.limit = params.limit;
   motor.LPF_angle.Tf = params.lpf_time_constant;
 
-  pid_position_enabled = true;
+  //   If calibration data is loaded, enable the position controller
+  //   Else, keep the position controller disabled
+  pid_position_enabled = calibration_loaded;
 }
 
 void MotorGo::MotorChannel::reset_torque_controller()

@@ -118,6 +118,7 @@ class MotorChannel
   // found, the motor will be calibrated anyway and the calibration will be
   // saved to EEPROM
   bool should_calibrate;
+  bool calibration_loaded = false;
 
   // Store whether the parameters have been set
   // If not, the motor will not run be disabled when a command is received
