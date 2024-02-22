@@ -66,9 +66,11 @@ void MotorGo::MotorChannel::init(MotorParameters params, bool should_calibrate)
   {
     // If no data was found, issue a warning that only open-loop control will
     // be available
-    Serial.println(
-        "No calibration data found... Motor will only be usable in "
-        "open-loop control modes");
+    // Include name of motor
+    Serial.print("WARNING: No calibration data found for ");
+    Serial.print(name);
+    Serial.println("... Motor will only be usable in open-loop control modes");
+    Serial.println("Set should_calibrate to true to calibrate the motor.")
   }
 
   // Link the calibrated sensor to the motor
