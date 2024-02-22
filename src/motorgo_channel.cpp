@@ -55,7 +55,7 @@ void MotorGo::MotorChannel::init(MotorParameters params, bool should_calibrate)
   // Initialize motor
   motor.init();
 
-  // Calibrate encoders
+  // Calibrate encoders/motors if flag is set
   sensor_calibrated.voltage_calibration = params.calibration_voltage;
   if (should_calibrate)
   {
@@ -64,8 +64,11 @@ void MotorGo::MotorChannel::init(MotorParameters params, bool should_calibrate)
   // Use calibration data if it exists
   else if (!sensor_calibrated.loadCalibrationData(motor, name))
   {
-    // If no data was found, calibrate the sensor
-    sensor_calibrated.calibrate(motor, name);
+    // If no data was found, issue a warning that only open-loop control will
+    // be available
+    Serial.println(
+        "No calibration data found... Motor will only be usable in "
+        "open-loop control modes");
   }
 
   // Link the calibrated sensor to the motor
