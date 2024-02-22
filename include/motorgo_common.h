@@ -43,7 +43,7 @@ struct MotorParameters
 {
   int pole_pairs;
   float power_supply_voltage;
-  float voltage_limit;
+  float voltage_limit = 1000.0f;
   float current_limit = 1000.0f;
   float velocity_limit = 1000.0f;
   float calibration_voltage;
