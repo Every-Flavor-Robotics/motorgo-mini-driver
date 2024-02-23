@@ -6,6 +6,8 @@
 #include <Arduino.h>
 #include <SPI.h>
 
+#include "SimpleFOC.h"
+
 namespace MotorGo
 {
 
@@ -52,6 +54,10 @@ enum ControlMode
  */struct MotorParameters
 {
   int pole_pairs;
+  float kv = NOT_SET;
+  float phase_resistance = NOT_SET;
+  float phase_inductance = NOT_SET;
+
   float power_supply_voltage;
   float voltage_limit = 1000.0f;
   float current_limit = 1000.0f;

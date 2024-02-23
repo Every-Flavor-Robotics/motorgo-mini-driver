@@ -34,6 +34,9 @@ void MotorGo::MotorChannel::init(MotorParameters params, bool should_calibrate)
 
   // Set the correct number of pole pairs
   motor.pole_pairs = params.pole_pairs;
+  motor.KV_rating = params.kv;
+  motor.phase_resistance = params.phase_resistance;
+  motor.phase_inductance = params.phase_inductance;
 
   // Init encoder
   encoder.init(&MotorGo::hspi);
