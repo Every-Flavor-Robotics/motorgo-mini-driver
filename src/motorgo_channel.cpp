@@ -37,6 +37,9 @@ void MotorGo::MotorChannel::init(MotorParameters params, bool should_calibrate)
   motor.KV_rating = params.kv;
   motor.phase_resistance = params.phase_resistance;
   motor.phase_inductance = params.phase_inductance;
+  //   Set default LPF time constants
+  motor.LPF_velocity.Tf = 0.001;
+  motor.LPF_angle.Tf = 0.001;
 
   // Init encoder
   encoder.init(&MotorGo::hspi);
