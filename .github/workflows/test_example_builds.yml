@@ -27,16 +27,15 @@ jobs:
           pio pkg install --global --tool "platformio/framework-arduinoespressif32"
       - name: Make update_driver_version executable
         run: chmod +x .github/scripts/update_platformio_deps.py
-      - name: Checkout motorgo-arduino repository
+      - name: Checkout motorgo-board-definitions repository
         uses: actions/checkout@v2
         with:
-          repository: "Every-Flavor-Robotics/motorgo-arduino"
+          repository: "Every-Flavor-Robotics/motorgo-board-definitions"
           ref: "main"
-          path: "motorgo-arduino"
+          path: "motorgo-board-definitions"
       - name: Run setup_platformio.py script
         run: |
-          cd motorgo-arduino/board_definitions
-          ls ~/.platformio/packages/
+          cd motorgo-board-definitions/
           python setup_platformio.py
 
       - name: Build Examples
