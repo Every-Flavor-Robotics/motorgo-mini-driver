@@ -3,7 +3,6 @@ name: Build and Publish Documentation (Pushes)
 on:
   push:
     branches:
-      - api-docs
       - main
       - dev
 
