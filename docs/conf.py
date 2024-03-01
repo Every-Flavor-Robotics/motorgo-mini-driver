@@ -62,6 +62,7 @@ html_static_path = ['_static']
 
 # Whitelist the versions you want included (adjust as needed)
 smv_branch_whitelist = r'^main|dev|api-docs$'
+smv_tag_whitelist = r'^.*$'
 
 # Output subdirectory based on branch for simple version separation
 smv_outputdir_format = '{ref.name}'
