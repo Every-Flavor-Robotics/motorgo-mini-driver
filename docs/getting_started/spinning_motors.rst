@@ -21,91 +21,93 @@ The following code initializes both motor controller channels for the MotorGo br
 
     #include "motorgo_mini.h"
 
-    MotorGo::MotorGoMini* motorgo_mini;
-    MotorGo::MotorParameters motor_params_ch0;
-    MotorGo::MotorParameters motor_params_ch1;
-    MotorGo::PIDParameters velocity_pid_params;
+    MotorGo::MotorGoMini motorgo_mini;
+    MotorGo::MotorChannel& motor_left = motorgo_mini.ch0;
+    MotorGo::MotorChannel& motor_right = motorgo_mini.ch1;
+
+    MotorGo::MotorParameters motor_params_left;
+    MotorGo::MotorParameters motor_params_right;
+
+    MotorGo::PIDParameters velocity_pid_params_left;
+    MotorGo::PIDParameters velocity_pid_params_right;
 
     // Function to print at a maximum frequency
     void freq_println(String str, int freq)
     {
-        static unsigned long last_print_time = 0;
-        unsigned long now = millis();
-        if (now - last_print_time > 1000 / freq)
-        {
-            Serial.println(str);
-            last_print_time = now;
-        }
-    }
+    static unsigned long last_print_time = 0;
+    unsigned long now = millis();
 
+    if (now - last_print_time > 1000 / freq)
+    {
+        Serial.println(str);
+        last_print_time = now;
+    }
+    }
 
     void setup()
     {
-        Serial.begin(115200);
+    Serial.begin(115200);
 
-        // Setup motor parameters
-        motor_params_ch0.pole_pairs = 7;
-        motor_params_ch0.power_supply_voltage = 5.0;
-        motor_params_ch0.voltage_limit = 5.0;
-        motor_params_ch0.current_limit = 300;
-        motor_params_ch0.velocity_limit = 100.0;
-        motor_params_ch0.calibration_voltage = 2.0;
+    delay(3000);
 
+    // Setup motor parameters
+    motor_params_left.pole_pairs = 7;
+    motor_params_left.power_supply_voltage = 5.0;
+    motor_params_left.voltage_limit = 5.0;
+    motor_params_left.current_limit = 300;
+    motor_params_left.velocity_limit = 100.0;
+    motor_params_left.calibration_voltage = 2.0;
+    motor_params_left.reversed = false;
 
-        motor_params_ch1.pole_pairs = 7;
-        motor_params_ch1.power_supply_voltage = 5.0;
-        motor_params_ch1.voltage_limit = 5.0;
-        motor_params_ch1.current_limit = 300;
-        motor_params_ch1.velocity_limit = 100.0;
-        motor_params_ch1.calibration_voltage = 2.0;
+    motor_params_right.pole_pairs = 7;
+    motor_params_right.power_supply_voltage = 5.0;
+    motor_params_right.voltage_limit = 5.0;
+    motor_params_right.current_limit = 300;
+    motor_params_right.velocity_limit = 100.0;
+    motor_params_right.calibration_voltage = 2.0;
+    motor_params_right.reversed = true;
 
-        // Instantiate motorgo mini board
-        motorgo_mini = new MotorGo::MotorGoMini();
+    // Setup Ch0
+    bool calibrate = false;
+    motor_left.init(motor_params_left, calibrate);
+    motor_right.init(motor_params_right, calibrate);
 
-        // Setup Ch0 and Ch1 with FOCStudio disabled
-        bool calibrate = false;
-        bool enable_foc_studio = false;
-        motorgo_mini->init_ch0(motor_params_ch0, calibrate, enable_foc_studio);
-        motorgo_mini->init_ch1(motor_params_ch1, calibrate, enable_foc_studio);
+    // Set velocity controller parameters
+    // Setup PID parameters
+    velocity_pid_params_left.p = 1.6;
+    velocity_pid_params_left.i = 0.01;
+    velocity_pid_params_left.d = 0.0;
+    velocity_pid_params_left.output_ramp = 10000.0;
+    velocity_pid_params_left.lpf_time_constant = 0.11;
 
+    velocity_pid_params_right.p = 1.6;
+    velocity_pid_params_right.i = 0.01;
+    velocity_pid_params_right.d = 0.0;
+    velocity_pid_params_right.output_ramp = 10000.0;
+    velocity_pid_params_right.lpf_time_constant = 0.11;
 
-        // Set velocity controller parameters
-        // Setup PID parameters
-        velocity_pid_params.p = 1.0;
-        velocity_pid_params.i = 0.01;
-        velocity_pid_params.d = 0.0;
-        velocity_pid_params.output_ramp = 10000.0;
-        velocity_pid_params.lpf_time_constant = 0.11;
+    motor_left.set_velocity_controller(velocity_pid_params_left);
+    motor_right.set_velocity_controller(velocity_pid_params_right);
 
+    //   Set closed-loop velocity mode
+    motor_left.set_control_mode(MotorGo::ControlMode::Velocity);
+    motor_right.set_control_mode(MotorGo::ControlMode::Velocity);
 
-        motorgo_mini->set_velocity_controller_ch0(velocity_pid_params);
-        motorgo_mini->set_velocity_controller_ch1(velocity_pid_params);
-
-
-        //   Set closed-loop velocity mode
-        motorgo_mini->set_control_mode_ch0(MotorGo::ControlMode::Velocity);
-        motorgo_mini->set_control_mode_ch1(MotorGo::ControlMode::Velocity);
-
-
-        motorgo_mini->enable_ch0();
-        motorgo_mini->enable_ch1();
+    //   Enable motors
+    motor_left.enable();
+    motor_right.enable();
     }
+
     void loop()
-        {
-        // Run Ch0 and Ch1
-        motorgo_mini->loop_ch0();
-        motorgo_mini->loop_ch1();
+    {
+    motor_left.loop();
+    motor_right.loop();
 
+    motor_left.set_target_velocity(10.0);
+    motor_right.set_target_velocity(10.0);
 
-        // set target velocity (rad/s)
-        motorgo_mini->set_target_velocity_ch0(10.0);
-        motorgo_mini->set_target_velocity_ch1(10.0);
+    String str = "Velocity - Ch0: " + String(motor_left.get_velocity()) +
+                " Ch1: " + String(motor_right.get_velocity());
 
-
-        // print velocity in serial terminal
-        String str = "Velocity - Ch0: " + String(motorgo_mini->get_ch0_velocity()) +
-                    " Ch1: " + String(motorgo_mini->get_ch1_velocity());
-        freq_println(str, 10);
+    freq_println(str, 10);
     }
-
-
