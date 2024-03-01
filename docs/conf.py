@@ -31,7 +31,7 @@ exhale_args = {
     # These arguments are required
     "containmentFolder":     "./api",
     "rootFileName":          "api_reference.rst",
-    "afterTitleDescription": "MotorGo Mini Driver API TEST TEST TEST",
+    "afterTitleDescription": "MotorGo Mini Driver API",
     "doxygenStripFromPath":  "..",
     # Heavily encouraged optional argument (see docs)
     "rootFileTitle":         "API Reference",
@@ -56,6 +56,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
+html_sidebars = {'**': ['logo-text.html', 'globaltoc.html', 'searchbox.html']}
 
 
 # -- Options for Multiversion  ------------------------------------------------
