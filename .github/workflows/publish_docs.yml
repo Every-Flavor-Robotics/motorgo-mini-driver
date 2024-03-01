@@ -1,10 +1,11 @@
 name: Build and Publish Documentation (Pushes)
 
 on:
-  push:
+  pull_request:
     branches:
-      - main
       - dev
+      - main
+    types: [closed]
 
 jobs:
   build-and-deploy-docs:
