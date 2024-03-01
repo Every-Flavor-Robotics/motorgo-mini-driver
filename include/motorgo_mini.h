@@ -1,5 +1,3 @@
-// Header file for the MotorGo Mini driver class.
-
 #ifndef MOTORGO_MINI_H
 #define MOTORGO_MINI_H
 
@@ -9,6 +7,14 @@
 namespace MotorGo
 {
 
+/**
+ * @class MotorGoMini
+ * @brief Provides control and management for the MotorGo Mini hardware.
+ *
+ * This class sets up and encapsulates the MotorChannel objects for the two
+ * motor channels on the MotorGo Mini. The MotorChannel is the primary
+ * interface for controlling and managing BLDC motors using the MotorGo hardware.
+ */
 class MotorGoMini
 {
  private:
