@@ -3,8 +3,9 @@ name: Build Documentation (PR Validation)
 on:
   pull_request:
     branches:
-      - main
       - dev
+      - main
+    types: [closed]
 
 jobs:
   build-docs:
