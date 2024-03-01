@@ -17,6 +17,7 @@ extensions = [
     'breathe',
     'exhale',
     'sphinx_rtd_theme',
+    'sphinx_multiversion'
 ]
 
 breathe_projects = {
@@ -55,3 +56,16 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
+
+
+# -- Options for Multiversion  ------------------------------------------------
+
+# Whitelist the versions you want included (adjust as needed)
+smv_branch_whitelist = r'^main|dev|api-docs$'
+
+# Output subdirectory based on branch for simple version separation
+smv_outputdir_format = '{ref.name}'
+
+# Customize the version selection layout
+smv_tag_dropdown = True
+smv_rename_assets_path = False
