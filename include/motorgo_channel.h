@@ -123,6 +123,41 @@ class MotorChannel
   void set_position_controller(PIDParameters params);
 
   /**
+   * @brief Get the user-specified torque limit.
+   *
+   * @return float
+   */
+  float get_torque_limit();
+
+  /**
+   * @brief Get the user-specified velocity limit.
+   *
+   * @return float
+   */
+  float get_velocity_limit();
+
+  /**
+   * @brief Get the user-specified lower position limit.
+   *
+   * @return float
+   */
+  float get_position_limit_low();
+
+  /**
+   * @brief Get the user-specified upper position limit.
+   *
+   * @return float
+   */
+  float get_position_limit_high();
+
+  /**
+   * @brief Get the user-specified voltage limit.
+   *
+   * @return float
+   */
+  float get_voltage_limit();
+
+  /**
    * @brief Sets the maximum torque that can be commanded to the torque
    * controller.
    * @param limit The maximum torque in N*m that can be commanded to the motor.

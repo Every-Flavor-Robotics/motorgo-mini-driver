@@ -294,6 +294,22 @@ void MotorGo::MotorChannel::set_target_voltage(float target)
   }
 }
 
+float MotorGo::MotorChannel::get_torque_limit() { return torque_limit; }
+
+float MotorGo::MotorChannel::get_velocity_limit() { return velocity_limit; }
+
+float MotorGo::MotorChannel::get_position_limit_low()
+{
+  return position_limit_low;
+}
+
+float MotorGo::MotorChannel::get_position_limit_high()
+{
+  return position_limit_high;
+}
+
+float MotorGo::MotorChannel::get_voltage_limit() { return voltage_limit; }
+
 void MotorGo::MotorChannel::set_torque_limit(float limit)
 {
   torque_limit = limit;
