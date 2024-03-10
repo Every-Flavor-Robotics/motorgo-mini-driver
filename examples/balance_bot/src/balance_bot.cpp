@@ -16,8 +16,8 @@ MotorGo::MotorGoMini motorgo_mini;
 MotorGo::MotorChannel& motor_left = motorgo_mini.ch0;
 MotorGo::MotorChannel& motor_right = motorgo_mini.ch1;
 
-MotorGo::MotorParameters motor_params_left;
-MotorGo::MotorParameters motor_params_right;
+MotorGo::ChannelConfiguration config_left;
+MotorGo::ChannelConfiguration config_right;
 
 // declare PID manager object
 MotorGo::PIDManager pid_manager;
@@ -135,24 +135,18 @@ void setup()
   mpu.calibrate();
 
   // Setup motor parameters
-  motor_params_left.pole_pairs = 7;
-  motor_params_left.power_supply_voltage = 5.0;
-  motor_params_left.voltage_limit = 5.0;
-  motor_params_left.current_limit = 300;
-  motor_params_left.velocity_limit = 100.0;
-  motor_params_left.calibration_voltage = 2.0;
+  config_left.motor_config = MotorGo::MotorGoGreen;
+  config_left.power_supply_voltage = 5.0;
+  config_left.reversed = false;
 
-  motor_params_right.pole_pairs = 7;
-  motor_params_right.power_supply_voltage = 5.0;
-  motor_params_right.voltage_limit = 5.0;
-  motor_params_right.current_limit = 300;
-  motor_params_right.velocity_limit = 100.0;
-  motor_params_right.calibration_voltage = 2.0;
+  config_right.motor_config = MotorGo::MotorGoGreen;
+  config_right.power_supply_voltage = 5.0;
+  config_right.reversed = true;
 
   // Setup both motor channels
   bool calibrate = false;
-  motor_left.init(motor_params_left, calibrate);
-  motor_right.init(motor_params_right, calibrate);
+  motor_left.init(config_left, calibrate);
+  motor_right.init(config_right, calibrate);
 
   // Set motor control mode to voltage control
   motor_left.set_control_mode(MotorGo::ControlMode::Voltage);
