@@ -334,7 +334,7 @@ void MotorGo::MotorChannel::set_torque_controller(MotorGo::PIDParameters params)
   motor.PID_current_q.I = params.i;
   motor.PID_current_q.D = params.d;
   motor.PID_current_q.output_ramp = params.output_ramp;
-  motor.PID_current_q.limit = params.limit;
+  //   motor.PID_current_q.limit = params.limit;
   motor.LPF_current_q.Tf = params.lpf_time_constant;
 
   //   If calibration data is loaded, enable the torque controller
@@ -349,7 +349,7 @@ void MotorGo::MotorChannel::set_velocity_controller(
   motor.PID_velocity.I = params.i;
   motor.PID_velocity.D = params.d;
   motor.PID_velocity.output_ramp = params.output_ramp;
-  motor.PID_velocity.limit = params.limit;
+  //   motor.PID_velocity.limit = params.limit;
   motor.LPF_velocity.Tf = params.lpf_time_constant;
 
   //   If calibration data is loaded, enable the velocity controller
@@ -364,7 +364,7 @@ void MotorGo::MotorChannel::set_position_controller(
   motor.P_angle.I = params.i;
   motor.P_angle.D = params.d;
   motor.P_angle.output_ramp = params.output_ramp;
-  motor.P_angle.limit = params.limit;
+  //   motor.P_angle.limit = params.limit;
   motor.LPF_angle.Tf = params.lpf_time_constant;
 
   //   If calibration data is loaded, enable the position controller
@@ -427,7 +427,7 @@ void MotorGo::MotorChannel::load_controller_helper(const char* key,
   controller.I = packed_params.i;
   controller.D = packed_params.d;
   controller.output_ramp = packed_params.output_ramp;
-  controller.limit = packed_params.limit;
+  //   controller.limit = packed_params.limit;
   lpf.Tf = packed_params.lpf_time_constant;
 }
 
