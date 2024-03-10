@@ -55,7 +55,7 @@ enum ControlMode
  */
 struct MotorConfiguration
 {
-  int pole_pairs;
+  int pole_pairs = -1;
   float kv = NOT_SET;
   float phase_resistance = NOT_SET;
   float phase_inductance = NOT_SET;
