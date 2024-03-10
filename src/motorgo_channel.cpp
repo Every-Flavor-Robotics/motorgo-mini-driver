@@ -258,7 +258,10 @@ void MotorGo::MotorChannel::set_target_voltage(float target)
 
 void MotorGo::MotorChannel::zero_position()
 {
-  motor.sensor_offset = motor.shaftAngle();
+  // Shaft angle returns the filtered angle, with the sensor offset applied
+  //   Add current sensor_offset back to the current shaft angle to
+  //   recover the filtered (but not offset) angle
+  motor.sensor_offset = motor.shaftAngle() + motor.sensor_offset;
 }
 
 // Built In PID controller functions
