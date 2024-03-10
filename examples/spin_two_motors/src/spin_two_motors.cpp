@@ -67,6 +67,9 @@ void setup()
   motor_left.set_control_mode(MotorGo::ControlMode::Velocity);
   motor_right.set_control_mode(MotorGo::ControlMode::Velocity);
 
+  // Set a velocity limit of 5.0 rad/s for the left motor
+  motor_left.set_velocity_limit(5.0);
+
   //   Enable motors
   motor_left.enable();
   motor_right.enable();
@@ -77,6 +80,7 @@ void loop()
   motor_left.loop();
   motor_right.loop();
 
+  // Left Motor should only spin at 5.0 rad/s, because of the velocity limit
   motor_left.set_target_velocity(10.0);
   motor_right.set_target_velocity(10.0);
 
