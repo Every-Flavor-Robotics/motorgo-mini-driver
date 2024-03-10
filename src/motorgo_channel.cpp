@@ -26,17 +26,18 @@ MotorGo::MotorChannel::MotorChannel(BLDCChannelParameters params,
   }
 }
 
-void MotorGo::MotorChannel::init(MotorParameters params, bool should_calibrate)
+void MotorGo::MotorChannel::init(ChannelConfiguration config,
+                                 bool should_calibrate)
 {
   // Save motor parameters
-  motor_params = params;
+  channel_config = config;
   this->should_calibrate = should_calibrate;
 
   // Set the correct number of pole pairs
-  motor.pole_pairs = params.pole_pairs;
-  motor.KV_rating = params.kv;
-  motor.phase_resistance = params.phase_resistance;
-  motor.phase_inductance = params.phase_inductance;
+  motor.pole_pairs = channel_config.motor_config.pole_pairs;
+  motor.KV_rating = channel_config.motor_config.kv;
+  motor.phase_resistance = channel_config.motor_config.phase_resistance;
+  motor.phase_inductance = channel_config.motor_config.phase_inductance;
   //   Set default LPF time constants
   motor.LPF_velocity.Tf = 0.001;
   motor.LPF_angle.Tf = 0.001;
@@ -48,21 +49,27 @@ void MotorGo::MotorChannel::init(MotorParameters params, bool should_calibrate)
   motor.linkSensor(&encoder);
 
   // Init driver and link to motor
-  driver.voltage_power_supply = params.power_supply_voltage;
-  driver.voltage_limit = params.voltage_limit;
+  driver.voltage_power_supply = channel_config.power_supply_voltage;
+  driver.voltage_limit = DRIVER_VOLTAGE_LIMIT;
   driver.init();
   motor.linkDriver(&driver);
 
   // Set motor control parameters
   motor.foc_modulation = FOCModulationType::SpaceVectorPWM;
-  motor.voltage_limit = params.voltage_limit;
-  motor.current_limit = params.current_limit;
+  motor.voltage_limit = channel_config.motor_config.voltage_limit;
+
+  //   Set the motor current limit to the lesser of the current limit and the
+  //   driver current limit
+  motor.current_limit =
+      min(channel_config.motor_config.current_limit, DRIVER_CURRENT_LIMIT);
 
   // Initialize motor
   motor.init();
 
   // Calibrate encoders/motors if flag is set
-  sensor_calibrated.voltage_calibration = params.calibration_voltage;
+  sensor_calibrated.voltage_calibration =
+      channel_config.motor_config.calibration_voltage;
+
   if (should_calibrate)
   {
     sensor_calibrated.calibrate(motor, name);
@@ -97,7 +104,7 @@ void MotorGo::MotorChannel::init(MotorParameters params, bool should_calibrate)
   // true
   // Multiply by sensor direction to correctly handle the motor being plugged
   //   in any configuration
-  if (params.reversed)
+  if (channel_config.reversed)
   {
     // Direction enum is defined with looking at the motor from the back.
     // motor_direction_ch0 = Direction::CCW * motor_ch0.sensor_direction;
@@ -119,10 +126,10 @@ void MotorGo::MotorChannel::init(MotorParameters params, bool should_calibrate)
   disable();
 }
 
-void MotorGo::MotorChannel::init(MotorParameters params)
+void MotorGo::MotorChannel::init(ChannelConfiguration config)
 {
   // Call the other init function with should_calibrate set to false
-  init(params, false);
+  init(config, false);
 }
 
 void MotorGo::MotorChannel::loop()

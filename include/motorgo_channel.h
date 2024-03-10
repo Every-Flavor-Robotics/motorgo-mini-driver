@@ -48,19 +48,21 @@ class MotorChannel
   /**
   * @brief Initializes motor and encoder with default settings. Calibration
            is automatically loaded.
-  * @param params MotorParameters structure containing motor setup parameters.
+  * @param channel_config ChannelConfiguration structure containing the
+  * configuration for the motor channel.
   */
-  void init(MotorParameters params);
+  void init(ChannelConfiguration channel_config);
 
   /**
    * @brief Initializes motor and encoder with the option of calibration.
    *        If should_calibrate is false, calibration procedure will not run.
    *        Calibration will be loaded from flash if available, else the
    *        channel will only run open loop control modes
-   * @param params MotorParameters structure containing motor setup parameters.
+   * @param channel_config ChannelConfiguration structure containing the
+   * configuration for the motor channel.
    * @param should_calibrate If true, performs calibration on startup.
    */
-  void init(MotorParameters params, bool should_calibrate);
+  void init(ChannelConfiguration channel_config, bool should_calibrate);
 
   /** @} */  // end of motor_initialization group
 
@@ -303,7 +305,7 @@ class MotorChannel
   CalibratedSensor sensor_calibrated;
 
   // Additional motor and encoder parameters
-  MotorParameters motor_params;
+  ChannelConfiguration channel_config;
   Direction motor_direction;
 
   // Current targets
@@ -338,9 +340,9 @@ class MotorChannel
   // MotorGo Limits
   // MotorGo Mini driver voltage limit
   // TODO: Move these to board definitions
-  float voltage_limit = 11.0f;
+  const float DRIVER_VOLTAGE_LIMIT = 11.0f;
   // MotorGo Mini driver current limit
-  float current_limit = 2.5f;
+  const float DRIVER_CURRENT_LIMIT = 2.5f;
 
   // Calibration parameters
   // If should_calibrate is set to true, the motor will be calibrated on startup
