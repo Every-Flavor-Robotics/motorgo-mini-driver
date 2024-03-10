@@ -32,7 +32,7 @@ jobs:
           REPO_NAME: ${{ github.repository }} # Set environment variable
         run: |
           python .github/scripts/package_arduino_lib.py library.json motorgo-mini-driver \
-            --output-dir $GITHUB_WORKSPACE/motorgo-arduino/arduino_library \
+            --output-dir $GITHUB_WORKSPACE/motorgo-arduino/ \
             --storage-dir ./tmp
 
       # Open Pull Request
