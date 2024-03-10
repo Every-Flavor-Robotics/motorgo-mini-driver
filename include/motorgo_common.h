@@ -59,11 +59,39 @@ struct MotorConfiguration
   float kv = NOT_SET;
   float phase_resistance = NOT_SET;
   float phase_inductance = NOT_SET;
-
   float voltage_limit = 1000.0f;
   float current_limit = 1000.0f;
   float velocity_limit = 1000.0f;
   float calibration_voltage = NOT_SET;
+
+  // Default constructor
+  MotorConfiguration()
+      : pole_pairs(-1),
+        kv(NOT_SET),
+        phase_resistance(NOT_SET),
+        phase_inductance(NOT_SET),
+        voltage_limit(1000.0f),
+        current_limit(1000.0f),
+        velocity_limit(1000.0f),
+        calibration_voltage(NOT_SET)
+  {
+  }
+
+  // Constructor with parameters
+  MotorConfiguration(int pole_pairs, float kv, float phase_resistance,
+                     float phase_inductance, float voltage_limit,
+                     float current_limit, float velocity_limit,
+                     float calibration_voltage)
+      : pole_pairs(pole_pairs),
+        kv(kv),
+        phase_resistance(phase_resistance),
+        phase_inductance(phase_inductance),
+        voltage_limit(voltage_limit),
+        current_limit(current_limit),
+        velocity_limit(velocity_limit),
+        calibration_voltage(calibration_voltage)
+  {
+  }
 };
 
 /**
