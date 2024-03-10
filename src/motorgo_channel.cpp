@@ -190,6 +190,12 @@ void MotorGo::MotorChannel::set_target_velocity(float target)
 {
   target_velocity = target * motor_direction;
 
+  if (velocity_limit_enabled)
+  {
+    target_velocity =
+        _constrain(target_velocity, -velocity_limit, velocity_limit);
+  }
+
   // If the control mode is velocity open loop, move the motor
   // If closed loop velocity, move the motor only if PID params are set
   switch (control_mode)
@@ -212,6 +218,10 @@ void MotorGo::MotorChannel::set_target_velocity(float target)
 void MotorGo::MotorChannel::set_target_torque(float target)
 {
   target_torque = target * motor_direction;
+  if (torque_limit_enabled)
+  {
+    target_torque = _constrain(target_torque, -torque_limit, torque_limit);
+  }
 
   if (control_mode == MotorGo::ControlMode::Torque)
   {
@@ -229,6 +239,12 @@ void MotorGo::MotorChannel::set_target_torque(float target)
 void MotorGo::MotorChannel::set_target_position(float target)
 {
   target_position = target * motor_direction;
+
+  if (position_limit_enabled)
+  {
+    target_position =
+        _constrain(target_position, position_limit_low, position_limit_high);
+  }
 
   // If the control mode is position open loop, move the motor
   // If closed loop position, move the motor only if PID params are set
@@ -253,7 +269,41 @@ void MotorGo::MotorChannel::set_target_position(float target)
 void MotorGo::MotorChannel::set_target_voltage(float target)
 {
   target_voltage = target * motor_direction;
-  motor.move(target_voltage);
+
+  if (voltage_limit_enabled)
+  {
+    target_voltage = _constrain(target_voltage, -voltage_limit, voltage_limit);
+  }
+
+  if (control_mode == MotorGo::ControlMode::Voltage)
+  {
+    motor.move(target_voltage);
+  }
+}
+
+void MotorGo::MotorChannel::set_torque_limit(float limit)
+{
+  torque_limit = limit;
+  torque_limit_enabled = true;
+}
+
+void MotorGo::MotorChannel::set_velocity_limit(float limit)
+{
+  velocity_limit = limit;
+  velocity_limit_enabled = true;
+}
+
+void MotorGo::MotorChannel::set_position_limit(float low, float high)
+{
+  position_limit_low = low;
+  position_limit_high = high;
+  position_limit_enabled = true;
+}
+
+void MotorGo::MotorChannel::set_voltage_limit(float limit)
+{
+  voltage_limit = limit;
+  voltage_limit_enabled = true;
 }
 
 void MotorGo::MotorChannel::zero_position()
