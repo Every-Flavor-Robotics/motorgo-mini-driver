@@ -7,6 +7,12 @@
 
 namespace MotorGo
 {
+
+/**
+ * @brief Configuration for the official MotorGo Green motor. This is a
+ * PTZ 2804 motor.
+ *
+ */
 const MotorConfiguration MotorGoGreen(7,         // pole_pairs
                                       320.0f,    // kv
                                       2.3f,      // phase_resistance
