@@ -285,18 +285,18 @@ void MotorGo::MotorChannel::set_target_voltage(float target)
 
   if (voltage_limit_enabled)
   {
-    // With the phase resistance and KV set, voltage control behaves
-    // Similarly to an estimated current control. However, SimpleFOC does not
-    // account for the current limits set in this mode. Since we use the current
-    // limit as a way to protect the motor, we use the lesser of the voltage
-    // limit and the current limit as the limit for the voltage control.
-    float limit = min(voltage_limit, channel_config.motor_config.current_limit);
-    target_voltage = _constrain(target_voltage, -limit, limit);
+    target_voltage = _constrain(target_voltage, -voltage_limit, voltage_limit);
   }
 
   if (control_mode == MotorGo::ControlMode::Voltage)
   {
-    motor.move(target_voltage);
+    // With the phase resistance and KV set, voltage control behaves
+    // similarly to an estimated current control. However, SimpleFOC does not
+    // account for the current limits set in this mode. Since we use the current
+    // limit as a way to protect the motor, we also constrain the voltage
+    // command to the current limit.
+    motor.move(
+        _constrain(target_voltage, -motor.current_limit, motor.current_limit));
   }
 }
 
