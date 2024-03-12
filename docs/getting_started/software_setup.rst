@@ -27,7 +27,7 @@ First, install the ESP32 board definitions, if you have not already done so.
 * Search for `Espressif 32`
 * Click `Install`
 
-Next, you'll have to install the MotorGo board definition, which is available in this respository.
+Next, you'll have to install the MotorGo board definition, which is available in the `MotorGo Board Definitions repository <https://github.com/Every-Flavor-Robotics/motorgo-board-definitions>`_.
 
 **Arduino IDE 1.X/2.X**
 
@@ -36,6 +36,7 @@ Next, you'll have to install the MotorGo board definition, which is available in
 * Go to `Tools > Board > Boards Manager...`
 * Search for `MotorGo`
 * Click `Install`
+* Select
 
 **PlatformIO**
 
@@ -43,26 +44,45 @@ Next, you'll have to install the MotorGo board definition, which is available in
 * Navigate to the root of the this repository
 * Run the python script `python3 setup_platformio.py`
 
+Or you can paste the following commands into your terminal.
+
+.. code-block:: bash
+
+  git clone https://github.com/Every-Flavor-Robotics/motorgo-board-definitions.git
+  cd motorgo-board-definitions
+  python3 setup_platformio.py    
+
+To use the board definition, either select the MotorGo Mini 1 from the list of boards when creating a new project OR modify the board in your `platformio.ini` file as follows:
+
+.. code-block:: ini
+
+  board = motorgo_mini_1
+
+
+
 
 If you're in Arduino IDE, you should be able to now select the MotorGo Mini 1 from the board list. If you're in PlatformIO, you should be able to select the MotorGo Mini 1 from the board list OR modify the `board` in `platformio.ini` to `motorgo_mini_1`. To test this is working as expected, you can upload the `Blink` example to the MotorGo Mini 1 board. If the onboard LED blinks, you're good to go!
 
 Setting up the MotorGo Mini driver library
 ------------------------------------------
 
-The MotorGo Mini library provides an easy interface to control motors and read encoders using the onboard hardware. The main code for the library is available `here <https://github.com/Every-Flavor-Robotics/motorgo-mini-driver>`. The Arduino compatible library is available `here <https://github.com/Every-Flavor-Robotics/motorgo-arduino>`. Below are instructions for setting the library up.
+The MotorGo Mini library provides an easy interface to control motors and read encoders using the onboard hardware. The main code for the library (PlatformIO package) is available `here <https://github.com/Every-Flavor-Robotics/motorgo-mini-driver>`_. The Arduino compatible library is available `here <https://github.com/Every-Flavor-Robotics/motorgo-arduino>`_. Below are instructions for setting the library up.
 
 **Arduino IDE 1.X/2.X**
 
-* Download the libary by clicking `here <https://github.com/Every-Flavor-Robotics/motorgo-arduino/raw/main/motorgo-mini-driver.zip>`
+* Download the libary by clicking `here <https://github.com/Every-Flavor-Robotics/motorgo-arduino/raw/main/motorgo-mini-driver.zip>`_
 * Go to `Sketch > Include Library > Add .ZIP Library...`
 * Select the downloaded file
 
 **PlatformIO**
 You can reference the github repo directly in your `platformio.ini` file.
 
-```ini
-lib_deps =
-    https://github.com/Every-Flavor-Robotics/motorgo-mini-driver.git#v1.0.0
-```
+.. code-block:: ini
 
-You can modify v1.0.0 to whichever release tag you prefer, or switch to dev for the latest experimental changes. Example code is available in the examples directory of the library. You can open examples directly in Arduino by going to `File > Examples > MotorGo Mini Driver` (under `Examples from Custom Libaries`). We recommend continuing to :ref:`calibrate-motors` to step through the process of calibrating the motors and encoders before running other examples.
+  lib_deps =
+    https://github.com/Every-Flavor-Robotics/motorgo-mini-driver.git#v1.0.0
+..
+
+You should modify v1.0.0 to whichever release tag you prefer, or switch to dev for the latest experimental changes.
+
+Example code is available in the examples directory of the library. You can open examples directly in Arduino by going to `File > Examples > MotorGo Mini Driver` (under `Examples from Custom Libaries`). We recommend continuing to :ref:`calibrate-motors` to step through the process of calibrating the motors and encoders before running other examples.
