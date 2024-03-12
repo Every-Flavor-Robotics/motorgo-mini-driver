@@ -19,7 +19,9 @@ The calibration step also automatically determines the direction of the motor. A
 
 **Calibration Sketch**
 
-This sketch will run the calibration routine for channel 0 on the MotorGo. If you want to calibrate channel 1, simply change the function calls to ``init_ch1`` and ``loop_ch1``.
+You can open this sketch from the MotorGo Mini Driver examples in the Arduino IDE or by `downloading this project <https://github.com/Every-Flavor-Robotics/motorgo-mini-driver/tree/main/examples/calibrate_motors>`_ for PlatformIO.
+
+This sketch will run the calibration routine for channel 0 and channel 1 on the MotorGo.
 
 - The calibration sweep involves a slow, 360-degree rotation of the rotor in both directions.
 - This process maps the rotor's position to the encoder's readings.
@@ -79,6 +81,18 @@ This sketch will run the calibration routine for channel 0 on the MotorGo. If yo
 
         freq_println(str, 10);
     }
+
+If you are using PlatformIO, you can configure the project with the following platformio.ini file.
+
+.. code-block:: ini
+
+    [env:calibrate_motors]
+    platform = platformio/espressif32@^6.1.0
+    board = motorgo_mini_1
+    framework = arduino
+    monitor_speed = 115200
+    lib_deps =
+        https://github.com/Every-Flavor-Robotics/motorgo-mini-driver.git#v1.0.0
 
 
 Let's break the code down line by line. You can segment all code for the MotorGo into three parts:
