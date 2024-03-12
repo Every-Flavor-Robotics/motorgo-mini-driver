@@ -374,10 +374,16 @@ class MotorChannel
 
   // MotorGo Limits
   // MotorGo Mini driver voltage limit
-  // TODO: Move these to board definitions
+  // TODO: Some board definitions include the voltage limit, others don't
+  // Set a default for now thats safe for the released hardware
+#ifndef DRIVER_VOLTAGE_LIMIT
   const float DRIVER_VOLTAGE_LIMIT = 11.0f;
+#endif
+
   // MotorGo Mini driver current limit
+#ifndef DRIVER_CURRENT_LIMIT
   const float DRIVER_CURRENT_LIMIT = 1.8f;
+#endif
 
   // Calibration parameters
   // If should_calibrate is set to true, the motor will be calibrated on startup
