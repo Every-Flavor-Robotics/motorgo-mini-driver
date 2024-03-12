@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'MotorGo Mini Driver'
+project = 'MotorGo Docs'
 copyright = '2023, Every Flavor Robotics LLC, MotorGo LLC'
 author = 'Every Flavor Robotics LLC, MotorGo LLC'
 
@@ -21,17 +21,17 @@ extensions = [
 ]
 
 breathe_projects = {
-    'MotorGo Mini Driver': './doxyoutput/xml',  # Point to your Doxygen XML output directory
+    'MotorGo Docs': './doxyoutput/xml',  # Point to your Doxygen XML output directory
 }
 
-breathe_default_project = 'MotorGo Mini Driver'
+breathe_default_project = 'MotorGo Docs'
 
 # Setup the exhale extension
 exhale_args = {
     # These arguments are required
     "containmentFolder":     "./api",
     "rootFileName":          "api_reference.rst",
-    "afterTitleDescription": "MotorGo Mini Driver API",
+    "afterTitleDescription": "Docs for the MotorGo Product Line",
     "doxygenStripFromPath":  "..",
     # Heavily encouraged optional argument (see docs)
     "rootFileTitle":         "API Reference",
