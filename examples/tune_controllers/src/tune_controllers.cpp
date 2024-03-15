@@ -126,8 +126,10 @@ void setup()
   motor_ch0.set_control_mode(MotorGo::ControlMode::Velocity);
   motor_ch1.set_control_mode(MotorGo::ControlMode::Velocity);
 
-  //   motorgo_mini->enable_ch0();
-  //   motorgo_mini->enable_ch1();
+  pid_manager.init(WIFI_SSID, WIFI_PASSWORD);
+
+  //   motor_ch0.enable();
+  //   motor_ch1.enable();
 }
 
 void loop()
