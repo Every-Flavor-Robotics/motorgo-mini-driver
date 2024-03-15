@@ -295,8 +295,11 @@ void MotorGo::MotorChannel::set_target_voltage(float target)
     // account for the current limits set in this mode. Since we use the current
     // limit as a way to protect the motor, we also constrain the voltage
     // command to the current limit.
-    motor.move(
-        _constrain(target_voltage, -motor.current_limit, motor.current_limit));
+    // motor.move(
+    //     _constrain(target_voltage, -motor.current_limit,
+    //     motor.current_limit));
+
+    motor.move(target_voltage);
   }
 }
 
