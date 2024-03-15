@@ -2,7 +2,7 @@
 MotorGo Mini Driver
 ==================
 
-The 'MotorGo Mini <https://motorgo.net>'_ is a 2-channel brushless motor controller and microcontroller combo designed to accelerate the process of robot prototype development. MotorGo Mini handles the low-level details of motor control, including power distribution, current sensing, encoder reading, PID controls, and communications, so that you can focus on the high-level details of your robot's behavior.
+The `MotorGo Mini <https://motorgo.net>`_ is a 2-channel brushless motor controller and microcontroller combo designed to accelerate the process of robot prototype development. MotorGo Mini handles the low-level details of motor control, including power distribution, current sensing, encoder reading, PID controls, and communications, so that you can focus on the high-level details of your robot's behavior.
 
 Key Hardware Features:
 
