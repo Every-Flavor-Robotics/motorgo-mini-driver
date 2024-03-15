@@ -136,10 +136,16 @@ void setup()
 
   // Setup motor parameters
   config_left.motor_config = MotorGo::MotorGoGreen;
+  // Configure a lower voltage limit if your MotorGo is restarting
+  // when the motor is loaded.
+  // config_left.motor_config.voltage_limit = 3;
   config_left.power_supply_voltage = 5.0;
   config_left.reversed = false;
 
   config_right.motor_config = MotorGo::MotorGoGreen;
+  // Configure a lower voltage limit if your MotorGo is restarting
+  // when the motor is loaded.
+  // config_right.motor_config.voltage_limit = 3;
   config_right.power_supply_voltage = 5.0;
   config_right.reversed = true;
 
