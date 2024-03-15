@@ -6,8 +6,8 @@ MotorGo::MotorGoMini motorgo_mini;
 MotorGo::MotorChannel& motor_left = motorgo_mini.ch0;
 MotorGo::MotorChannel& motor_right = motorgo_mini.ch1;
 
-MotorGo::MotorParameters motor_params_left;
-MotorGo::MotorParameters motor_params_right;
+MotorGo::ChannelConfiguration config_left;
+MotorGo::ChannelConfiguration config_right;
 
 MotorGo::PIDParameters velocity_pid_params_left;
 MotorGo::PIDParameters velocity_pid_params_right;
@@ -32,36 +32,29 @@ void setup()
   delay(3000);
 
   // Setup motor parameters
-  motor_params_left.pole_pairs = 7;
-  motor_params_left.power_supply_voltage = 5.0;
-  motor_params_left.voltage_limit = 5.0;
-  motor_params_left.current_limit = 300;
-  motor_params_left.velocity_limit = 100.0;
-  motor_params_left.calibration_voltage = 2.0;
-  motor_params_left.reversed = false;
 
-  motor_params_right.pole_pairs = 7;
-  motor_params_right.power_supply_voltage = 5.0;
-  motor_params_right.voltage_limit = 5.0;
-  motor_params_right.current_limit = 300;
-  motor_params_right.velocity_limit = 100.0;
-  motor_params_right.calibration_voltage = 2.0;
-  motor_params_right.reversed = true;
+  config_left.motor_config = MotorGo::MotorGoGreen;
+  config_left.power_supply_voltage = 5.0;
+  config_left.reversed = false;
 
-  // Setup Ch0
+  config_right.motor_config = MotorGo::MotorGoGreen;
+  config_right.power_supply_voltage = 5.0;
+  config_right.reversed = true;
+
+  // Setup
   bool calibrate = false;
-  motor_left.init(motor_params_left, calibrate);
-  motor_right.init(motor_params_right, calibrate);
+  motor_left.init(config_left, calibrate);
+  motor_right.init(config_right, calibrate);
 
   // Set velocity controller parameters
   // Setup PID parameters
-  velocity_pid_params_left.p = 1.6;
+  velocity_pid_params_left.p = 0.8;
   velocity_pid_params_left.i = 0.01;
   velocity_pid_params_left.d = 0.0;
   velocity_pid_params_left.output_ramp = 10000.0;
   velocity_pid_params_left.lpf_time_constant = 0.11;
 
-  velocity_pid_params_right.p = 1.6;
+  velocity_pid_params_right.p = 0.8;
   velocity_pid_params_right.i = 0.01;
   velocity_pid_params_right.d = 0.0;
   velocity_pid_params_right.output_ramp = 10000.0;
@@ -74,6 +67,9 @@ void setup()
   motor_left.set_control_mode(MotorGo::ControlMode::Velocity);
   motor_right.set_control_mode(MotorGo::ControlMode::Velocity);
 
+  // Set a velocity limit of 5.0 rad/s for the left motor
+  motor_left.set_velocity_limit(5.0);
+
   //   Enable motors
   motor_left.enable();
   motor_right.enable();
@@ -84,6 +80,7 @@ void loop()
   motor_left.loop();
   motor_right.loop();
 
+  // Left Motor should only spin at 5.0 rad/s, because of the velocity limit
   motor_left.set_target_velocity(10.0);
   motor_right.set_target_velocity(10.0);
 

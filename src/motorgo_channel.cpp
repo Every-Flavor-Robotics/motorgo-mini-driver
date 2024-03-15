@@ -26,14 +26,21 @@ MotorGo::MotorChannel::MotorChannel(BLDCChannelParameters params,
   }
 }
 
-void MotorGo::MotorChannel::init(MotorParameters params, bool should_calibrate)
+void MotorGo::MotorChannel::init(ChannelConfiguration config,
+                                 bool should_calibrate)
 {
   // Save motor parameters
-  motor_params = params;
+  channel_config = config;
   this->should_calibrate = should_calibrate;
 
   // Set the correct number of pole pairs
-  motor.pole_pairs = params.pole_pairs;
+  motor.pole_pairs = channel_config.motor_config.pole_pairs;
+  motor.KV_rating = channel_config.motor_config.kv;
+  motor.phase_resistance = channel_config.motor_config.phase_resistance;
+  motor.phase_inductance = channel_config.motor_config.phase_inductance;
+  //   Set default LPF time constants
+  motor.LPF_velocity.Tf = 0.001;
+  motor.LPF_angle.Tf = 0.001;
 
   // Init encoder
   encoder.init(&MotorGo::hspi);
@@ -42,21 +49,27 @@ void MotorGo::MotorChannel::init(MotorParameters params, bool should_calibrate)
   motor.linkSensor(&encoder);
 
   // Init driver and link to motor
-  driver.voltage_power_supply = params.power_supply_voltage;
-  driver.voltage_limit = params.voltage_limit;
+  driver.voltage_power_supply = channel_config.power_supply_voltage;
+  driver.voltage_limit = DRIVER_VOLTAGE_LIMIT;
   driver.init();
   motor.linkDriver(&driver);
 
   // Set motor control parameters
   motor.foc_modulation = FOCModulationType::SpaceVectorPWM;
-  motor.voltage_limit = params.voltage_limit;
-  motor.current_limit = params.current_limit;
+  motor.voltage_limit = channel_config.motor_config.voltage_limit;
+
+  //   Set the motor current limit to the lesser of the current limit and the
+  //   driver current limit
+  motor.current_limit =
+      min(channel_config.motor_config.current_limit, DRIVER_CURRENT_LIMIT);
 
   // Initialize motor
   motor.init();
 
   // Calibrate encoders/motors if flag is set
-  sensor_calibrated.voltage_calibration = params.calibration_voltage;
+  sensor_calibrated.voltage_calibration =
+      channel_config.motor_config.calibration_voltage;
+
   if (should_calibrate)
   {
     sensor_calibrated.calibrate(motor, name);
@@ -91,7 +104,7 @@ void MotorGo::MotorChannel::init(MotorParameters params, bool should_calibrate)
   // true
   // Multiply by sensor direction to correctly handle the motor being plugged
   //   in any configuration
-  if (params.reversed)
+  if (channel_config.reversed)
   {
     // Direction enum is defined with looking at the motor from the back.
     // motor_direction_ch0 = Direction::CCW * motor_ch0.sensor_direction;
@@ -113,10 +126,10 @@ void MotorGo::MotorChannel::init(MotorParameters params, bool should_calibrate)
   disable();
 }
 
-void MotorGo::MotorChannel::init(MotorParameters params)
+void MotorGo::MotorChannel::init(ChannelConfiguration config)
 {
   // Call the other init function with should_calibrate set to false
-  init(params, false);
+  init(config, false);
 }
 
 void MotorGo::MotorChannel::loop()
@@ -190,6 +203,12 @@ void MotorGo::MotorChannel::set_target_velocity(float target)
 {
   target_velocity = target * motor_direction;
 
+  if (velocity_limit_enabled)
+  {
+    target_velocity =
+        _constrain(target_velocity, -velocity_limit, velocity_limit);
+  }
+
   // If the control mode is velocity open loop, move the motor
   // If closed loop velocity, move the motor only if PID params are set
   switch (control_mode)
@@ -212,6 +231,10 @@ void MotorGo::MotorChannel::set_target_velocity(float target)
 void MotorGo::MotorChannel::set_target_torque(float target)
 {
   target_torque = target * motor_direction;
+  if (torque_limit_enabled)
+  {
+    target_torque = _constrain(target_torque, -torque_limit, torque_limit);
+  }
 
   if (control_mode == MotorGo::ControlMode::Torque)
   {
@@ -229,6 +252,12 @@ void MotorGo::MotorChannel::set_target_torque(float target)
 void MotorGo::MotorChannel::set_target_position(float target)
 {
   target_position = target * motor_direction;
+
+  if (position_limit_enabled)
+  {
+    target_position =
+        _constrain(target_position, position_limit_low, position_limit_high);
+  }
 
   // If the control mode is position open loop, move the motor
   // If closed loop position, move the motor only if PID params are set
@@ -253,7 +282,66 @@ void MotorGo::MotorChannel::set_target_position(float target)
 void MotorGo::MotorChannel::set_target_voltage(float target)
 {
   target_voltage = target * motor_direction;
-  motor.move(target_voltage);
+
+  if (voltage_limit_enabled)
+  {
+    target_voltage = _constrain(target_voltage, -voltage_limit, voltage_limit);
+  }
+
+  if (control_mode == MotorGo::ControlMode::Voltage)
+  {
+    // With the phase resistance and KV set, voltage control behaves
+    // similarly to an estimated current control. However, SimpleFOC does not
+    // account for the current limits set in this mode. Since we use the current
+    // limit as a way to protect the motor, we also constrain the voltage
+    // command to the current limit.
+    // motor.move(
+    //     _constrain(target_voltage, -motor.current_limit,
+    //     motor.current_limit));
+
+    motor.move(target_voltage);
+  }
+}
+
+float MotorGo::MotorChannel::get_torque_limit() { return torque_limit; }
+
+float MotorGo::MotorChannel::get_velocity_limit() { return velocity_limit; }
+
+float MotorGo::MotorChannel::get_position_limit_low()
+{
+  return position_limit_low;
+}
+
+float MotorGo::MotorChannel::get_position_limit_high()
+{
+  return position_limit_high;
+}
+
+float MotorGo::MotorChannel::get_voltage_limit() { return voltage_limit; }
+
+void MotorGo::MotorChannel::set_torque_limit(float limit)
+{
+  torque_limit = limit;
+  torque_limit_enabled = true;
+}
+
+void MotorGo::MotorChannel::set_velocity_limit(float limit)
+{
+  velocity_limit = limit;
+  velocity_limit_enabled = true;
+}
+
+void MotorGo::MotorChannel::set_position_limit(float low, float high)
+{
+  position_limit_low = low;
+  position_limit_high = high;
+  position_limit_enabled = true;
+}
+
+void MotorGo::MotorChannel::set_voltage_limit(float limit)
+{
+  voltage_limit = limit;
+  voltage_limit_enabled = true;
 }
 
 void MotorGo::MotorChannel::zero_position()
@@ -271,7 +359,7 @@ void MotorGo::MotorChannel::set_torque_controller(MotorGo::PIDParameters params)
   motor.PID_current_q.I = params.i;
   motor.PID_current_q.D = params.d;
   motor.PID_current_q.output_ramp = params.output_ramp;
-  motor.PID_current_q.limit = params.limit;
+  //   motor.PID_current_q.limit = params.limit;
   motor.LPF_current_q.Tf = params.lpf_time_constant;
 
   //   If calibration data is loaded, enable the torque controller
@@ -286,7 +374,7 @@ void MotorGo::MotorChannel::set_velocity_controller(
   motor.PID_velocity.I = params.i;
   motor.PID_velocity.D = params.d;
   motor.PID_velocity.output_ramp = params.output_ramp;
-  motor.PID_velocity.limit = params.limit;
+  //   motor.PID_velocity.limit = params.limit;
   motor.LPF_velocity.Tf = params.lpf_time_constant;
 
   //   If calibration data is loaded, enable the velocity controller
@@ -301,7 +389,7 @@ void MotorGo::MotorChannel::set_position_controller(
   motor.P_angle.I = params.i;
   motor.P_angle.D = params.d;
   motor.P_angle.output_ramp = params.output_ramp;
-  motor.P_angle.limit = params.limit;
+  //   motor.P_angle.limit = params.limit;
   motor.LPF_angle.Tf = params.lpf_time_constant;
 
   //   If calibration data is loaded, enable the position controller
@@ -364,7 +452,7 @@ void MotorGo::MotorChannel::load_controller_helper(const char* key,
   controller.I = packed_params.i;
   controller.D = packed_params.d;
   controller.output_ramp = packed_params.output_ramp;
-  controller.limit = packed_params.limit;
+  //   controller.limit = packed_params.limit;
   lpf.Tf = packed_params.lpf_time_constant;
 }
 

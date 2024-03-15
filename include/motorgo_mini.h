@@ -3,6 +3,7 @@
 
 #include "motorgo_channel.h"
 #include "motorgo_common.h"
+#include "motorgo_motors.h"
 
 namespace MotorGo
 {
@@ -13,7 +14,8 @@ namespace MotorGo
  *
  * This class sets up and encapsulates the MotorChannel objects for the two
  * motor channels on the MotorGo Mini. The MotorChannel is the primary
- * interface for controlling and managing BLDC motors using the MotorGo hardware.
+ * interface for controlling and managing BLDC motors using the MotorGo
+ * hardware.
  */
 class MotorGoMini
 {

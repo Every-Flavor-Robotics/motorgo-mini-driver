@@ -48,21 +48,23 @@ class MotorChannel
   /**
   * @brief Initializes motor and encoder with default settings. Calibration
            is automatically loaded.
-  * @param params MotorParameters structure containing motor setup parameters.
+  * @param channel_config ChannelConfiguration structure containing the
+  * configuration for the motor channel.
   */
-  void init(MotorParameters params);
+  void init(ChannelConfiguration channel_config);
 
   /**
-  * @brief Initializes motor and encoder with the option of calibration.
-  *        If should_calibrate is false, calibration procedure will not run.
-  *        Calibration will be loaded from flash if available, else the
-  *        channel will only run open loop control modes
-  * @param params MotorParameters structure containing motor setup parameters.
-  * @param should_calibrate If true, performs calibration on startup.
-  */
-  void init(MotorParameters params, bool should_calibrate);
+   * @brief Initializes motor and encoder with the option of calibration.
+   *        If should_calibrate is false, calibration procedure will not run.
+   *        Calibration will be loaded from flash if available, else the
+   *        channel will only run open loop control modes
+   * @param channel_config ChannelConfiguration structure containing the
+   * configuration for the motor channel.
+   * @param should_calibrate If true, performs calibration on startup.
+   */
+  void init(ChannelConfiguration channel_config, bool should_calibrate);
 
-    /** @} */  // end of motor_initialization group
+  /** @} */  // end of motor_initialization group
 
   /**
    * @brief Runs the control loop for the motor channel and updates encoder
@@ -113,7 +115,7 @@ class MotorChannel
    */
   void set_velocity_controller(PIDParameters params);
 
-   /**
+  /**
    * @brief Sets the PID parameters for the position controller.
    * @param params The PIDParameters structure to configure the position
    * controller.
@@ -121,15 +123,82 @@ class MotorChannel
   void set_position_controller(PIDParameters params);
 
   /**
+   * @brief Get the user-specified torque limit.
+   *
+   * @return float
+   */
+  float get_torque_limit();
+
+  /**
+   * @brief Get the user-specified velocity limit.
+   *
+   * @return float
+   */
+  float get_velocity_limit();
+
+  /**
+   * @brief Get the user-specified lower position limit.
+   *
+   * @return float
+   */
+  float get_position_limit_low();
+
+  /**
+   * @brief Get the user-specified upper position limit.
+   *
+   * @return float
+   */
+  float get_position_limit_high();
+
+  /**
+   * @brief Get the user-specified voltage limit.
+   *
+   * @return float
+   */
+  float get_voltage_limit();
+
+  /**
+   * @brief Sets the maximum torque that can be commanded to the torque
+   * controller.
+   * @param limit The maximum torque in N*m that can be commanded to the motor.
+   * @note This limit is only enforced if the motor is in torque control mode.
+   */
+  void set_torque_limit(float limit);
+
+  /**
+   * @brief Sets the maximum velocity that can be commanded to the velocity
+   * controller.
+   * @param limit The maximum velocity in rad/s that can be commanded to the
+   * motor.
+   * @note This limit is only enforced if the motor is in velocity control mode.
+   */
+  void set_velocity_limit(float limit);
+
+  /**
+   * @brief Sets the position limits for the position controller.
+   * @param low The lower position limit in radians.
+   * @param high The upper position limit in radians.
+   * @note This limit is only enforced if the motor is in position control mode.
+   */
+  void set_position_limit(float low, float high);
+
+  /**
+   * @brief Sets the maximum voltage that can be commanded to the motor.
+   * @param limit The maximum voltage in V that can be commanded to the motor.
+   * @note This limit is only enforced if the motor is in voltage control mode.
+   */
+  void set_voltage_limit(float limit);
+
+  /**
    * @brief Resets the internal state of the torque controller. This clears
    *        the integral term and sets the output to zero.
    */
   void reset_torque_controller();
 
-   /**
-    * @brief Resets the internal state of the velocity controller. This clears
-    *        the integral term and sets the output to zero.
-    */
+  /**
+   * @brief Resets the internal state of the velocity controller. This clears
+   *        the integral term and sets the output to zero.
+   */
   void reset_velocity_controller();
 
   /**
@@ -168,7 +237,7 @@ class MotorChannel
    */
   void load_position_controller();
 
-    /** @} */  // end of pid_controller_management group
+  /** @} */  // end of pid_controller_management group
 
   /**
    * @name Motor Command
@@ -258,7 +327,6 @@ class MotorChannel
 
   /** @} */  // end of state_retrieval group
 
-
  private:
   //    Motor name
   //   Used to store calibration parameters in EEPROM
@@ -272,7 +340,7 @@ class MotorChannel
   CalibratedSensor sensor_calibrated;
 
   // Additional motor and encoder parameters
-  MotorParameters motor_params;
+  ChannelConfiguration channel_config;
   Direction motor_direction;
 
   // Current targets
@@ -285,12 +353,37 @@ class MotorChannel
 
   // Rad/s
   float target_velocity = 0.0f;
+  bool velocity_limit_enabled = false;
+  float velocity_limit = 0.0f;
+
   // N*m
   float target_torque = 0.0f;
+  bool torque_limit_enabled = false;
+  float torque_limit = 0.0f;
+
   // Rad
   float target_position = 0.0f;
+  bool position_limit_enabled = false;
+  float position_limit_low = 0.0f;
+  float position_limit_high = 0.0f;
+
   // V
   float target_voltage = 0.0f;
+  bool voltage_limit_enabled = false;
+  float voltage_limit = 10000.0f;
+
+  // MotorGo Limits
+  // MotorGo Mini driver voltage limit
+  // TODO: Some board definitions include the voltage limit, others don't
+  // Set a default for now thats safe for the released hardware
+#ifndef DRIVER_VOLTAGE_LIMIT
+  const float DRIVER_VOLTAGE_LIMIT = 11.0f;
+#endif
+
+  // MotorGo Mini driver current limit
+#ifndef DRIVER_CURRENT_LIMIT
+  const float DRIVER_CURRENT_LIMIT = 1.8f;
+#endif
 
   // Calibration parameters
   // If should_calibrate is set to true, the motor will be calibrated on startup

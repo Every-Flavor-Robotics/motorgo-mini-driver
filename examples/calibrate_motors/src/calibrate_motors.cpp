@@ -6,8 +6,8 @@ MotorGo::MotorGoMini motorgo_mini;
 MotorGo::MotorChannel& motor_ch0 = motorgo_mini.ch0;
 MotorGo::MotorChannel& motor_ch1 = motorgo_mini.ch1;
 
-MotorGo::MotorParameters motor_params_ch0;
-MotorGo::MotorParameters motor_params_ch1;
+MotorGo::ChannelConfiguration config_ch0;
+MotorGo::ChannelConfiguration config_ch1;
 
 // Function to print at a maximum frequency
 void freq_println(String str, int freq)
@@ -27,24 +27,16 @@ void setup()
   Serial.begin(115200);
 
   // Setup motor parameters
-  motor_params_ch0.pole_pairs = 7;
-  motor_params_ch0.power_supply_voltage = 5.0;
-  motor_params_ch0.voltage_limit = 5.0;
-  motor_params_ch0.current_limit = 300;
-  motor_params_ch0.velocity_limit = 100.0;
-  motor_params_ch0.calibration_voltage = 2.0;
+  config_ch0.motor_config = MotorGo::MotorGoGreen;
+  config_ch0.power_supply_voltage = 5.0;
 
-  motor_params_ch1.pole_pairs = 7;
-  motor_params_ch1.power_supply_voltage = 5.0;
-  motor_params_ch1.voltage_limit = 5.0;
-  motor_params_ch1.current_limit = 300;
-  motor_params_ch1.velocity_limit = 100.0;
-  motor_params_ch1.calibration_voltage = 2.0;
+  config_ch1.motor_config = MotorGo::MotorGoGreen;
+  config_ch1.power_supply_voltage = 5.0;
 
   // Setup Ch0
   bool calibrate = true;
-  motor_ch0.init(motor_params_ch0, calibrate);
-  motor_ch1.init(motor_params_ch1, calibrate);
+  motor_ch0.init(config_ch0, calibrate);
+  motor_ch1.init(config_ch1, calibrate);
 }
 
 void loop()
