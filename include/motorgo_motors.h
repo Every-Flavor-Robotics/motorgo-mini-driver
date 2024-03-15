@@ -18,7 +18,7 @@ const MotorConfiguration MotorGoGreen(
     NOT_SET,   //   320.0f,    // kv
     NOT_SET,   //   2.3f,      // phase_resistance
     NOT_SET,   // phase_inductance
-    2.8,       // 12.0f,     // voltage_limit
+    4.15,      // 12.0f,     // voltage_limit
     2.5f,      // current_limit
     10000.0f,  // velocity_limit
     1.0f       // calibration_voltage
