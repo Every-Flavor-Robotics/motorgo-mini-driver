@@ -1,6 +1,6 @@
 {
-    "name": "MotorGo Mini Driver",
-    "version": "1.0.0",
+    "name": "MotorGo-Mini-Driver",
+    "version": "0.0.1",
     "description": "The MotorGo Mini driver provides an API to interface with the motor controllers on the MotorGo Mini board.",
     "keywords": "motor, controller, brushless",
     "repository": {
@@ -21,40 +21,15 @@
         {
             "owner": "askuric",
             "name": "Simple FOC",
-            "version": "^2.3.2"
+            "version": "^2.3.0"
         },
         {
             "name": "SimpleFOCDrivers",
-            "version": "https://github.com/Every-Flavor-Robotics/Arduino-FOC-drivers.git"
+            "version": "https://github.com/Roam-Studios/Arduino-FOC-drivers.git#ccw-bug-fix"
         },
         {
             "name": "ESP-Options",
-            "version": "https://github.com/Every-Flavor-Robotics/esp-options.git"
-        },
-        {
-            "name": "ESPWifiConfig",
-            "version": "https://github.com/Every-Flavor-Robotics/esp-wifi-config.git"
-        },
-        {
-            "name": "Wire",
-            "version": "*"
-        },
-        {
-            "name": "SPI",
-            "version": "*"
-        },
-        {
-            "name": "Preferences",
-            "version": "*"
-        },
-        {
-            "name": "FS",
-            "version": "*"
-        },
-        {
-            "name": "Arduino_JSON",
-            "version": "0.2.0",
-            "repository": "https://github.com/arduino-libraries/Arduino_JSON.git"
+            "version": "https://github.com/Roam-Studios/esp-options.git"
         }
     ]
 }

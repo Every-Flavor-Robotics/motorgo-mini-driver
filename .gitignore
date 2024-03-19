@@ -4,7 +4,3 @@
 .vscode/launch.json
 .vscode/ipch
 .vscode
-
-docs/_build
-docs/doxyoutput
-docs/api
