@@ -36,7 +36,7 @@ jobs:
           python .github/scripts/package_arduino_lib.py library.json motorgo-mini-driver \
             --output-dir $GITHUB_WORKSPACE/motorgo-arduino/ \
             --storage-dir ./tmp \
-            --ignore-packages Wifi
+            --ignore-packages WiFi
 
       # Open Pull Request
       - name: Create Pull Request

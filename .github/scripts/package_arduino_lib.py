@@ -40,7 +40,7 @@ def check_platform(lib_dir: str, safe: bool = True) -> bool:
 
     return False
 
-def print_dependency_summary(dependencies):
+def print_dependency_summary(dependencies, ignore_packages = []):
     """Prints a formatted summary of dependencies and actions taken.
 
     Args:
@@ -60,6 +60,14 @@ def print_dependency_summary(dependencies):
             print(f'\033[93mSkipping: {name}  (Likely a system dependency)\033[0m')  # Yellow =  Skipping
         else:
             print(f'\033[91mWarning: Invalid dependency format: {dep}\033[0m')  # Red = Warning
+
+    # Print ignored packages
+    if ignore_packages:
+        print("\n--- Ignored Packages ---")
+        for pkg in ignore_packages:
+            print(f'\033[93m{pkg}\033[0m')
+
+
 
     print("--------------------------\n")
 
@@ -171,7 +179,7 @@ def copy_source_files(pio_lib_path, package_output_dir):
     copy_directory(include_dir, output_src_dir)
     copy_directory(src_dir, output_src_dir)
 
-def install_pio_dependencies(storage_dir: str, dependencies: List[dict]) -> None:
+def install_pio_dependencies(storage_dir: str, dependencies: List[dict], ignore_packages: List[str]) -> None:
     """Installs dependencies using PlatformIO package manager.
 
     Args:
@@ -196,7 +204,7 @@ def install_pio_dependencies(storage_dir: str, dependencies: List[dict]) -> None
 
     print(f"Installing dependencies with command: {pio_install_command}")
 
-    print_dependency_summary(dependencies)
+    print_dependency_summary(dependencies, ignore_packages)
 
     # Run PlatformIO package installation
     result = subprocess.run(pio_install_command, capture_output=True)
@@ -226,7 +234,7 @@ def package_arduino_lib(path_to_library_json, storage_dir, output_dir, ignore_pa
     with open(path_to_library_json, 'r') as f:
         data = json.load(f)
 
-    install_pio_dependencies(storage_dir, data.get("dependencies", []))
+    install_pio_dependencies(storage_dir, data.get("dependencies", []), ignore_packages)
 
     # Packaging Logic
     package_output_dir = os.path.join(output_dir, repo_name)
