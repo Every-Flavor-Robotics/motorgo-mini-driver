@@ -3,8 +3,6 @@ name: Package Arduino Library and Submit PR
 on:
   pull_request:
     branches: [main]
-  push:
-    branches: [bug-94/fix-arduino-build]
 
 jobs:
   build_package:
