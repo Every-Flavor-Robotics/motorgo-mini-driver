@@ -3,6 +3,8 @@ name: Package Arduino Library and Submit PR
 on:
   pull_request:
     branches: [main]
+  push:
+    branches: [bug-94/fix-arduino-build]
 
 jobs:
   build_package:
@@ -33,7 +35,8 @@ jobs:
         run: |
           python .github/scripts/package_arduino_lib.py library.json motorgo-mini-driver \
             --output-dir $GITHUB_WORKSPACE/motorgo-arduino/ \
-            --storage-dir ./tmp
+            --storage-dir ./tmp \
+            --ignore-packages Wifi
 
       # Open Pull Request
       - name: Create Pull Request
