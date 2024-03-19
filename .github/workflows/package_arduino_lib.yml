@@ -33,7 +33,7 @@ jobs:
         env:
           REPO_NAME: ${{ github.repository }} # Set environment variable
         run: |
-          python .github/scripts/package_arduino_lib.py library.json motorgo-mini-driver \
+          python .github/scripts/package_arduino_lib.py library.json MotorGo_Mini_Driver \
             --output-dir $GITHUB_WORKSPACE/motorgo-arduino/ \
             --storage-dir ./tmp \
             --ignore-packages WiFi
