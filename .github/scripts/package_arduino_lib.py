@@ -238,7 +238,11 @@ def package_arduino_lib(path_to_library_json, storage_dir, output_dir, ignore_pa
 
     # Packaging Logic
     package_output_dir = os.path.join(output_dir, repo_name)
-    os.makedirs(package_output_dir, exist_ok=True)  # Ensure the main output directory exists
+    if os.path.exists(package_output_dir):
+        shutil.rmtree(package_output_dir)  # Recursively delete the contents of package_output_dir
+
+    # Create the main output directory
+    os.makedirs(package_output_dir)
 
     # Iterate over installed dependency directories and package
     for lib_dir in os.listdir(storage_dir):
