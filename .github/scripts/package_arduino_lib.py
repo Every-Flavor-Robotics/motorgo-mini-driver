@@ -40,7 +40,7 @@ def check_platform(lib_dir: str, safe: bool = True) -> bool:
 
     return False
 
-def print_dependency_summary(dependencies):
+def print_dependency_summary(dependencies, ignore_packages = []):
     """Prints a formatted summary of dependencies and actions taken.
 
     Args:
@@ -60,6 +60,14 @@ def print_dependency_summary(dependencies):
             print(f'\033[93mSkipping: {name}  (Likely a system dependency)\033[0m')  # Yellow =  Skipping
         else:
             print(f'\033[91mWarning: Invalid dependency format: {dep}\033[0m')  # Red = Warning
+
+    # Print ignored packages
+    if ignore_packages:
+        print("\n--- Ignored Packages ---")
+        for pkg in ignore_packages:
+            print(f'\033[93m{pkg}\033[0m')
+
+
 
     print("--------------------------\n")
 
@@ -171,7 +179,7 @@ def copy_source_files(pio_lib_path, package_output_dir):
     copy_directory(include_dir, output_src_dir)
     copy_directory(src_dir, output_src_dir)
 
-def install_pio_dependencies(storage_dir: str, dependencies: List[dict]) -> None:
+def install_pio_dependencies(storage_dir: str, dependencies: List[dict], ignore_packages: List[str]) -> None:
     """Installs dependencies using PlatformIO package manager.
 
     Args:
@@ -196,7 +204,7 @@ def install_pio_dependencies(storage_dir: str, dependencies: List[dict]) -> None
 
     print(f"Installing dependencies with command: {pio_install_command}")
 
-    print_dependency_summary(dependencies)
+    print_dependency_summary(dependencies, ignore_packages)
 
     # Run PlatformIO package installation
     result = subprocess.run(pio_install_command, capture_output=True)
@@ -213,9 +221,10 @@ def install_pio_dependencies(storage_dir: str, dependencies: List[dict]) -> None
 @click.command()
 @click.argument('path_to_library_json', type=click.Path(exists=True))
 @click.option('--storage-dir', default="./temp_deps", help="The directory to install the dependencies to.")
-@click.option('--output-dir', default="./output", help="Output directory for packaging the driver.")  # New Click option
+@click.option('--output-dir', default="./output", help="Output directory for packaging the driver.")
+@click.option('--ignore-packages', multiple=True, help="Names of packages to ignore when packaging.")
 @click.argument('repo_name')  # The argument to receive the repository name
-def package_arduino_lib(path_to_library_json, storage_dir, output_dir, repo_name):
+def package_arduino_lib(path_to_library_json, storage_dir, output_dir, ignore_packages, repo_name):
     """Installs dependencies specified in a PlatformIO library.json file.
 
     Args:
@@ -225,15 +234,28 @@ def package_arduino_lib(path_to_library_json, storage_dir, output_dir, repo_name
     with open(path_to_library_json, 'r') as f:
         data = json.load(f)
 
-    install_pio_dependencies(storage_dir, data.get("dependencies", []))
+    install_pio_dependencies(storage_dir, data.get("dependencies", []), ignore_packages)
 
     # Packaging Logic
     package_output_dir = os.path.join(output_dir, repo_name)
-    os.makedirs(package_output_dir, exist_ok=True)  # Ensure the main output directory exists
+    if os.path.exists(package_output_dir):
+        shutil.rmtree(package_output_dir)  # Recursively delete the contents of package_output_dir
+
+    # Create the main output directory
+    os.makedirs(package_output_dir)
 
     # Iterate over installed dependency directories and package
     for lib_dir in os.listdir(storage_dir):
         lib_path = os.path.join(storage_dir, lib_dir)
+        # Extract the package name
+        lib_name = os.path.basename(lib_dir)
+
+        # Check if the package should be ignored
+        if lib_name in ignore_packages:
+            # Print in Yellow
+            print(f"\033[93mSkipping: {lib_dir}  (Ignored)\033[0m")
+            continue
+
         # Confirm that the library is an ESP32 PlatformIO library
         if os.path.isdir(lib_path) and check_platform(lib_path, safe = False):
             copy_source_files(lib_path, package_output_dir)
@@ -275,7 +297,7 @@ def package_arduino_lib(path_to_library_json, storage_dir, output_dir, repo_name
     shutil.copy2(os.path.join(current_repo_path, "library.properties"), package_output_dir)
 
     # Create a zip file of the package_output_dir, put it in the output_dir
-    shutil.make_archive(package_output_dir, 'zip', package_output_dir)
+    shutil.make_archive(package_output_dir, 'zip', os.path.dirname(package_output_dir), os.path.basename(package_output_dir))
 
     print(f'\033[92mPackage zipped to: {package_output_dir}.zip\033[0m')
 

@@ -1,6 +1,5 @@
 #include <Arduino.h>
-
-#include "motorgo_mini.h"
+#include <motorgo_mini.h>
 
 MotorGo::MotorGoMini motorgo_mini;
 MotorGo::MotorChannel& motor_left = motorgo_mini.ch0;
