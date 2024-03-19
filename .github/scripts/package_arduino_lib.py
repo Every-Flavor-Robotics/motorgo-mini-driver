@@ -293,7 +293,7 @@ def package_arduino_lib(path_to_library_json, storage_dir, output_dir, ignore_pa
     shutil.copy2(os.path.join(current_repo_path, "library.properties"), package_output_dir)
 
     # Create a zip file of the package_output_dir, put it in the output_dir
-    shutil.make_archive(package_output_dir, 'zip', package_output_dir)
+    shutil.make_archive(package_output_dir, 'zip', os.path.dirname(package_output_dir), os.path.basename(package_output_dir))
 
     print(f'\033[92mPackage zipped to: {package_output_dir}.zip\033[0m')
 
