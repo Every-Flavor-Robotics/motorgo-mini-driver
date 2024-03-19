@@ -213,9 +213,10 @@ def install_pio_dependencies(storage_dir: str, dependencies: List[dict]) -> None
 @click.command()
 @click.argument('path_to_library_json', type=click.Path(exists=True))
 @click.option('--storage-dir', default="./temp_deps", help="The directory to install the dependencies to.")
-@click.option('--output-dir', default="./output", help="Output directory for packaging the driver.")  # New Click option
+@click.option('--output-dir', default="./output", help="Output directory for packaging the driver.")
+@click.option('--ignore-packages', multiple=True, help="Names of packages to ignore when packaging.")
 @click.argument('repo_name')  # The argument to receive the repository name
-def package_arduino_lib(path_to_library_json, storage_dir, output_dir, repo_name):
+def package_arduino_lib(path_to_library_json, storage_dir, output_dir, ignore_packages, repo_name):
     """Installs dependencies specified in a PlatformIO library.json file.
 
     Args:
@@ -234,6 +235,15 @@ def package_arduino_lib(path_to_library_json, storage_dir, output_dir, repo_name
     # Iterate over installed dependency directories and package
     for lib_dir in os.listdir(storage_dir):
         lib_path = os.path.join(storage_dir, lib_dir)
+        # Extract the package name
+        lib_name = os.path.basename(lib_dir)
+
+        # Check if the package should be ignored
+        if lib_name in ignore_packages:
+            # Print in Yellow
+            print(f"\033[93mSkipping: {lib_dir}  (Ignored)\033[0m")
+            continue
+
         # Confirm that the library is an ESP32 PlatformIO library
         if os.path.isdir(lib_path) and check_platform(lib_path, safe = False):
             copy_source_files(lib_path, package_output_dir)
