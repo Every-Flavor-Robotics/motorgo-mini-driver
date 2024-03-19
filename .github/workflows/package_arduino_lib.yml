@@ -39,16 +39,16 @@ jobs:
             --ignore-packages WiFi
 
       # Open Pull Request
-      # - name: Create Pull Request
-      #   uses: peter-evans/create-pull-request@v6
-      #   with:
-      #     token: ${{ secrets.MOTORGO_ARDUINO_KEY }}
-      #     # /$GITHUB_WORKSPACE/motorgo-arduino
-      #     path: /${{ github.workspace }}/motorgo-arduino
-      #     commit-message: Automated Arduino Package Update
-      #     branch: auto-package-update/${{ github.sha }}
-      #     title: Arduino Library Update to ${{ github.sha }}
-      #     body: |
-      #       Automated update of the Arduino library package
-      #       Please review changes.
-      #     base: main # The branch to open the PR against
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.MOTORGO_ARDUINO_KEY }}
+          # /$GITHUB_WORKSPACE/motorgo-arduino
+          path: /${{ github.workspace }}/motorgo-arduino
+          commit-message: Automated Arduino Package Update
+          branch: auto-package-update/${{ github.sha }}
+          title: Arduino Library Update to ${{ github.sha }}
+          body: |
+            Automated update of the Arduino library package
+            Please review changes.
+          base: main # The branch to open the PR against
