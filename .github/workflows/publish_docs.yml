@@ -5,8 +5,10 @@ on:
     branches:
       - dev
       - main
-      - bug-94/fix-multiversion
     # types: [closed]
+  push:
+    branches:
+      - bug-94/fix-multiversion
 
 jobs:
   build-and-deploy-docs:
