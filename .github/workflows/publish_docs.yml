@@ -35,6 +35,7 @@ jobs:
       - name: Build Documentation
         run: |
           cd docs
+          git branch -a
           sphinx-multiversion . _build/html -D 'exhale_args.containmentFolder=${sourcedir}/api'
 
       - name: Deploy to GitHub Pages
