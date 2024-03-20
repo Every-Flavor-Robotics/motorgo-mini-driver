@@ -6,6 +6,8 @@ on:
       - dev
       - main
     types: [closed]
+  release:
+    types: [published]
 
 jobs:
   build-and-deploy-docs:
@@ -13,7 +15,10 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
 
       - name: Set up Python
         uses: actions/setup-python@v3
@@ -26,10 +31,19 @@ jobs:
           sudo apt-get install doxygen
           pip install sphinx breathe exhale sphinx_rtd_theme sphinxcontrib-versioning sphinx-multiversion
 
+      - name: Checkout dev branch
+        continue-on-error: true
+        run: git checkout --track origin/dev
+
+      - name: Checkout main branch
+        continue-on-error: true
+        run: git checkout --track origin/main
+
       - name: Build Documentation
         run: |
           cd docs
-          sphinx-build -b html . _build/html/${{ github.ref_name }}  # Version matches branch
+          git checkout ${{ github.ref }}
+          sphinx-multiversion . _build/html -D 'exhale_args.containmentFolder=${sourcedir}/api'
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3

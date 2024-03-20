@@ -1,6 +1,6 @@
 {
     "name": "MotorGo Mini Driver",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "The MotorGo Mini driver provides an API to interface with the motor controllers on the MotorGo Mini board.",
     "keywords": "motor, controller, brushless",
     "repository": {

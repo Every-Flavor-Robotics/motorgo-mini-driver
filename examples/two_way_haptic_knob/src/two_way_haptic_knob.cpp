@@ -1,7 +1,7 @@
 #include <Arduino.h>
+#include <motorgo_mini.h>
 
 #include "configurable.h"
-#include "motorgo_mini.h"
 #include "pid_manager.h"
 
 // UPDATE THESE VALUES

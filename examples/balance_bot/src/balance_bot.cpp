@@ -1,10 +1,10 @@
 #include <Arduino.h>
+#include <motorgo_mini.h>
 
 #include "Wire.h"
 #include "common/lowpass_filter.h"
 #include "common/pid.h"
 #include "configurable.h"
-#include "motorgo_mini.h"
 #include "pid_manager.h"
 #include "sensorgo_mpu6050.h"
 
