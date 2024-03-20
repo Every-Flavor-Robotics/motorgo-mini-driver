@@ -1,0 +1,14 @@
+.. _exhale_function_motorgo__common_8h_1a62ac3f21bf59ff04024043e3731d95a9:
+
+Function MotorGo::init_encoder_spi
+==================================
+
+- Defined in :ref:`file_include_motorgo_common.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: MotorGo::init_encoder_spi()
+   :project: MotorGo Docs

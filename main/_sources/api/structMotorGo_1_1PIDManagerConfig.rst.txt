@@ -1,0 +1,17 @@
+.. _exhale_struct_structMotorGo_1_1PIDManagerConfig:
+
+Struct PIDManagerConfig
+=======================
+
+- Defined in :ref:`file_include_pid_manager.h`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: MotorGo::PIDManagerConfig
+   :project: MotorGo Docs
+   :members:
+   :protected-members:
+   :undoc-members:

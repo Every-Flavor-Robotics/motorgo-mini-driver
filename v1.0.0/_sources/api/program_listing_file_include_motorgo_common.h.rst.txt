@@ -1,0 +1,130 @@
+
+.. _program_listing_file_include_motorgo_common.h:
+
+Program Listing for File motorgo_common.h
+=========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_motorgo_common.h>` (``include/motorgo_common.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   // A file that stores common definitions and types used by the MotorGo library.
+   
+   #ifndef MOTORGO_TYPES_H
+   #define MOTORGO_TYPES_H
+   
+   #include <Arduino.h>
+   #include <SPI.h>
+   
+   #include "SimpleFOC.h"
+   
+   namespace MotorGo
+   {
+   
+   struct BLDCChannelParameters
+   {
+     uint8_t uh;
+     uint8_t ul;
+     uint8_t vh;
+     uint8_t vl;
+     uint8_t wh;
+     uint8_t wl;
+     uint8_t current_u;
+     uint8_t current_v;
+     uint8_t current_w;
+     uint8_t enc_cs;
+   };
+   
+   enum ControlMode
+   {
+     None,
+     Voltage,
+     Velocity,
+     Torque,
+     Position,
+     VelocityOpenLoop,
+     PositionOpenLoop
+   };
+   
+   struct MotorConfiguration
+   {
+     int pole_pairs = -1;
+     float kv = NOT_SET;
+     float phase_resistance = NOT_SET;
+     float phase_inductance = NOT_SET;
+     float voltage_limit = 1000.0f;
+     float current_limit = 1000.0f;
+     float velocity_limit = 1000.0f;
+     float calibration_voltage = NOT_SET;
+   
+     // Default constructor
+     MotorConfiguration()
+         : pole_pairs(-1),
+           kv(NOT_SET),
+           phase_resistance(NOT_SET),
+           phase_inductance(NOT_SET),
+           voltage_limit(1000.0f),
+           current_limit(1000.0f),
+           velocity_limit(1000.0f),
+           calibration_voltage(NOT_SET)
+     {
+     }
+   
+     // Constructor with parameters
+     MotorConfiguration(int pole_pairs, float kv, float phase_resistance,
+                        float phase_inductance, float voltage_limit,
+                        float current_limit, float velocity_limit,
+                        float calibration_voltage)
+         : pole_pairs(pole_pairs),
+           kv(kv),
+           phase_resistance(phase_resistance),
+           phase_inductance(phase_inductance),
+           voltage_limit(voltage_limit),
+           current_limit(current_limit),
+           velocity_limit(velocity_limit),
+           calibration_voltage(calibration_voltage)
+     {
+     }
+   };
+   
+   struct ChannelConfiguration
+   {
+     MotorConfiguration motor_config;
+     float power_supply_voltage;
+     float reversed;
+   };
+   
+   struct PIDParameters
+   {
+     float p;
+     float i;
+     float d;
+     float output_ramp = 10000.0f;
+     float lpf_time_constant = 0.1f;
+     float limit = 10000.0f;
+   };
+   
+   typedef union
+   {
+     struct __attribute__((packed))
+     {
+       float p;
+       float i;
+       float d;
+       float output_ramp;
+       float lpf_time_constant;
+       float limit;
+     };
+   
+     uint8_t raw[sizeof(PIDParameters)];
+   } packed_pid_parameters_t;
+   
+   extern SPIClass hspi;
+   
+   void init_encoder_spi();
+   
+   }  // namespace MotorGo
+   
+   #endif  // MOTORGO_TYPES_H

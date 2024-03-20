@@ -1,0 +1,17 @@
+.. _exhale_class_classMotorGo_1_1MotorGoMini:
+
+Class MotorGoMini
+=================
+
+- Defined in :ref:`file_include_motorgo_mini.h`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: MotorGo::MotorGoMini
+   :project: MotorGo Docs
+   :members:
+   :protected-members:
+   :undoc-members:

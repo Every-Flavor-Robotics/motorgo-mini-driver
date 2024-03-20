@@ -1,0 +1,17 @@
+.. _exhale_class_classMotorGo_1_1PIDManager:
+
+Class PIDManager
+================
+
+- Defined in :ref:`file_include_pid_manager.h`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: MotorGo::PIDManager
+   :project: MotorGo Docs
+   :members:
+   :protected-members:
+   :undoc-members:

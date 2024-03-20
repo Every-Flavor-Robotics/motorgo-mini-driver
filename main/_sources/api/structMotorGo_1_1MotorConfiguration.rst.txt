@@ -1,0 +1,17 @@
+.. _exhale_struct_structMotorGo_1_1MotorConfiguration:
+
+Struct MotorConfiguration
+=========================
+
+- Defined in :ref:`file_include_motorgo_common.h`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: MotorGo::MotorConfiguration
+   :project: MotorGo Docs
+   :members:
+   :protected-members:
+   :undoc-members:

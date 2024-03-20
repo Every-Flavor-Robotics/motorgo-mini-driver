@@ -1,0 +1,43 @@
+:orphan:
+
+
+API Reference
+=============
+
+Directories
+***********
+
+
+.. toctree::
+   :maxdepth: 2
+
+   dir_include.rst
+
+Files
+*****
+
+
+.. toctree::
+   :maxdepth: 2
+
+   file_include_motorgo_channel.h.rst
+
+.. toctree::
+   :maxdepth: 2
+
+   file_include_motorgo_common.h.rst
+
+.. toctree::
+   :maxdepth: 2
+
+   file_include_motorgo_mini.h.rst
+
+.. toctree::
+   :maxdepth: 2
+
+   file_include_motorgo_motors.h.rst
+
+.. toctree::
+   :maxdepth: 2
+
+   file_include_pid_manager.h.rst

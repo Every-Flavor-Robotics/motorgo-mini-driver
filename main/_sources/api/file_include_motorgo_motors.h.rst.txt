@@ -1,0 +1,58 @@
+
+.. _file_include_motorgo_motors.h:
+
+File motorgo_motors.h
+=====================
+
+|exhale_lsh| :ref:`Parent directory <dir_include>` (``include``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/motorgo_motors.h``)
+-----------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_motorgo_motors.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``motorgo_common.h`` (:ref:`file_include_motorgo_common.h`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_include_motorgo_mini.h`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_MotorGo`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_motorgo__motors_8h_1a6afe6a3b7bfe9c37a92dd7e8ab22016e`
+
