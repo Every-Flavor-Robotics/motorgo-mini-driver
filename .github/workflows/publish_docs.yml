@@ -5,7 +5,8 @@ on:
     branches:
       - dev
       - main
-    types: [closed]
+      - bug-94/fix-multiversion
+    # types: [closed]
 
 jobs:
   build-and-deploy-docs:
@@ -29,7 +30,9 @@ jobs:
       - name: Build Documentation
         run: |
           cd docs
-          sphinx-build -b html . _build/html/${{ github.ref_name }}  # Version matches branch
+          sphinx-multiversion -b html . _build/html
+
+        # sphinx-build -b html . _build/html/${{ github.ref_name }}  # Version matches branch
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
