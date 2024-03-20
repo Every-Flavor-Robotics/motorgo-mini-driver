@@ -62,7 +62,7 @@ html_sidebars = {'**': ['logo-text.html', 'globaltoc.html', 'searchbox.html']}
 # -- Options for Multiversion  ------------------------------------------------
 
 # Whitelist the versions you want included (adjust as needed)
-smv_branch_whitelist = r'^main|dev|api-docs$'
+smv_branch_whitelist = r'^main|dev|bug-94/fix-multiversion$'
 smv_tag_whitelist = r'^.*$'
 
 # Output subdirectory based on branch for simple version separation
