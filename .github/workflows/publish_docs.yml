@@ -6,6 +6,8 @@ on:
       - dev
       - main
     types: [closed]
+  release:
+    types: [published]
 
 jobs:
   build-and-deploy-docs:
