@@ -237,7 +237,9 @@ def package_arduino_lib(path_to_library_json, storage_dir, output_dir, ignore_pa
     install_pio_dependencies(storage_dir, data.get("dependencies", []), ignore_packages)
 
     # Packaging Logic
-    package_output_dir = os.path.join(output_dir, repo_name)
+    # Do not create a subdirectory for the package, just use the output_dir
+    # package_output_dir = os.path.join(output_dir, repo_name)
+    package_output_dir = output_dir
     if os.path.exists(package_output_dir):
         shutil.rmtree(package_output_dir)  # Recursively delete the contents of package_output_dir
 
@@ -296,10 +298,7 @@ def package_arduino_lib(path_to_library_json, storage_dir, output_dir, ignore_pa
     shutil.copy2(path_to_library_json, package_output_dir)
     shutil.copy2(os.path.join(current_repo_path, "library.properties"), package_output_dir)
 
-    # Create a zip file of the package_output_dir, put it in the output_dir
-    shutil.make_archive(package_output_dir, 'zip', os.path.dirname(package_output_dir), os.path.basename(package_output_dir))
-
-    print(f'\033[92mPackage zipped to: {package_output_dir}.zip\033[0m')
+    # print(f'\033[92mPackage zipped to: {package_output_dir}.zip\033[0m')
 
 
 
