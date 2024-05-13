@@ -24,6 +24,7 @@ jobs:
       - name: Install Espressif 32 Platform
         run: |
           pio pkg install --global --platform "platformio/espressif32"
+          pio pkg install --global --tool "espressif/toolchain-xtensa-esp32s3"
           pio pkg install --global --tool "platformio/framework-arduinoespressif32"
       - name: Make update_driver_version executable
         run: chmod +x .github/scripts/update_platformio_deps.py
