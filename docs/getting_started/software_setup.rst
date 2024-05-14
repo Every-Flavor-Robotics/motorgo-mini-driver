@@ -2,56 +2,46 @@
 Get started writing code for the MotorGo
 ========================================
 
-The MotorGo is programmable in the Arduino IDE or in PlatformIO. At it's core, the MotorGo is an ESP32-S3 microcontroller with built-in motor drivers, so it can be programmed just like any other ESP32. To make it easy to use the onboard features, we have published custom board definitions for the MotorGo and a MotorGo Mini driver library. The MotorGo Mini board defintions define the onboard led pins, I2C, and SPI pins so that you can use them in your code without having to look up the pin numbers. The MotorGo Mini driver library provides a simple interface for controlling the motors and reading the encoders. You only need to use the driver if you want to use the motors or encoders. If you want to use the onboard peripherals, you can use the MotorGo Mini board definitions without the driver library.
+The MotorGo is programmable in the Arduino IDE or in PlatformIO. At it's core, the MotorGo is an ESP32-S3 microcontroller with built-in motor drivers, so it can be programmed just like any other ESP32. Follow the steps below to get started writing code for the MotorGo in Arduino or PlatformIO.
 
 There are 3 tools you need to get started writing code for the MotorGo:
 
-* MotorGo Mini Board Definitions: Let's you program the MotorGo Mini in Arduino/PlatformIO
-* MotorGo Mini Driver: Provides functions for controlling the motors with the onboard motor controllers
-* MotorGo Mini GUI: Let's you tune your PID controllers over WiFi (optional)
+* ESP32 Boards: Provides board definitions for the MotorGo
+* MotorGo Mini Driver: Provides API/functions for controlling the motors with the onboard motor controllers
+* MotorGo Mini GUI: Lets you tune your PID controllers over WiFi (optional)
 
 Let's walk through the steps of setting each of these up.
 
-Setting up board definitions
-----------------------------
-
-Follow the steps below to set up the board definitions.
-
-First, install the ESP32 board definitions, if you have not already done so.
-
-**Arduino IDE 1.X/2.X**
+Arduino IDE
+-----------
+First, install the ESP32 board definitions, if you have not already done so. You need at least version 2.0.16 of the ESP32 board definitions for the MotorGo to work.
 
 * Go to `Tools > Board > Boards Manager...`
 * Search for `ESP32`
 * Install `esp32` by Espressif Systems
 
-**PlatformIO**
+Next, install the MotorGo Mini driver library.
+
+* Download the libary by clicking `here <https://github.com/Every-Flavor-Robotics/motorgo-arduino/raw/main/motorgo-mini-driver.zip>`_
+* Go to `Sketch > Include Library > Add .ZIP Library...`
+* Select the downloaded file
+
+To test if everything is working as expected, you can upload an example sketch to the board.
+
+* Go to `File > Examples > MotorGo Mini Driver (under Examples from Custom Libaries) > read_encoders`
+* Next, select the MotorGo Mini 1 board by clicking `Select Board > Select Other Board and Port > MotorGo Mini 1 (ESP32-S3)`. If you're in Arduino IDE 1.X, you can find in the board in `Tools > Board > MotorGo Mini 1 (ESP32-S3)`
+* Click the upload button (right arrow) to upload the sketch to the board
+
+You should see the encoder values printed to the serial monitor. If you see this, you're good to go!
+
+PlatformIO
+----------
+First, install the ESP32 board definitions, if you have not already done so.
 
 * Navigate to PlatformIO Home
 * Go to `Platforms`
 * Search for `Espressif 32`
 * Click `Install`
-
-Next, follow the steps below to setup the MotorGo board definitions.
-
-**Arduino IDE 1.X/2.X**
-
-* Go to `File > Preferences`
-* Add `https://raw.githubusercontent.com/Every-Flavor-Robotics/motorgo-board-definitions/main/package_motorgo_index.json` to `Additional Boards Manager URLs`
-* Go to `Tools > Board > Boards Manager...`
-* Search for `MotorGo`
-* Click `Install`
-* Select MotorGo > MotorGo Mini 1 (ESP32-S3) from the list of boards (Tools > Boards) to use the board.
-
-**PlatformIO**
-
-Run the following commands to set up the MotorGo board definitions in PlatformIO.
-
-.. code-block:: bash
-
-  git clone https://github.com/Every-Flavor-Robotics/motorgo-board-definitions.git
-  cd motorgo-board-definitions
-  python3 setup_platformio.py    
 
 To use the board definition, either select the MotorGo Mini 1 from the list of boards when creating a new project OR modify the board in your `platformio.ini` file as follows:
 
@@ -59,23 +49,7 @@ To use the board definition, either select the MotorGo Mini 1 from the list of b
 
   board = motorgo_mini_1
 
-
-
-To test this is working as expected, you can upload the `Blink` example to the MotorGo Mini 1 board. If the onboard LED blinks, you're good to go!
-
-Setting up the MotorGo Mini driver library
-------------------------------------------
-
-The MotorGo Mini library provides an easy interface to control motors and read encoders using the onboard hardware. Below are instructions for setting the library up.
-
-**Arduino IDE 1.X/2.X**
-
-* Download the libary by clicking `here <https://github.com/Every-Flavor-Robotics/motorgo-arduino/raw/main/motorgo-mini-driver.zip>`_
-* Go to `Sketch > Include Library > Add .ZIP Library...`
-* Select the downloaded file
-
-**PlatformIO**
-You can reference the github repo directly in your `platformio.ini` file.
+Next, to setup the MotorGo Mini driver library, you can reference the github repo directly in your `platformio.ini` file.
 
 .. code-block:: ini
 
@@ -83,13 +57,14 @@ You can reference the github repo directly in your `platformio.ini` file.
     https://github.com/Every-Flavor-Robotics/motorgo-mini-driver.git#v1.0.0
 ..
 
-You should modify v1.0.0 to whichever release tag you prefer, or switch to #dev for the latest experimental changes. You can find the latest releases on the `Github repo for the driver <https://github.com/Every-Flavor-Robotics/motorgo-mini-driver/releases>`_
+You should modify v1.0.0 to whichever release tag you prefer, or switch to `#dev` for the latest experimental changes. You can find the latest releases on the `Github repo for the driver <https://github.com/Every-Flavor-Robotics/motorgo-mini-driver/releases>`_
 
-Example code is available in the examples directory of the library. You can open examples directly in Arduino by going to `File > Examples > MotorGo Mini Driver` (under `Examples from Custom Libaries`). We recommend continuing to :ref:`calibrate-motors` to step through the process of calibrating the motors and encoders before running other examples.
+You can find an example PlatformIO project for reading the encoder data `here <https://github.com/Every-Flavor-Robotics/motorgo-mini-driver/tree/main/examples/read_encoders>`_
+
 
 Setting up the MotorGo Mini GUI
 -------------------------------
 
-The MotorGo Mini GUI provides an interface on your computer to wirelessly tune PID controllers on the MotorGo Mini. You can find the latest version of the GUI `here <https://github.com/Every-Flavor-Robotics/motorgo-mini-gui/releases>`_. Download and install the correct version for your operating system (.dmg for Mac, .exe for Windows, and .AppImage or .deb for Linux). 
+The MotorGo Mini GUI provides an interface on your computer to wirelessly tune PID controllers on the MotorGo Mini. You can find the latest version of the GUI `here <https://github.com/Every-Flavor-Robotics/motorgo-mini-gui/releases>`_. Download and install the correct version for your operating system (.dmg for Mac, .exe for Windows, and .AppImage or .deb for Linux).
 
 Check out the `balance_bot` or `tune_controllers` examples for a demonstration of setting up the MotorGo to communicate with the GUI.
