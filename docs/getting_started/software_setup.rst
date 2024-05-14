@@ -57,7 +57,7 @@ Next, to setup the MotorGo Mini driver library, you can reference the github rep
     https://github.com/Every-Flavor-Robotics/motorgo-mini-driver.git#v1.0.0
 ..
 
-You should modify v1.0.0 to whichever release tag you prefer, or switch to #dev for the latest experimental changes. You can find the latest releases on the `Github repo for the driver <https://github.com/Every-Flavor-Robotics/motorgo-mini-driver/releases>`_
+You should modify v1.0.0 to whichever release tag you prefer, or switch to `#dev` for the latest experimental changes. You can find the latest releases on the `Github repo for the driver <https://github.com/Every-Flavor-Robotics/motorgo-mini-driver/releases>`_
 
 You can find an example PlatformIO project for reading the encoder data `here <https://github.com/Every-Flavor-Robotics/motorgo-mini-driver/tree/main/examples/read_encoders>`_
 
