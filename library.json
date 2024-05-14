@@ -19,13 +19,12 @@
     "platforms": "esp32-s3-motorgo-mini",
     "dependencies": [
         {
-            "owner": "askuric",
             "name": "Simple FOC",
-            "version": "^2.3.2"
+            "version": "https://github.com/Every-Flavor-Robotics/Arduino-FOC.git#cbbd999c7bec8967ac229b126f2e48d96b93478e"
         },
         {
             "name": "SimpleFOCDrivers",
-            "version": "https://github.com/Every-Flavor-Robotics/Arduino-FOC-drivers.git"
+            "version": "https://github.com/Every-Flavor-Robotics/Arduino-FOC-drivers.git#3c4585c95f640be3cf704b230be615a96a01e326"
         },
         {
             "name": "ESP-Options",
