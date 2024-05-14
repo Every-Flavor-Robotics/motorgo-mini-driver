@@ -20,7 +20,7 @@
     "dependencies": [
         {
             "name": "Simple FOC",
-            "version": "https://github.com/Every-Flavor-Robotics/Arduino-FOC.git#9a1b87a2c11d624fd3c3b54146ac517620d4c35c"
+            "version": "https://github.com/Every-Flavor-Robotics/Arduino-FOC.git#cbbd999c7bec8967ac229b126f2e48d96b93478e"
         },
         {
             "name": "SimpleFOCDrivers",
