@@ -218,6 +218,26 @@ def install_pio_dependencies(storage_dir: str, dependencies: List[dict], ignore_
         # Print in Green
         print(f"\033[92mDependencies installed successfully!\033[0m")
 
+
+def copy_additional_files(files: list, output_dir: str):
+    """Copies additional files to the output directory.
+
+    Args:
+        files (list): List of files to copy.
+        output_dir (str): The output directory where files will be placed.
+
+    """
+
+    for file_path in files:
+        if os.path.exists(file_path):
+            if os.path.isdir(file_path):
+                copy_directory(file_path, output_dir)
+            else:
+                shutil.copy2(file_path, output_dir)
+        else:
+            print(f"\033[93mWarning: File or directory '{file_path}' does not exist.\033[0m"
+                    f"\n\033[93mSkipping...\033[0m")
+
 @click.command()
 @click.argument('path_to_library_json', type=click.Path(exists=True))
 @click.option('--storage-dir', default="./temp_deps", help="The directory to install the dependencies to.")
@@ -305,10 +325,11 @@ def package_arduino_lib(path_to_library_json, storage_dir, output_dir, ignore_pa
             if os.path.exists(examples_dir) else f'\033[93mNo examples found in: {examples_dir}\033[0m')
 
     # Copy library.json and library.properties to root of the output_dir
-    shutil.copy2(path_to_library_json, package_output_dir)
-    shutil.copy2(os.path.join(current_repo_path, "library.properties"), package_output_dir)
+    copy_additional_files([path_to_library_json,
+                            os.path.join(current_repo_path, "library.properties"),
+                            os.path.join(current_repo_path, "README.rst"),
+                            os.path.join(current_repo_path, "LICENSE")], package_output_dir)
 
-    # print(f'\033[92mPackage zipped to: {package_output_dir}.zip\033[0m')
 
 
 
