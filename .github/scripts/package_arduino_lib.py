@@ -240,11 +240,13 @@ def package_arduino_lib(path_to_library_json, storage_dir, output_dir, ignore_pa
     # Do not create a subdirectory for the package, just use the output_dir
     # package_output_dir = os.path.join(output_dir, repo_name)
     package_output_dir = output_dir
+    # Directories to exclude when deleting the contents of package_output_dir
+    exclude_dirs = [".git", ".github"]
     if os.path.exists(package_output_dir):
         # Recursively delete the contents of package_output_dir
         # Do not delete .git directory
         for item in os.listdir(package_output_dir):
-            if item != ".git":
+            if item not in exclude_dirs:
                 item_path = os.path.join(package_output_dir, item)
                 if os.path.isdir(item_path):
                     shutil.rmtree(item_path)
