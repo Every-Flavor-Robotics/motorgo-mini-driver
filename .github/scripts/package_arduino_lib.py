@@ -241,7 +241,15 @@ def package_arduino_lib(path_to_library_json, storage_dir, output_dir, ignore_pa
     # package_output_dir = os.path.join(output_dir, repo_name)
     package_output_dir = output_dir
     if os.path.exists(package_output_dir):
-        shutil.rmtree(package_output_dir)  # Recursively delete the contents of package_output_dir
+        # Recursively delete the contents of package_output_dir
+        # Do not delete .git directory
+        for item in os.listdir(package_output_dir):
+            if item != ".git":
+                item_path = os.path.join(package_output_dir, item)
+                if os.path.isdir(item_path):
+                    shutil.rmtree(item_path)
+                else:
+                    os.remove(item_path)
 
     # Create the main output directory
     os.makedirs(package_output_dir)
