@@ -2,7 +2,7 @@ name: Package Arduino Library and Submit PR
 
 on:
   pull_request:
-    branches: [main, feature-109/arduino-library-index-fixes]
+    branches: [main, dev]
 
 jobs:
   build_package:
