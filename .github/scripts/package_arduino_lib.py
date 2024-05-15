@@ -250,9 +250,9 @@ def package_arduino_lib(path_to_library_json, storage_dir, output_dir, ignore_pa
                     shutil.rmtree(item_path)
                 else:
                     os.remove(item_path)
-
-    # Create the main output directory
-    os.makedirs(package_output_dir)
+    else:
+        # Create the main output directory
+        os.makedirs(package_output_dir)
 
     # Iterate over installed dependency directories and package
     for lib_dir in os.listdir(storage_dir):
