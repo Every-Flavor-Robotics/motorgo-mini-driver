@@ -218,6 +218,26 @@ def install_pio_dependencies(storage_dir: str, dependencies: List[dict], ignore_
         # Print in Green
         print(f"\033[92mDependencies installed successfully!\033[0m")
 
+
+def copy_additional_files(files: list, output_dir: str):
+    """Copies additional files to the output directory.
+
+    Args:
+        files (list): List of files to copy.
+        output_dir (str): The output directory where files will be placed.
+
+    """
+
+    for file_path in files:
+        if os.path.exists(file_path):
+            if os.path.isdir(file_path):
+                copy_directory(file_path, output_dir)
+            else:
+                shutil.copy2(file_path, output_dir)
+        else:
+            print(f"\033[93mWarning: File or directory '{file_path}' does not exist.\033[0m"
+                    f"\n\033[93mSkipping...\033[0m")
+
 @click.command()
 @click.argument('path_to_library_json', type=click.Path(exists=True))
 @click.option('--storage-dir', default="./temp_deps", help="The directory to install the dependencies to.")
@@ -237,12 +257,24 @@ def package_arduino_lib(path_to_library_json, storage_dir, output_dir, ignore_pa
     install_pio_dependencies(storage_dir, data.get("dependencies", []), ignore_packages)
 
     # Packaging Logic
-    package_output_dir = os.path.join(output_dir, repo_name)
+    # Do not create a subdirectory for the package, just use the output_dir
+    # package_output_dir = os.path.join(output_dir, repo_name)
+    package_output_dir = output_dir
+    # Directories to exclude when deleting the contents of package_output_dir
+    exclude_dirs = [".git", ".github"]
     if os.path.exists(package_output_dir):
-        shutil.rmtree(package_output_dir)  # Recursively delete the contents of package_output_dir
-
-    # Create the main output directory
-    os.makedirs(package_output_dir)
+        # Recursively delete the contents of package_output_dir
+        # Do not delete .git directory
+        for item in os.listdir(package_output_dir):
+            if item not in exclude_dirs:
+                item_path = os.path.join(package_output_dir, item)
+                if os.path.isdir(item_path):
+                    shutil.rmtree(item_path)
+                else:
+                    os.remove(item_path)
+    else:
+        # Create the main output directory
+        os.makedirs(package_output_dir)
 
     # Iterate over installed dependency directories and package
     for lib_dir in os.listdir(storage_dir):
@@ -293,13 +325,11 @@ def package_arduino_lib(path_to_library_json, storage_dir, output_dir, ignore_pa
             if os.path.exists(examples_dir) else f'\033[93mNo examples found in: {examples_dir}\033[0m')
 
     # Copy library.json and library.properties to root of the output_dir
-    shutil.copy2(path_to_library_json, package_output_dir)
-    shutil.copy2(os.path.join(current_repo_path, "library.properties"), package_output_dir)
+    copy_additional_files([path_to_library_json,
+                            os.path.join(current_repo_path, "library.properties"),
+                            os.path.join(current_repo_path, "README.rst"),
+                            os.path.join(current_repo_path, "LICENSE")], package_output_dir)
 
-    # Create a zip file of the package_output_dir, put it in the output_dir
-    shutil.make_archive(package_output_dir, 'zip', os.path.dirname(package_output_dir), os.path.basename(package_output_dir))
-
-    print(f'\033[92mPackage zipped to: {package_output_dir}.zip\033[0m')
 
 
 
