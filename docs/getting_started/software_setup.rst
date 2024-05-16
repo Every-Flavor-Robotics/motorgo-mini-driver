@@ -22,9 +22,8 @@ First, install the ESP32 board definitions, if you have not already done so. You
 
 Next, install the MotorGo Mini driver library.
 
-* Download the libary by clicking `here <https://github.com/Every-Flavor-Robotics/motorgo-arduino/raw/main/motorgo-mini-driver.zip>`_
-* Go to `Sketch > Include Library > Add .ZIP Library...`
-* Select the downloaded file
+* Click on the library manager on the left toolbar or for Arduino IDE 1.X, go to `Sketch > Include Library > Manage Libraries...`
+* Search for `MotorGo_Mini_Driver` and press install
 
 To test if everything is working as expected, you can upload an example sketch to the board.
 
