@@ -1,6 +1,6 @@
 {
     "name": "MotorGo Mini Driver",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "description": "The MotorGo Mini driver provides an API to interface with the motor controllers on the MotorGo Mini board.",
     "keywords": "motor, controller, brushless",
     "repository": {
@@ -19,13 +19,12 @@
     "platforms": "esp32-s3-motorgo-mini",
     "dependencies": [
         {
-            "owner": "askuric",
             "name": "Simple FOC",
-            "version": "^2.3.2"
+            "version": "https://github.com/Every-Flavor-Robotics/Arduino-FOC.git#cbbd999c7bec8967ac229b126f2e48d96b93478e"
         },
         {
             "name": "SimpleFOCDrivers",
-            "version": "https://github.com/Every-Flavor-Robotics/Arduino-FOC-drivers.git"
+            "version": "https://github.com/Every-Flavor-Robotics/Arduino-FOC-drivers.git#639943f76a16a706b5125af28e5599060a909cea"
         },
         {
             "name": "ESP-Options",

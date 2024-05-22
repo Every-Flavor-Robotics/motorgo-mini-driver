@@ -201,13 +201,16 @@ void MotorGo::MotorChannel::set_control_mode(MotorGo::ControlMode control_mode)
 
 void MotorGo::MotorChannel::set_target_velocity(float target)
 {
-  target_velocity = target * motor_direction;
+  target_velocity = target;
 
   if (velocity_limit_enabled)
   {
     target_velocity =
         _constrain(target_velocity, -velocity_limit, velocity_limit);
   }
+
+  // Multiply by the motor direction to correct the sign
+  target_velocity *= motor_direction;
 
   // If the control mode is velocity open loop, move the motor
   // If closed loop velocity, move the motor only if PID params are set
@@ -230,11 +233,14 @@ void MotorGo::MotorChannel::set_target_velocity(float target)
 }
 void MotorGo::MotorChannel::set_target_torque(float target)
 {
-  target_torque = target * motor_direction;
+  target_torque = target;
   if (torque_limit_enabled)
   {
     target_torque = _constrain(target_torque, -torque_limit, torque_limit);
   }
+
+  // Multiply by the motor direction to correct the sign
+  target_torque *= motor_direction;
 
   if (control_mode == MotorGo::ControlMode::Torque)
   {
@@ -251,13 +257,16 @@ void MotorGo::MotorChannel::set_target_torque(float target)
 
 void MotorGo::MotorChannel::set_target_position(float target)
 {
-  target_position = target * motor_direction;
+  target_position = target;
 
   if (position_limit_enabled)
   {
     target_position =
         _constrain(target_position, position_limit_low, position_limit_high);
   }
+
+  //  Multiply by the motor direction to correct the sign
+  target_position *= motor_direction;
 
   // If the control mode is position open loop, move the motor
   // If closed loop position, move the motor only if PID params are set
@@ -281,12 +290,15 @@ void MotorGo::MotorChannel::set_target_position(float target)
 
 void MotorGo::MotorChannel::set_target_voltage(float target)
 {
-  target_voltage = target * motor_direction;
+  target_voltage = target;
 
   if (voltage_limit_enabled)
   {
     target_voltage = _constrain(target_voltage, -voltage_limit, voltage_limit);
   }
+
+  // Multiply by the motor direction to correct the sign
+  target_voltage *= motor_direction;
 
   if (control_mode == MotorGo::ControlMode::Voltage)
   {
