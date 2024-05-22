@@ -1,0 +1,64 @@
+
+.. _file_include_pid_manager.h:
+
+File pid_manager.h
+==================
+
+|exhale_lsh| :ref:`Parent directory <dir_include>` (``include``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/pid_manager.h``)
+--------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_pid_manager.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``Arduino_JSON.h``
+
+- ``configurable.h``
+
+- ``motorgo_mini.h`` (:ref:`file_include_motorgo_mini.h`)
+
+- ``readable.h``
+
+
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_MotorGo`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structESPWifiConfig_1_1JsonConverter_3_01MotorGo_1_1PIDParameters_01_4`
+
+- :ref:`exhale_struct_structESPWifiConfig_1_1JsonSerializer_3_01MotorGo_1_1PIDParameters_01_4`
+
+- :ref:`exhale_struct_structMotorGo_1_1PIDManagerConfig`
+
+- :ref:`exhale_class_classMotorGo_1_1PIDManager`
+

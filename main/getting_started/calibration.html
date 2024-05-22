@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Motor Calibration &mdash; MotorGo Docs  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Spinning Two Motors" href="spinning_motors.html" />
+    <link rel="prev" title="Get started writing code for the MotorGo" href="software_setup.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MotorGo Docs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="getting_started.html">Getting Started</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="software_setup.html">Get started writing code for the MotorGo</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Motor Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spinning_motors.html">Spinning Two Motors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tuning_pid.html">Tuning PID Controllers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../example_projects/examples.html">Example Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core_concepts/core_concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../common_issues.html">Common Issues</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MotorGo Docs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="getting_started.html">Getting Started</a></li>
+      <li class="breadcrumb-item active">Motor Calibration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/getting_started/calibration.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+
+
+  <section id="motor-calibration">
+<span id="calibrate-motors"></span><h1>Motor Calibration<a class="headerlink" href="#motor-calibration" title="Link to this heading"></a></h1>
+<p><strong>Calibration Overview</strong></p>
+<p>This section outlines the encoder calibration process for the MotorGo, which is crucial for accurate rotor position mapping in relation to the encoder.</p>
+<p>The calibration step also automatically determines the direction of the motor. After calibration, any motor should spin the same direction when given the same command. However, if you flip the direction the motor is plugged in, you will have to re-calibrate!</p>
+<p><strong>Pre-requisites</strong></p>
+<ul class="simple">
+<li><p><em>Encoder Installation</em>: Ensure that the encoder, along with its magnet, is correctly installed prior to calibration.</p></li>
+<li><p><em>Software Setup</em>: The calibration step is performed through the provided software API.</p></li>
+</ul>
+<p><strong>Calibration Sketch</strong></p>
+<p>You can open this sketch from the MotorGo Mini Driver examples in the Arduino IDE or by <a class="reference external" href="https://github.com/Every-Flavor-Robotics/motorgo-mini-driver/tree/main/examples/calibrate_motors">downloading this project</a> for PlatformIO.</p>
+<p>This sketch will run the calibration routine for channel 0 and channel 1 on the MotorGo.</p>
+<ul class="simple">
+<li><p>The calibration sweep involves a slow, 360-degree rotation of the rotor in both directions.</p></li>
+<li><p>This process maps the rotor’s position to the encoder’s readings.</p></li>
+<li><p>The sweep is initiated every time the code is run. If you flash calibration code to the board, it will perform a calibration every time the board resets.</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;Arduino.h&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;motorgo_mini.h&quot;</span>
+
+<span class="n">MotorGo</span><span class="o">::</span><span class="n">MotorGoMini</span><span class="w"> </span><span class="n">motorgo_mini</span><span class="p">;</span>
+<span class="n">MotorGo</span><span class="o">::</span><span class="n">MotorChannel</span><span class="o">&amp;</span><span class="w"> </span><span class="n">motor_ch0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">motorgo_mini</span><span class="p">.</span><span class="n">ch0</span><span class="p">;</span>
+<span class="n">MotorGo</span><span class="o">::</span><span class="n">MotorChannel</span><span class="o">&amp;</span><span class="w"> </span><span class="n">motor_ch1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">motorgo_mini</span><span class="p">.</span><span class="n">ch1</span><span class="p">;</span>
+
+<span class="n">MotorGo</span><span class="o">::</span><span class="n">ChannelConfiguration</span><span class="w"> </span><span class="n">config_ch0</span><span class="p">;</span>
+<span class="n">MotorGo</span><span class="o">::</span><span class="n">ChannelConfiguration</span><span class="w"> </span><span class="n">config_ch1</span><span class="p">;</span>
+
+<span class="c1">// Function to print at a maximum frequency</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">freq_println</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">str</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">freq</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">last_print_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">now</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">millis</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">now</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">last_print_time</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1000</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">freq</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+<span class="w">        </span><span class="n">last_print_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">now</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">setup</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">115200</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Setup motor parameters</span>
+<span class="w">    </span><span class="n">config_ch0</span><span class="p">.</span><span class="n">motor_config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MotorGo</span><span class="o">::</span><span class="n">MotorGoGreen</span><span class="p">;</span>
+<span class="w">    </span><span class="n">config_ch0</span><span class="p">.</span><span class="n">power_supply_voltage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.0</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">config_ch1</span><span class="p">.</span><span class="n">motor_config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MotorGo</span><span class="o">::</span><span class="n">MotorGoGreen</span><span class="p">;</span>
+<span class="w">    </span><span class="n">config_ch1</span><span class="p">.</span><span class="n">power_supply_voltage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.0</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// Setup Ch0</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">calibrate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">motor_ch0</span><span class="p">.</span><span class="n">init</span><span class="p">(</span><span class="n">config_ch0</span><span class="p">,</span><span class="w"> </span><span class="n">calibrate</span><span class="p">);</span>
+<span class="w">    </span><span class="n">motor_ch1</span><span class="p">.</span><span class="n">init</span><span class="p">(</span><span class="n">config_ch1</span><span class="p">,</span><span class="w"> </span><span class="n">calibrate</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">loop</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Run Ch0</span>
+<span class="w">    </span><span class="n">motor_ch0</span><span class="p">.</span><span class="n">loop</span><span class="p">();</span>
+<span class="w">    </span><span class="n">motor_ch1</span><span class="p">.</span><span class="n">loop</span><span class="p">();</span>
+
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Velocity - Ch0: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">motor_ch0</span><span class="p">.</span><span class="n">get_velocity</span><span class="p">())</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="s">&quot; Ch1: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">motor_ch1</span><span class="p">.</span><span class="n">get_velocity</span><span class="p">());</span>
+
+<span class="w">    </span><span class="n">freq_println</span><span class="p">(</span><span class="n">str</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If you are using PlatformIO, you can configure the project with the following platformio.ini file.</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[env:calibrate_motors]</span>
+<span class="na">platform</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">platformio/espressif32@^6.1.0</span>
+<span class="na">board</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">motorgo_mini_1</span>
+<span class="na">framework</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">arduino</span>
+<span class="na">monitor_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">115200</span>
+<span class="na">lib_deps</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="na">https</span><span class="o">:</span><span class="s">//github.com/Every-Flavor-Robotics/motorgo-mini-driver.git</span><span class="c1">#v1.0.0</span>
+</pre></div>
+</div>
+<p>Let’s break the code down line by line. You can segment all code for the MotorGo into three parts:</p>
+<ol class="arabic simple">
+<li><p>Define the MotorGo variables</p></li>
+<li><p>Initialize and configure the motor controllers</p></li>
+<li><p>Write motor commands and read encoder data</p></li>
+</ol>
+<p><strong>1. Define the MotorGo variables</strong></p>
+<p>This section defines the MotorGo variables and the motor channels. The MotorGoMini class is used to define the MotorGo object, and the MotorChannel class is used to define the motor channels.
+The MotorGoMini object provides access to the motor channels, which are used to control each motor independently. In the code snippet, the <cite>motorgo_mini</cite> object is an instance of the MotorGoMini class.</p>
+<p>The MotorChannel class represents a single motor channel and is used to configure and control the motor. In the code snippet, <cite>motor_ch0</cite> and <cite>motor_ch1</cite> are instances of the MotorChannel class, representing channel 0 and channel 1 respectively.</p>
+<p>To configure each motor channel, we use a <cite>ChannelConfiguration</cite> object. This object contains information about the motor being controlled, such as the motor configuration and the power supply voltage. In the code snippet, <cite>config_ch0</cite> and <cite>config_ch1</cite> are instances of the <cite>ChannelConfiguration</cite> class, representing the configuration for channel 0 and channel 1 respectively.</p>
+<p><strong>2. Initialize and configure the motor controllers</strong>
+After defining the MotorGo variables, the next step is to initialize and configure the motor controllers. This involves setting up the motor parameters and performing calibration.</p>
+<ul class="simple">
+<li><p>The <cite>config_ch0</cite> and <cite>config_ch1</cite> objects of the <cite>ChannelConfiguration</cite> class are used to configure the motor channels.</p></li>
+<li><p>The <cite>config_ch0.motor_config</cite> and <cite>config_ch1.motor_config</cite> variables specify the motor configuration. In this case, the <cite>MotorGoGreen</cite> configuration is used, which provides specifications for the official MotorGoGreen motor. However, you can create your own motor configuration to define specifications for other motors as well.</p></li>
+<li><p>The <cite>config_ch0.power_supply_voltage</cite> and <cite>config_ch1.power_supply_voltage</cite> variables specify the power supply voltage for each motor channel. In the example, we assume the board is powered over USB at 5 volts. However, if you are using the screw terminals to provide power, you can set a higher voltage.</p></li>
+</ul>
+<p>The <cite>init</cite> function sets up the motor using the <cite>ChannelConfiguration</cite> and optionally performs calibration as detailed below.</p>
+<p><strong>Calibration</strong></p>
+<p>Calibration is required each time a new motor/encoder is connected or when the motor encoder combo is reassembled. However, once calibration is performed, it is saved and only needs to be run once. The calibration process determines the direction of the motor and maps the rotor’s position to the encoder’s readings, ensuring accurate rotor position mapping.</p>
+<p>After the setup() function is executed, the motor controllers are initialized and calibrated, ready to execute motor commands and read encoder data in the loop() function.</p>
+<p><strong>3. Write motor commands and read encoder data</strong>
+Finally, the loop() section of the code snippet is where motor commands are written and encoder data is read. The <cite>loop()</cite> function is called on each motor channel to update the motor controls and read encoder data. It is important to note that the <cite>loop()</cite> function should be executed as fast as possible without any delays.</p>
+<p>To ensure that the <cite>loop()</cite> function is executed at a high frequency, we use the convenience function <cite>freq_println()</cite>, which will print output at a specified frequency. In this case, it is printing the velocity of each motor channel at a frequency of 10 Hz. Spinning the motors by hand should result in a change in velocity.</p>
+<p>While not in this example, the loop is also where you would compute a target for the motor to command (as a position, velocity, voltage, or torque). As you will see in other examples, you can configure PID controllers to track those targets, which would be executed in the loop as well.</p>
+</section>
+
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="software_setup.html" class="btn btn-neutral float-left" title="Get started writing code for the MotorGo" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="spinning_motors.html" class="btn btn-neutral float-right" title="Spinning Two Motors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Every Flavor Robotics LLC, MotorGo LLC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: main
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../../v1.0.0/getting_started/calibration.html">v1.0.0</a></dd>
+            <dd><a href="../../v1.0.1/getting_started/calibration.html">v1.0.1</a></dd>
+            <dd><a href="../../v1.1.0/getting_started/calibration.html">v1.1.0</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../../dev/getting_started/calibration.html">dev</a></dd>
+            <dd><a href="calibration.html">main</a></dd>
+        </dl>
+    </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

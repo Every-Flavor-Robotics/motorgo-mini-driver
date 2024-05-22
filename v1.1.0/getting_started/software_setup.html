@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get started writing code for the MotorGo &mdash; MotorGo Docs  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Motor Calibration" href="calibration.html" />
+    <link rel="prev" title="Getting Started" href="getting_started.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MotorGo Docs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="getting_started.html">Getting Started</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Get started writing code for the MotorGo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#arduino-ide">Arduino IDE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#platformio">PlatformIO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setting-up-the-motorgo-mini-gui">Setting up the MotorGo Mini GUI</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="calibration.html">Motor Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spinning_motors.html">Spinning Two Motors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tuning_pid.html">Tuning PID Controllers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../example_projects/examples.html">Example Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core_concepts/core_concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../common_issues.html">Common Issues</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MotorGo Docs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="getting_started.html">Getting Started</a></li>
+      <li class="breadcrumb-item active">Get started writing code for the MotorGo</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/getting_started/software_setup.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+
+
+  <section id="get-started-writing-code-for-the-motorgo">
+<h1>Get started writing code for the MotorGo<a class="headerlink" href="#get-started-writing-code-for-the-motorgo" title="Link to this heading"></a></h1>
+<p>The MotorGo is programmable in the Arduino IDE or in PlatformIO. At it’s core, the MotorGo is an ESP32-S3 microcontroller with built-in motor drivers, so it can be programmed just like any other ESP32. Follow the steps below to get started writing code for the MotorGo in Arduino or PlatformIO.</p>
+<p>There are 3 tools you need to get started writing code for the MotorGo:</p>
+<ul class="simple">
+<li><p>ESP32 Boards: Provides board definitions for the MotorGo</p></li>
+<li><p>MotorGo Mini Driver: Provides API/functions for controlling the motors with the onboard motor controllers</p></li>
+<li><p>MotorGo Mini GUI: Lets you tune your PID controllers over WiFi (optional)</p></li>
+</ul>
+<p>Let’s walk through the steps of setting each of these up.</p>
+<section id="arduino-ide">
+<h2>Arduino IDE<a class="headerlink" href="#arduino-ide" title="Link to this heading"></a></h2>
+<p>First, install the ESP32 board definitions, if you have not already done so. You need at least version 2.0.16 of the ESP32 board definitions for the MotorGo to work.</p>
+<ul class="simple">
+<li><p>Go to <cite>Tools &gt; Board &gt; Boards Manager…</cite></p></li>
+<li><p>Search for <cite>ESP32</cite></p></li>
+<li><p>Install <cite>esp32</cite> by Espressif Systems</p></li>
+</ul>
+<p>Next, install the MotorGo Mini driver library.</p>
+<ul class="simple">
+<li><p>Click on the library manager on the left toolbar or for Arduino IDE 1.X, go to <cite>Sketch &gt; Include Library &gt; Manage Libraries…</cite></p></li>
+<li><p>Search for <cite>MotorGo_Mini_Driver</cite> and press install</p></li>
+</ul>
+<p>To test if everything is working as expected, you can upload an example sketch to the board.</p>
+<ul class="simple">
+<li><p>Go to <cite>File &gt; Examples &gt; MotorGo Mini Driver (under Examples from Custom Libaries) &gt; read_encoders</cite></p></li>
+<li><p>Next, select the MotorGo Mini 1 board by clicking <cite>Select Board &gt; Select Other Board and Port &gt; MotorGo Mini 1 (ESP32-S3)</cite>. If you’re in Arduino IDE 1.X, you can find in the board in <cite>Tools &gt; Board &gt; MotorGo Mini 1 (ESP32-S3)</cite></p></li>
+<li><p>Click the upload button (right arrow) to upload the sketch to the board</p></li>
+</ul>
+<p>You should see the encoder values printed to the serial monitor. If you see this, you’re good to go!</p>
+</section>
+<section id="platformio">
+<h2>PlatformIO<a class="headerlink" href="#platformio" title="Link to this heading"></a></h2>
+<p>First, install the ESP32 board definitions, if you have not already done so.</p>
+<ul class="simple">
+<li><p>Navigate to PlatformIO Home</p></li>
+<li><p>Go to <cite>Platforms</cite></p></li>
+<li><p>Search for <cite>Espressif 32</cite></p></li>
+<li><p>Click <cite>Install</cite></p></li>
+</ul>
+<p>To use the board definition, either select the MotorGo Mini 1 from the list of boards when creating a new project OR modify the board in your <cite>platformio.ini</cite> file as follows:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">board</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">motorgo_mini_1</span>
+</pre></div>
+</div>
+<p>Next, to setup the MotorGo Mini driver library, you can reference the github repo directly in your <cite>platformio.ini</cite> file.</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">lib_deps</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="na">https</span><span class="o">:</span><span class="s">//github.com/Every-Flavor-Robotics/motorgo-mini-driver.git</span><span class="c1">#v1.0.0</span>
+</pre></div>
+</div>
+<p>You should modify v1.0.0 to whichever release tag you prefer, or switch to <cite>#dev</cite> for the latest experimental changes. You can find the latest releases on the <a class="reference external" href="https://github.com/Every-Flavor-Robotics/motorgo-mini-driver/releases">Github repo for the driver</a></p>
+<p>You can find an example PlatformIO project for reading the encoder data <a class="reference external" href="https://github.com/Every-Flavor-Robotics/motorgo-mini-driver/tree/main/examples/read_encoders">here</a></p>
+</section>
+<section id="setting-up-the-motorgo-mini-gui">
+<h2>Setting up the MotorGo Mini GUI<a class="headerlink" href="#setting-up-the-motorgo-mini-gui" title="Link to this heading"></a></h2>
+<p>The MotorGo Mini GUI provides an interface on your computer to wirelessly tune PID controllers on the MotorGo Mini. You can find the latest version of the GUI <a class="reference external" href="https://github.com/Every-Flavor-Robotics/motorgo-mini-gui/releases">here</a>. Download and install the correct version for your operating system (.dmg for Mac, .exe for Windows, and .AppImage or .deb for Linux).</p>
+<p>Check out the <cite>balance_bot</cite> or <cite>tune_controllers</cite> examples for a demonstration of setting up the MotorGo to communicate with the GUI.</p>
+</section>
+</section>
+
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="getting_started.html" class="btn btn-neutral float-left" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="calibration.html" class="btn btn-neutral float-right" title="Motor Calibration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Every Flavor Robotics LLC, MotorGo LLC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: v1.1.0
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../../v1.0.0/getting_started/software_setup.html">v1.0.0</a></dd>
+            <dd><a href="../../v1.0.1/getting_started/software_setup.html">v1.0.1</a></dd>
+            <dd><a href="software_setup.html">v1.1.0</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../../dev/getting_started/software_setup.html">dev</a></dd>
+            <dd><a href="../../main/getting_started/software_setup.html">main</a></dd>
+        </dl>
+    </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

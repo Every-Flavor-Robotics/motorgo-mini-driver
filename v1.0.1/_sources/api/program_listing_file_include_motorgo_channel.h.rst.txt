@@ -1,0 +1,201 @@
+
+.. _program_listing_file_include_motorgo_channel.h:
+
+Program Listing for File motorgo_channel.h
+==========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_motorgo_channel.h>` (``include/motorgo_channel.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   // Header file for the Motor Channel class.
+   
+   #ifndef MOTOR_CHANNEL_H
+   #define MOTOR_CHANNEL_H
+   
+   #include <SPI.h>
+   #include <SimpleFOC.h>
+   #include <Wire.h>
+   
+   #include "encoders/calibrated/CalibratedSensor.h"
+   #include "encoders/mt6701/MagneticSensorMT6701SSI.h"
+   #include "motorgo_common.h"
+   
+   namespace MotorGo
+   {
+   
+   class MotorChannel
+   {
+    public:
+     MotorChannel(BLDCChannelParameters params, const char* name);
+     MotorChannel(const MotorChannel&) = delete;  // Delete copy constructor
+     MotorChannel& operator=(const MotorChannel&) =
+         delete;  // Delete copy assignment operator
+   
+     void init(ChannelConfiguration channel_config);
+   
+     void init(ChannelConfiguration channel_config, bool should_calibrate);
+     // end of motor_initialization group
+   
+     void loop();
+   
+     PIDParameters get_torque_controller();
+   
+     PIDParameters get_velocity_controller();
+   
+     PIDParameters get_position_controller();
+   
+     void set_torque_controller(PIDParameters params);
+   
+     void set_velocity_controller(PIDParameters params);
+   
+     void set_position_controller(PIDParameters params);
+   
+     float get_torque_limit();
+   
+     float get_velocity_limit();
+   
+     float get_position_limit_low();
+   
+     float get_position_limit_high();
+   
+     float get_voltage_limit();
+   
+     void set_torque_limit(float limit);
+   
+     void set_velocity_limit(float limit);
+   
+     void set_position_limit(float low, float high);
+   
+     void set_voltage_limit(float limit);
+   
+     void reset_torque_controller();
+   
+     void reset_velocity_controller();
+   
+     void reset_position_controller();
+   
+     void save_torque_controller();
+   
+     void save_velocity_controller();
+   
+     void save_position_controller();
+   
+     void load_torque_controller();
+   
+     void load_velocity_controller();
+   
+     void load_position_controller();
+     // end of pid_controller_management group
+   
+     void enable();
+   
+     void disable();
+   
+     void set_control_mode(ControlMode mode);
+   
+     void set_target_torque(float target);
+   
+     void set_target_velocity(float target);
+   
+     void set_target_position(float target);
+   
+     void set_target_voltage(float target);
+     // end of motor_command group
+   
+     void zero_position();
+   
+     float get_torque();
+   
+     float get_velocity();
+   
+     float get_position();
+   
+     float get_voltage();
+     // end of state_retrieval group
+   
+    private:
+     //    Motor name
+     //   Used to store calibration parameters in EEPROM
+     const char* name;
+   
+     // Encoder, motor, and driver instances
+     BLDCMotor motor;
+     BLDCDriver6PWM driver;
+     MagneticSensorMT6701SSI encoder;
+     //   Calibrated sensor stores the calibration parameters
+     CalibratedSensor sensor_calibrated;
+   
+     // Additional motor and encoder parameters
+     ChannelConfiguration channel_config;
+     Direction motor_direction;
+   
+     // Current targets
+     // target_velocity, target_position, target_voltage, or target_torque will
+     // be used depending on the control mode. We store all of them separately
+     // to avoid erroneous motion due to switching units when switching between
+     // control modes
+     // Set to None by default to require user to set a control mode
+     ControlMode control_mode = None;
+   
+     // Rad/s
+     float target_velocity = 0.0f;
+     bool velocity_limit_enabled = false;
+     float velocity_limit = 0.0f;
+   
+     // N*m
+     float target_torque = 0.0f;
+     bool torque_limit_enabled = false;
+     float torque_limit = 0.0f;
+   
+     // Rad
+     float target_position = 0.0f;
+     bool position_limit_enabled = false;
+     float position_limit_low = 0.0f;
+     float position_limit_high = 0.0f;
+   
+     // V
+     float target_voltage = 0.0f;
+     bool voltage_limit_enabled = false;
+     float voltage_limit = 10000.0f;
+   
+     // MotorGo Limits
+     // MotorGo Mini driver voltage limit
+     // TODO: Some board definitions include the voltage limit, others don't
+     // Set a default for now thats safe for the released hardware
+   #ifndef DRIVER_VOLTAGE_LIMIT
+     const float DRIVER_VOLTAGE_LIMIT = 11.0f;
+   #endif
+   
+     // MotorGo Mini driver current limit
+   #ifndef DRIVER_CURRENT_LIMIT
+     const float DRIVER_CURRENT_LIMIT = 1.8f;
+   #endif
+   
+     // Calibration parameters
+     // If should_calibrate is set to true, the motor will be calibrated on startup
+     // Else, the calibration will be loaded from EEPROM. If no calibration is
+     // found, the motor will be calibrated anyway and the calibration will be
+     // saved to EEPROM
+     bool should_calibrate;
+     bool calibration_loaded = false;
+   
+     // Store whether the parameters have been set
+     // If not, the motor will not run be disabled when a command is received
+     bool pid_torque_enabled = false;
+     bool pid_velocity_enabled = false;
+     bool pid_position_enabled = false;
+   
+     //   Helper functions for loading and saving PID parameters
+     void save_controller_helper(const char* key, const PIDController& controller,
+                                 const LowPassFilter& lpf);
+   
+     void load_controller_helper(const char* key, PIDController& controller,
+                                 LowPassFilter& lpf);
+   };
+   
+   }  // namespace MotorGo
+   
+   #endif  // MOTOR_CHANNEL_H

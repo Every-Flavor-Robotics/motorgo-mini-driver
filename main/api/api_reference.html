@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Reference &mdash; MotorGo Docs  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Namespace ESPWifiConfig" href="namespace_ESPWifiConfig.html" />
+    <link rel="prev" title="PID Controller Architecture" href="../core_concepts/pid_architecture.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MotorGo Docs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example_projects/examples.html">Example Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core_concepts/core_concepts.html">Core Concepts</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#class-hierarchy">Class Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#file-hierarchy">File Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">API Reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#namespaces">Namespaces</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="namespace_ESPWifiConfig.html">Namespace ESPWifiConfig</a></li>
+<li class="toctree-l4"><a class="reference internal" href="namespace_MotorGo.html">Namespace MotorGo</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#classes-and-structs">Classes and Structs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="structESPWifiConfig_1_1JsonConverter_3_01MotorGo_1_1PIDParameters_01_4.html">Template Struct JsonConverter&lt; MotorGo::PIDParameters &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structESPWifiConfig_1_1JsonSerializer_3_01MotorGo_1_1PIDParameters_01_4.html">Template Struct JsonSerializer&lt; MotorGo::PIDParameters &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structMotorGo_1_1BLDCChannelParameters.html">Struct BLDCChannelParameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structMotorGo_1_1ChannelConfiguration.html">Struct ChannelConfiguration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structMotorGo_1_1MotorConfiguration.html">Struct MotorConfiguration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structMotorGo_1_1PIDManagerConfig.html">Struct PIDManagerConfig</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structMotorGo_1_1PIDParameters.html">Struct PIDParameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classMotorGo_1_1MotorChannel.html">Class MotorChannel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classMotorGo_1_1MotorGoMini.html">Class MotorGoMini</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classMotorGo_1_1PIDManager.html">Class PIDManager</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#enums">Enums</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="enum_motorgo__common_8h_1af40038847c987db9ba0ecae79d54f493.html">Enum ControlMode</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#unions">Unions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="unionMotorGo_1_1packed__pid__parameters__t.html">Union packed_pid_parameters_t</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#functions">Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="function_motorgo__common_8h_1a62ac3f21bf59ff04024043e3731d95a9.html">Function MotorGo::init_encoder_spi</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_motorgo__motors_8h_1a6afe6a3b7bfe9c37a92dd7e8ab22016e.html">Function MotorGo::MotorGoGreen</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#variables">Variables</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="variable_motorgo__common_8h_1aecbba03599f0847d7fb31d6e896b5c2d.html">Variable MotorGo::hspi</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../common_issues.html">Common Issues</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MotorGo Docs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/api_reference.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+
+
+  <section id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h1>
+<p>Docs for the MotorGo Product Line</p>
+<section id="class-hierarchy">
+<h2>Class Hierarchy<a class="headerlink" href="#class-hierarchy" title="Link to this heading"></a></h2>
+<ul class="treeView" id="class-treeView">
+  <li>
+    <ul class="collapsibleList">
+      <li>Namespace <a href="namespace_ESPWifiConfig.html#namespace-ESPWifiConfig">ESPWifiConfig</a><ul><li>Template <a href="structESPWifiConfig_1_1JsonConverter_3_01MotorGo_1_1PIDParameters_01_4.html#exhale-struct-structESPWifiConfig-1-1JsonConverter-3-01MotorGo-1-1PIDParameters-01-4">Struct JsonConverter&lt; MotorGo::PIDParameters &gt;</a></li><li class="lastChild">Template <a href="structESPWifiConfig_1_1JsonSerializer_3_01MotorGo_1_1PIDParameters_01_4.html#exhale-struct-structESPWifiConfig-1-1JsonSerializer-3-01MotorGo-1-1PIDParameters-01-4">Struct JsonSerializer&lt; MotorGo::PIDParameters &gt;</a></li></ul></li><li class="lastChild">Namespace <a href="namespace_MotorGo.html#namespace-MotorGo">MotorGo</a><ul><li>Struct <a href="structMotorGo_1_1BLDCChannelParameters.html#exhale-struct-structMotorGo-1-1BLDCChannelParameters">BLDCChannelParameters</a></li><li>Struct <a href="structMotorGo_1_1MotorConfiguration.html#exhale-struct-structMotorGo-1-1MotorConfiguration">MotorConfiguration</a></li><li>Struct <a href="structMotorGo_1_1PIDManagerConfig.html#exhale-struct-structMotorGo-1-1PIDManagerConfig">PIDManagerConfig</a></li><li>Class <a href="classMotorGo_1_1MotorChannel.html#exhale-class-classMotorGo-1-1MotorChannel">MotorChannel</a></li><li>Class <a href="classMotorGo_1_1PIDManager.html#exhale-class-classMotorGo-1-1PIDManager">PIDManager</a></li><li>Enum <a href="enum_motorgo__common_8h_1af40038847c987db9ba0ecae79d54f493.html#exhale-enum-motorgo-common-8h-1af40038847c987db9ba0ecae79d54f493">ControlMode</a></li><li>Struct <a href="structMotorGo_1_1ChannelConfiguration.html#exhale-struct-structMotorGo-1-1ChannelConfiguration">ChannelConfiguration</a></li><li>Struct <a href="structMotorGo_1_1PIDParameters.html#exhale-struct-structMotorGo-1-1PIDParameters">PIDParameters</a></li><li>Class <a href="classMotorGo_1_1MotorGoMini.html#exhale-class-classMotorGo-1-1MotorGoMini">MotorGoMini</a></li><li class="lastChild">Union <a href="unionMotorGo_1_1packed__pid__parameters__t.html#exhale-union-unionMotorGo-1-1packed-pid-parameters-t">packed_pid_parameters_t</a></li></ul></li>
+    </ul>
+  </li><!-- only tree view element -->
+</ul><!-- /treeView class-treeView --></section>
+<section id="file-hierarchy">
+<h2>File Hierarchy<a class="headerlink" href="#file-hierarchy" title="Link to this heading"></a></h2>
+<ul class="treeView" id="file-treeView">
+  <li>
+    <ul class="collapsibleList">
+      <li class="lastChild">Directory <a href="dir_include.html#dir-include">include</a><ul><li>File <a href="file_include_motorgo_channel.h.html#file-include-motorgo-channel.h">motorgo_channel.h</a></li><li>File <a href="file_include_motorgo_common.h.html#file-include-motorgo-common.h">motorgo_common.h</a></li><li>File <a href="file_include_motorgo_mini.h.html#file-include-motorgo-mini.h">motorgo_mini.h</a></li><li>File <a href="file_include_motorgo_motors.h.html#file-include-motorgo-motors.h">motorgo_motors.h</a></li><li class="lastChild">File <a href="file_include_pid_manager.h.html#file-include-pid-manager.h">pid_manager.h</a></li></ul></li>
+    </ul>
+  </li><!-- only tree view element -->
+</ul><!-- /treeView file-treeView --></section>
+<section id="id1">
+<h2>API Reference<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<section id="namespaces">
+<h3>Namespaces<a class="headerlink" href="#namespaces" title="Link to this heading"></a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="namespace_ESPWifiConfig.html">Namespace ESPWifiConfig</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="namespace_ESPWifiConfig.html#classes">Classes</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="namespace_MotorGo.html">Namespace MotorGo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="namespace_MotorGo.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="namespace_MotorGo.html#enums">Enums</a></li>
+<li class="toctree-l2"><a class="reference internal" href="namespace_MotorGo.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="namespace_MotorGo.html#unions">Unions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="namespace_MotorGo.html#variables">Variables</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="classes-and-structs">
+<h3>Classes and Structs<a class="headerlink" href="#classes-and-structs" title="Link to this heading"></a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structESPWifiConfig_1_1JsonConverter_3_01MotorGo_1_1PIDParameters_01_4.html">Template Struct JsonConverter&lt; MotorGo::PIDParameters &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structESPWifiConfig_1_1JsonConverter_3_01MotorGo_1_1PIDParameters_01_4.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structESPWifiConfig_1_1JsonSerializer_3_01MotorGo_1_1PIDParameters_01_4.html">Template Struct JsonSerializer&lt; MotorGo::PIDParameters &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structESPWifiConfig_1_1JsonSerializer_3_01MotorGo_1_1PIDParameters_01_4.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structMotorGo_1_1BLDCChannelParameters.html">Struct BLDCChannelParameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structMotorGo_1_1BLDCChannelParameters.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structMotorGo_1_1ChannelConfiguration.html">Struct ChannelConfiguration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structMotorGo_1_1ChannelConfiguration.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structMotorGo_1_1MotorConfiguration.html">Struct MotorConfiguration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structMotorGo_1_1MotorConfiguration.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structMotorGo_1_1PIDManagerConfig.html">Struct PIDManagerConfig</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structMotorGo_1_1PIDManagerConfig.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structMotorGo_1_1PIDParameters.html">Struct PIDParameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structMotorGo_1_1PIDParameters.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classMotorGo_1_1MotorChannel.html">Class MotorChannel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classMotorGo_1_1MotorChannel.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classMotorGo_1_1MotorGoMini.html">Class MotorGoMini</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classMotorGo_1_1MotorGoMini.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classMotorGo_1_1PIDManager.html">Class PIDManager</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classMotorGo_1_1PIDManager.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="enums">
+<h3>Enums<a class="headerlink" href="#enums" title="Link to this heading"></a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="enum_motorgo__common_8h_1af40038847c987db9ba0ecae79d54f493.html">Enum ControlMode</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="enum_motorgo__common_8h_1af40038847c987db9ba0ecae79d54f493.html#enum-documentation">Enum Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="unions">
+<h3>Unions<a class="headerlink" href="#unions" title="Link to this heading"></a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="unionMotorGo_1_1packed__pid__parameters__t.html">Union packed_pid_parameters_t</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="unionMotorGo_1_1packed__pid__parameters__t.html#union-documentation">Union Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_motorgo__common_8h_1a62ac3f21bf59ff04024043e3731d95a9.html">Function MotorGo::init_encoder_spi</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_motorgo__common_8h_1a62ac3f21bf59ff04024043e3731d95a9.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_motorgo__motors_8h_1a6afe6a3b7bfe9c37a92dd7e8ab22016e.html">Function MotorGo::MotorGoGreen</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_motorgo__motors_8h_1a6afe6a3b7bfe9c37a92dd7e8ab22016e.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="variables">
+<h3>Variables<a class="headerlink" href="#variables" title="Link to this heading"></a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_motorgo__common_8h_1aecbba03599f0847d7fb31d6e896b5c2d.html">Variable MotorGo::hspi</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_motorgo__common_8h_1aecbba03599f0847d7fb31d6e896b5c2d.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+</section>
+
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../core_concepts/pid_architecture.html" class="btn btn-neutral float-left" title="PID Controller Architecture" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="namespace_ESPWifiConfig.html" class="btn btn-neutral float-right" title="Namespace ESPWifiConfig" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Every Flavor Robotics LLC, MotorGo LLC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: main
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../../v1.0.0/index.html">v1.0.0</a></dd>
+            <dd><a href="../../v1.0.1/index.html">v1.0.1</a></dd>
+            <dd><a href="../../v1.1.0/index.html">v1.1.0</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../../dev/index.html">dev</a></dd>
+            <dd><a href="api_reference.html">main</a></dd>
+        </dl>
+    </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+
+.. _file_include_motorgo_mini.h:
+
+File motorgo_mini.h
+===================
+
+|exhale_lsh| :ref:`Parent directory <dir_include>` (``include``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/motorgo_mini.h``)
+---------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_motorgo_mini.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``motorgo_channel.h`` (:ref:`file_include_motorgo_channel.h`)
+
+- ``motorgo_common.h`` (:ref:`file_include_motorgo_common.h`)
+
+- ``motorgo_motors.h`` (:ref:`file_include_motorgo_motors.h`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_include_pid_manager.h`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_MotorGo`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classMotorGo_1_1MotorGoMini`
+

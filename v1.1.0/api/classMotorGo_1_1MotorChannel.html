@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Class MotorChannel &mdash; MotorGo Docs  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class MotorGoMini" href="classMotorGo_1_1MotorGoMini.html" />
+    <link rel="prev" title="Struct PIDParameters" href="structMotorGo_1_1PIDParameters.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MotorGo Docs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example_projects/examples.html">Example Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core_concepts/core_concepts.html">Core Concepts</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#class-hierarchy">Class Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#file-hierarchy">File Hierarchy</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="api_reference.html#id1">API Reference</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="api_reference.html#namespaces">Namespaces</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="api_reference.html#classes-and-structs">Classes and Structs</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="structESPWifiConfig_1_1JsonConverter_3_01MotorGo_1_1PIDParameters_01_4.html">Template Struct JsonConverter&lt; MotorGo::PIDParameters &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structESPWifiConfig_1_1JsonSerializer_3_01MotorGo_1_1PIDParameters_01_4.html">Template Struct JsonSerializer&lt; MotorGo::PIDParameters &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structMotorGo_1_1BLDCChannelParameters.html">Struct BLDCChannelParameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structMotorGo_1_1ChannelConfiguration.html">Struct ChannelConfiguration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structMotorGo_1_1MotorConfiguration.html">Struct MotorConfiguration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structMotorGo_1_1PIDManagerConfig.html">Struct PIDManagerConfig</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structMotorGo_1_1PIDParameters.html">Struct PIDParameters</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Class MotorChannel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classMotorGo_1_1MotorGoMini.html">Class MotorGoMini</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classMotorGo_1_1PIDManager.html">Class PIDManager</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api_reference.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api_reference.html#unions">Unions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api_reference.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api_reference.html#variables">Variables</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../common_issues.html">Common Issues</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MotorGo Docs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="api_reference.html">API Reference</a></li>
+      <li class="breadcrumb-item active">Class MotorChannel</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/classMotorGo_1_1MotorChannel.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+
+
+  <section id="class-motorchannel">
+<span id="exhale-class-classmotorgo-1-1motorchannel"></span><h1>Class MotorChannel<a class="headerlink" href="#class-motorchannel" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_include_motorgo_channel.h.html#file-include-motorgo-channel-h"><span class="std std-ref">File motorgo_channel.h</span></a></p></li>
+</ul>
+<section id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Link to this heading"></a></h2>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannelE">
+<span id="_CPPv3N7MotorGo12MotorChannelE"></span><span id="_CPPv2N7MotorGo12MotorChannelE"></span><span id="MotorGo::MotorChannel"></span><span class="target" id="classMotorGo_1_1MotorChannel"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MotorChannel</span></span></span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannelE" title="Link to this definition"></a><br /></dt>
+<dd><p>Provides control and management for each of the MotorGo brushless DC (BLDC) motor channels. </p>
+<p>This class encapsulates the functionality for controlling and managing BLDC motors using the MotorGo hardware. It provides functions for setting up motors and encoders, running control loops, and setting control modes. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-motor-initialization">Motor Initialization</p>
+<p>Functions for initializing motors and encoders with various settings. </p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel4initE20ChannelConfiguration">
+<span id="_CPPv3N7MotorGo12MotorChannel4initE20ChannelConfiguration"></span><span id="_CPPv2N7MotorGo12MotorChannel4initE20ChannelConfiguration"></span><span id="MotorGo::MotorChannel::init__ChannelConfiguration"></span><span class="target" id="classMotorGo_1_1MotorChannel_1aaefb5ec197d26f439617745d2e1c6175"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">init</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="structMotorGo_1_1ChannelConfiguration.html#_CPPv4N7MotorGo20ChannelConfigurationE" title="MotorGo::ChannelConfiguration"><span class="n"><span class="pre">ChannelConfiguration</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">channel_config</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel4initE20ChannelConfiguration" title="Link to this definition"></a><br /></dt>
+<dd><p>Initializes motor and encoder with default settings. Calibration is automatically loaded. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>channel_config</strong> – <a class="reference internal" href="structMotorGo_1_1ChannelConfiguration.html#structMotorGo_1_1ChannelConfiguration"><span class="std std-ref">ChannelConfiguration</span></a> structure containing the configuration for the motor channel. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel4initE20ChannelConfigurationb">
+<span id="_CPPv3N7MotorGo12MotorChannel4initE20ChannelConfigurationb"></span><span id="_CPPv2N7MotorGo12MotorChannel4initE20ChannelConfigurationb"></span><span id="MotorGo::MotorChannel::init__ChannelConfiguration.b"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a866d7c03678da19c9437d2bce5d02854"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">init</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="structMotorGo_1_1ChannelConfiguration.html#_CPPv4N7MotorGo20ChannelConfigurationE" title="MotorGo::ChannelConfiguration"><span class="n"><span class="pre">ChannelConfiguration</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">channel_config</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">should_calibrate</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel4initE20ChannelConfigurationb" title="Link to this definition"></a><br /></dt>
+<dd><p>Initializes motor and encoder with the option of calibration. If should_calibrate is false, calibration procedure will not run. Calibration will be loaded from flash if available, else the channel will only run open loop control modes. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel_config</strong> – <a class="reference internal" href="structMotorGo_1_1ChannelConfiguration.html#structMotorGo_1_1ChannelConfiguration"><span class="std std-ref">ChannelConfiguration</span></a> structure containing the configuration for the motor channel. </p></li>
+<li><p><strong>should_calibrate</strong> – If true, performs calibration on startup. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-pid-controller-management">PID Controller Management</p>
+<p>Functions for managing PID controllers, including getting and setting parameters. </p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel21get_torque_controllerEv">
+<span id="_CPPv3N7MotorGo12MotorChannel21get_torque_controllerEv"></span><span id="_CPPv2N7MotorGo12MotorChannel21get_torque_controllerEv"></span><span id="MotorGo::MotorChannel::get_torque_controller"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a6d687c42deca27e5e98532e11c7f7e4e"></span><a class="reference internal" href="structMotorGo_1_1PIDParameters.html#_CPPv4N7MotorGo13PIDParametersE" title="MotorGo::PIDParameters"><span class="n"><span class="pre">PIDParameters</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_torque_controller</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel21get_torque_controllerEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Retrieves the PID parameters for the torque controller motor. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="structMotorGo_1_1PIDParameters.html#structMotorGo_1_1PIDParameters"><span class="std std-ref">PIDParameters</span></a> structure containing the current settings of the torque controller. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel23get_velocity_controllerEv">
+<span id="_CPPv3N7MotorGo12MotorChannel23get_velocity_controllerEv"></span><span id="_CPPv2N7MotorGo12MotorChannel23get_velocity_controllerEv"></span><span id="MotorGo::MotorChannel::get_velocity_controller"></span><span class="target" id="classMotorGo_1_1MotorChannel_1ad904778e942ca75e52e0e90813784e0a"></span><a class="reference internal" href="structMotorGo_1_1PIDParameters.html#_CPPv4N7MotorGo13PIDParametersE" title="MotorGo::PIDParameters"><span class="n"><span class="pre">PIDParameters</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_velocity_controller</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel23get_velocity_controllerEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Retrieves the PID parameters for the velocity controller. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="structMotorGo_1_1PIDParameters.html#structMotorGo_1_1PIDParameters"><span class="std std-ref">PIDParameters</span></a> structure containing the current settings of the velocity controller. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel23get_position_controllerEv">
+<span id="_CPPv3N7MotorGo12MotorChannel23get_position_controllerEv"></span><span id="_CPPv2N7MotorGo12MotorChannel23get_position_controllerEv"></span><span id="MotorGo::MotorChannel::get_position_controller"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a279bd36b876f80e499178a23952123bc"></span><a class="reference internal" href="structMotorGo_1_1PIDParameters.html#_CPPv4N7MotorGo13PIDParametersE" title="MotorGo::PIDParameters"><span class="n"><span class="pre">PIDParameters</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_position_controller</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel23get_position_controllerEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Retrieves the PID parameters for the position controller. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="structMotorGo_1_1PIDParameters.html#structMotorGo_1_1PIDParameters"><span class="std std-ref">PIDParameters</span></a> structure containing the current settings of the position controller. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel21set_torque_controllerE13PIDParameters">
+<span id="_CPPv3N7MotorGo12MotorChannel21set_torque_controllerE13PIDParameters"></span><span id="_CPPv2N7MotorGo12MotorChannel21set_torque_controllerE13PIDParameters"></span><span id="MotorGo::MotorChannel::set_torque_controller__PIDParameters"></span><span class="target" id="classMotorGo_1_1MotorChannel_1aa215b810d212b404017b1b544328c447"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_torque_controller</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="structMotorGo_1_1PIDParameters.html#_CPPv4N7MotorGo13PIDParametersE" title="MotorGo::PIDParameters"><span class="n"><span class="pre">PIDParameters</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">params</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel21set_torque_controllerE13PIDParameters" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the PID parameters for the torque controller. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>params</strong> – The <a class="reference internal" href="structMotorGo_1_1PIDParameters.html#structMotorGo_1_1PIDParameters"><span class="std std-ref">PIDParameters</span></a> structure to configure the torque controller. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel23set_velocity_controllerE13PIDParameters">
+<span id="_CPPv3N7MotorGo12MotorChannel23set_velocity_controllerE13PIDParameters"></span><span id="_CPPv2N7MotorGo12MotorChannel23set_velocity_controllerE13PIDParameters"></span><span id="MotorGo::MotorChannel::set_velocity_controller__PIDParameters"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a623ff56d08a9bc41fd84594e6cd73a80"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_velocity_controller</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="structMotorGo_1_1PIDParameters.html#_CPPv4N7MotorGo13PIDParametersE" title="MotorGo::PIDParameters"><span class="n"><span class="pre">PIDParameters</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">params</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel23set_velocity_controllerE13PIDParameters" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the PID parameters for the velocity controller. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>params</strong> – The <a class="reference internal" href="structMotorGo_1_1PIDParameters.html#structMotorGo_1_1PIDParameters"><span class="std std-ref">PIDParameters</span></a> structure to configure the velocity controller. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel23set_position_controllerE13PIDParameters">
+<span id="_CPPv3N7MotorGo12MotorChannel23set_position_controllerE13PIDParameters"></span><span id="_CPPv2N7MotorGo12MotorChannel23set_position_controllerE13PIDParameters"></span><span id="MotorGo::MotorChannel::set_position_controller__PIDParameters"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a224ff91e191d5772b8284a38574aaa98"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_position_controller</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="structMotorGo_1_1PIDParameters.html#_CPPv4N7MotorGo13PIDParametersE" title="MotorGo::PIDParameters"><span class="n"><span class="pre">PIDParameters</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">params</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel23set_position_controllerE13PIDParameters" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the PID parameters for the position controller. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>params</strong> – The <a class="reference internal" href="structMotorGo_1_1PIDParameters.html#structMotorGo_1_1PIDParameters"><span class="std std-ref">PIDParameters</span></a> structure to configure the position controller. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel16get_torque_limitEv">
+<span id="_CPPv3N7MotorGo12MotorChannel16get_torque_limitEv"></span><span id="_CPPv2N7MotorGo12MotorChannel16get_torque_limitEv"></span><span id="MotorGo::MotorChannel::get_torque_limit"></span><span class="target" id="classMotorGo_1_1MotorChannel_1ad5030c5895d84135af94849498d91248"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_torque_limit</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel16get_torque_limitEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Get the user-specified torque limit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel18get_velocity_limitEv">
+<span id="_CPPv3N7MotorGo12MotorChannel18get_velocity_limitEv"></span><span id="_CPPv2N7MotorGo12MotorChannel18get_velocity_limitEv"></span><span id="MotorGo::MotorChannel::get_velocity_limit"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a4212018528df7e8a3edce5b865f7f1c9"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_velocity_limit</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel18get_velocity_limitEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Get the user-specified velocity limit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel22get_position_limit_lowEv">
+<span id="_CPPv3N7MotorGo12MotorChannel22get_position_limit_lowEv"></span><span id="_CPPv2N7MotorGo12MotorChannel22get_position_limit_lowEv"></span><span id="MotorGo::MotorChannel::get_position_limit_low"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a19dc4f46e126ef2ee476a446cc3bd8ec"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_position_limit_low</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel22get_position_limit_lowEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Get the user-specified lower position limit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel23get_position_limit_highEv">
+<span id="_CPPv3N7MotorGo12MotorChannel23get_position_limit_highEv"></span><span id="_CPPv2N7MotorGo12MotorChannel23get_position_limit_highEv"></span><span id="MotorGo::MotorChannel::get_position_limit_high"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a4d9ca49101167c53afaaeb9348763650"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_position_limit_high</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel23get_position_limit_highEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Get the user-specified upper position limit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel17get_voltage_limitEv">
+<span id="_CPPv3N7MotorGo12MotorChannel17get_voltage_limitEv"></span><span id="_CPPv2N7MotorGo12MotorChannel17get_voltage_limitEv"></span><span id="MotorGo::MotorChannel::get_voltage_limit"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a499537465e885f1ad794e07c2cdd20e8"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_voltage_limit</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel17get_voltage_limitEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Get the user-specified voltage limit. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel16set_torque_limitEf">
+<span id="_CPPv3N7MotorGo12MotorChannel16set_torque_limitEf"></span><span id="_CPPv2N7MotorGo12MotorChannel16set_torque_limitEf"></span><span id="MotorGo::MotorChannel::set_torque_limit__float"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a1aa605215dbbce03a4202d8c45a0639a"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_torque_limit</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">limit</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel16set_torque_limitEf" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the maximum torque that can be commanded to the torque controller. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This limit is only enforced if the motor is in torque control mode. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>limit</strong> – The maximum torque in N*m that can be commanded to the motor. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel18set_velocity_limitEf">
+<span id="_CPPv3N7MotorGo12MotorChannel18set_velocity_limitEf"></span><span id="_CPPv2N7MotorGo12MotorChannel18set_velocity_limitEf"></span><span id="MotorGo::MotorChannel::set_velocity_limit__float"></span><span class="target" id="classMotorGo_1_1MotorChannel_1ab97f5b4d555bec2e7ec94bc1166e4777"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_velocity_limit</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">limit</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel18set_velocity_limitEf" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the maximum velocity that can be commanded to the velocity controller. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This limit is only enforced if the motor is in velocity control mode. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>limit</strong> – The maximum velocity in rad/s that can be commanded to the motor. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel18set_position_limitEff">
+<span id="_CPPv3N7MotorGo12MotorChannel18set_position_limitEff"></span><span id="_CPPv2N7MotorGo12MotorChannel18set_position_limitEff"></span><span id="MotorGo::MotorChannel::set_position_limit__float.float"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a906406af77bbb81f719afc4a16c315f9"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_position_limit</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">low</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">high</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel18set_position_limitEff" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the position limits for the position controller. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This limit is only enforced if the motor is in position control mode. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>low</strong> – The lower position limit in radians. </p></li>
+<li><p><strong>high</strong> – The upper position limit in radians. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel17set_voltage_limitEf">
+<span id="_CPPv3N7MotorGo12MotorChannel17set_voltage_limitEf"></span><span id="_CPPv2N7MotorGo12MotorChannel17set_voltage_limitEf"></span><span id="MotorGo::MotorChannel::set_voltage_limit__float"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a7dcf6784716ef0843e9074787538ff48"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_voltage_limit</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">limit</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel17set_voltage_limitEf" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the maximum voltage that can be commanded to the motor. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This limit is only enforced if the motor is in voltage control mode. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>limit</strong> – The maximum voltage in V that can be commanded to the motor. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel23reset_torque_controllerEv">
+<span id="_CPPv3N7MotorGo12MotorChannel23reset_torque_controllerEv"></span><span id="_CPPv2N7MotorGo12MotorChannel23reset_torque_controllerEv"></span><span id="MotorGo::MotorChannel::reset_torque_controller"></span><span class="target" id="classMotorGo_1_1MotorChannel_1afaf8f5f8f13775bda104115bc9b26ede"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">reset_torque_controller</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel23reset_torque_controllerEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Resets the internal state of the torque controller. This clears the integral term and sets the output to zero. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel25reset_velocity_controllerEv">
+<span id="_CPPv3N7MotorGo12MotorChannel25reset_velocity_controllerEv"></span><span id="_CPPv2N7MotorGo12MotorChannel25reset_velocity_controllerEv"></span><span id="MotorGo::MotorChannel::reset_velocity_controller"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a891f2b547ea07456a4396caf9356c3fc"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">reset_velocity_controller</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel25reset_velocity_controllerEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Resets the internal state of the velocity controller. This clears the integral term and sets the output to zero. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel25reset_position_controllerEv">
+<span id="_CPPv3N7MotorGo12MotorChannel25reset_position_controllerEv"></span><span id="_CPPv2N7MotorGo12MotorChannel25reset_position_controllerEv"></span><span id="MotorGo::MotorChannel::reset_position_controller"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a305789b44525a249a3be36af9110b903"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">reset_position_controller</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel25reset_position_controllerEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Resets the internal state of the position controller. This clears the integral term and sets the output to zero. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel22save_torque_controllerEv">
+<span id="_CPPv3N7MotorGo12MotorChannel22save_torque_controllerEv"></span><span id="_CPPv2N7MotorGo12MotorChannel22save_torque_controllerEv"></span><span id="MotorGo::MotorChannel::save_torque_controller"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a016a839a87578f5326a7584174bbbdb3"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">save_torque_controller</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel22save_torque_controllerEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Saves the current torque controller settings to memory. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel24save_velocity_controllerEv">
+<span id="_CPPv3N7MotorGo12MotorChannel24save_velocity_controllerEv"></span><span id="_CPPv2N7MotorGo12MotorChannel24save_velocity_controllerEv"></span><span id="MotorGo::MotorChannel::save_velocity_controller"></span><span class="target" id="classMotorGo_1_1MotorChannel_1aa6777cd25009e81f49de0d1ead47422f"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">save_velocity_controller</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel24save_velocity_controllerEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Saves the current velocity controller settings to memory. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel24save_position_controllerEv">
+<span id="_CPPv3N7MotorGo12MotorChannel24save_position_controllerEv"></span><span id="_CPPv2N7MotorGo12MotorChannel24save_position_controllerEv"></span><span id="MotorGo::MotorChannel::save_position_controller"></span><span class="target" id="classMotorGo_1_1MotorChannel_1adccf3a6de62449a65ca1265aa8c64ae4"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">save_position_controller</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel24save_position_controllerEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Saves the current position controller settings to memory. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel22load_torque_controllerEv">
+<span id="_CPPv3N7MotorGo12MotorChannel22load_torque_controllerEv"></span><span id="_CPPv2N7MotorGo12MotorChannel22load_torque_controllerEv"></span><span id="MotorGo::MotorChannel::load_torque_controller"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a30f0cf89aacc8b34f899ed4c9ea2265c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">load_torque_controller</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel22load_torque_controllerEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Loads the torque controller settings from memory. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel24load_velocity_controllerEv">
+<span id="_CPPv3N7MotorGo12MotorChannel24load_velocity_controllerEv"></span><span id="_CPPv2N7MotorGo12MotorChannel24load_velocity_controllerEv"></span><span id="MotorGo::MotorChannel::load_velocity_controller"></span><span class="target" id="classMotorGo_1_1MotorChannel_1af71781bf237a04e50621fe0a2370e3b4"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">load_velocity_controller</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel24load_velocity_controllerEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Loads the velocity controller settings from memory. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel24load_position_controllerEv">
+<span id="_CPPv3N7MotorGo12MotorChannel24load_position_controllerEv"></span><span id="_CPPv2N7MotorGo12MotorChannel24load_position_controllerEv"></span><span id="MotorGo::MotorChannel::load_position_controller"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a294e3cd0bdfabc36e2825fe9a2d8726f"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">load_position_controller</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel24load_position_controllerEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Loads the position controller settings from memory. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-motor-command">Motor Command</p>
+<p>Functions for basic motor command operations like enable, disable, and setting control modes. </p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel6enableEv">
+<span id="_CPPv3N7MotorGo12MotorChannel6enableEv"></span><span id="_CPPv2N7MotorGo12MotorChannel6enableEv"></span><span id="MotorGo::MotorChannel::enable"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a89787964ca18b21ecf1875588a20d720"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">enable</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel6enableEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Enables the motor, it will run the currently set command. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel7disableEv">
+<span id="_CPPv3N7MotorGo12MotorChannel7disableEv"></span><span id="_CPPv2N7MotorGo12MotorChannel7disableEv"></span><span id="MotorGo::MotorChannel::disable"></span><span class="target" id="classMotorGo_1_1MotorChannel_1aa26e13042007feb3977fb9d1fd4bb9b9"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">disable</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel7disableEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Disables the motor, it will stop running and ignore commands. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel16set_control_modeE11ControlMode">
+<span id="_CPPv3N7MotorGo12MotorChannel16set_control_modeE11ControlMode"></span><span id="_CPPv2N7MotorGo12MotorChannel16set_control_modeE11ControlMode"></span><span id="MotorGo::MotorChannel::set_control_mode__ControlMode"></span><span class="target" id="classMotorGo_1_1MotorChannel_1aba4d46b2420a509687e70cf067066b82"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_control_mode</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="enum_motorgo__common_8h_1af40038847c987db9ba0ecae79d54f493.html#_CPPv4N7MotorGo11ControlModeE" title="MotorGo::ControlMode"><span class="n"><span class="pre">ControlMode</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">mode</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel16set_control_modeE11ControlMode" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the control mode for the motor. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mode</strong> – The desired ControlMode (e.g., Velocity, Position) for the motor. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel17set_target_torqueEf">
+<span id="_CPPv3N7MotorGo12MotorChannel17set_target_torqueEf"></span><span id="_CPPv2N7MotorGo12MotorChannel17set_target_torqueEf"></span><span id="MotorGo::MotorChannel::set_target_torque__float"></span><span class="target" id="classMotorGo_1_1MotorChannel_1ad050323f04c27a794e846f13d2eb01d1"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_target_torque</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">target</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel17set_target_torqueEf" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the target torque for the motor. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>target</strong> – The desired target torque in N*m for the motor. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel19set_target_velocityEf">
+<span id="_CPPv3N7MotorGo12MotorChannel19set_target_velocityEf"></span><span id="_CPPv2N7MotorGo12MotorChannel19set_target_velocityEf"></span><span id="MotorGo::MotorChannel::set_target_velocity__float"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a1ad68247d13d3827cb1a722780be0c37"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_target_velocity</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">target</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel19set_target_velocityEf" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the target velocity for the motor. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>target</strong> – The desired target velocity in rad/s for the motor. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel19set_target_positionEf">
+<span id="_CPPv3N7MotorGo12MotorChannel19set_target_positionEf"></span><span id="_CPPv2N7MotorGo12MotorChannel19set_target_positionEf"></span><span id="MotorGo::MotorChannel::set_target_position__float"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a1b4235974c4cfb16210414cfa38d0872"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_target_position</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">target</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel19set_target_positionEf" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the target position for the motor. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>target</strong> – The desired target position in rad for the motor. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel18set_target_voltageEf">
+<span id="_CPPv3N7MotorGo12MotorChannel18set_target_voltageEf"></span><span id="_CPPv2N7MotorGo12MotorChannel18set_target_voltageEf"></span><span id="MotorGo::MotorChannel::set_target_voltage__float"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a350fc0d6db10cec42d53053990fdc27a"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_target_voltage</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">target</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel18set_target_voltageEf" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the target voltage for the motor. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>target</strong> – The desired target voltage in V for the motor. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-state-retrieval">State Retrieval</p>
+<p>Functions for retrieving the current state of the motors. </p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel13zero_positionEv">
+<span id="_CPPv3N7MotorGo12MotorChannel13zero_positionEv"></span><span id="_CPPv2N7MotorGo12MotorChannel13zero_positionEv"></span><span id="MotorGo::MotorChannel::zero_position"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a93bdcd9381b878a73d429dbcffe06962"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">zero_position</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel13zero_positionEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the current position of the motor to zero. This function resets the motor’s position value to zero. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel10get_torqueEv">
+<span id="_CPPv3N7MotorGo12MotorChannel10get_torqueEv"></span><span id="_CPPv2N7MotorGo12MotorChannel10get_torqueEv"></span><span id="MotorGo::MotorChannel::get_torque"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a3865ab724a1997bded7957998d6df197"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_torque</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel10get_torqueEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Retrieves the current torque of the motor. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The motor’s torque in N*m. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel12get_velocityEv">
+<span id="_CPPv3N7MotorGo12MotorChannel12get_velocityEv"></span><span id="_CPPv2N7MotorGo12MotorChannel12get_velocityEv"></span><span id="MotorGo::MotorChannel::get_velocity"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a7caf88485c1d08cf9b79b930bd2050cf"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_velocity</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel12get_velocityEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Retrieves the current velocity of the motor. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The motor’s velocity in rad/s. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel12get_positionEv">
+<span id="_CPPv3N7MotorGo12MotorChannel12get_positionEv"></span><span id="_CPPv2N7MotorGo12MotorChannel12get_positionEv"></span><span id="MotorGo::MotorChannel::get_position"></span><span class="target" id="classMotorGo_1_1MotorChannel_1ab3012e027c5ffaf6c95ff988b64882ee"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_position</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel12get_positionEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Retrieves the current position of the motor. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The motor’s position in radians. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel11get_voltageEv">
+<span id="_CPPv3N7MotorGo12MotorChannel11get_voltageEv"></span><span id="_CPPv2N7MotorGo12MotorChannel11get_voltageEv"></span><span id="MotorGo::MotorChannel::get_voltage"></span><span class="target" id="classMotorGo_1_1MotorChannel_1af094e3bd8d76538c80f3e9bb44adbc76"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_voltage</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel11get_voltageEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Retrieves the current voltage of the motor. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The motor’s voltage in V. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel12MotorChannelE21BLDCChannelParametersPKc">
+<span id="_CPPv3N7MotorGo12MotorChannel12MotorChannelE21BLDCChannelParametersPKc"></span><span id="_CPPv2N7MotorGo12MotorChannel12MotorChannelE21BLDCChannelParametersPKc"></span><span id="MotorGo::MotorChannel::MotorChannel__BLDCChannelParameters.cCP"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a7ccf1b76ccae50e2cd7af9b21e1e3e53"></span><span class="sig-name descname"><span class="n"><span class="pre">MotorChannel</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="structMotorGo_1_1BLDCChannelParameters.html#_CPPv4N7MotorGo21BLDCChannelParametersE" title="MotorGo::BLDCChannelParameters"><span class="n"><span class="pre">BLDCChannelParameters</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">params</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel12MotorChannelE21BLDCChannelParametersPKc" title="Link to this definition"></a><br /></dt>
+<dd><p>Constructor for the <a class="reference internal" href="#classMotorGo_1_1MotorChannel"><span class="std std-ref">MotorChannel</span></a> class. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> – <a class="reference internal" href="structMotorGo_1_1BLDCChannelParameters.html#structMotorGo_1_1BLDCChannelParameters"><span class="std std-ref">BLDCChannelParameters</span></a> structure containing the pin configuration for the motor channel. </p></li>
+<li><p><strong>name</strong> – The name of the motor channel, used for saving calibration parameters to EEPROM. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel12MotorChannelERK12MotorChannel">
+<span id="_CPPv3N7MotorGo12MotorChannel12MotorChannelERK12MotorChannel"></span><span id="_CPPv2N7MotorGo12MotorChannel12MotorChannelERK12MotorChannel"></span><span id="MotorGo::MotorChannel::MotorChannel__MotorChannelCR"></span><span class="target" id="classMotorGo_1_1MotorChannel_1af8bd047ff7ec924e6f5d5c3f3a5cbe7f"></span><span class="sig-name descname"><span class="n"><span class="pre">MotorChannel</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N7MotorGo12MotorChannel12MotorChannelERK12MotorChannel" title="MotorGo::MotorChannel::MotorChannel"><span class="n"><span class="pre">MotorChannel</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">delete</span></span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel12MotorChannelERK12MotorChannel" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannelaSERK12MotorChannel">
+<span id="_CPPv3N7MotorGo12MotorChannelaSERK12MotorChannel"></span><span id="_CPPv2N7MotorGo12MotorChannelaSERK12MotorChannel"></span><span id="MotorGo::MotorChannel::assign-operator__MotorChannelCR"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a9493211418a36d22edaff311fa215fef"></span><a class="reference internal" href="#_CPPv4N7MotorGo12MotorChannelE" title="MotorGo::MotorChannel"><span class="n"><span class="pre">MotorChannel</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N7MotorGo12MotorChannelE" title="MotorGo::MotorChannel"><span class="n"><span class="pre">MotorChannel</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">delete</span></span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannelaSERK12MotorChannel" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7MotorGo12MotorChannel4loopEv">
+<span id="_CPPv3N7MotorGo12MotorChannel4loopEv"></span><span id="_CPPv2N7MotorGo12MotorChannel4loopEv"></span><span id="MotorGo::MotorChannel::loop"></span><span class="target" id="classMotorGo_1_1MotorChannel_1a5d4f0d39606caba7f3c68668dbd4d8fa"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">loop</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7MotorGo12MotorChannel4loopEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Runs the control loop for the motor channel and updates encoder data. This should be run as fast as possible, without delays. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+</section>
+
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="structMotorGo_1_1PIDParameters.html" class="btn btn-neutral float-left" title="Struct PIDParameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="classMotorGo_1_1MotorGoMini.html" class="btn btn-neutral float-right" title="Class MotorGoMini" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Every Flavor Robotics LLC, MotorGo LLC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: v1.1.0
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../../v1.0.0/index.html">v1.0.0</a></dd>
+            <dd><a href="../../v1.0.1/index.html">v1.0.1</a></dd>
+            <dd><a href="classMotorGo_1_1MotorChannel.html">v1.1.0</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../../dev/index.html">dev</a></dd>
+            <dd><a href="../../main/index.html">main</a></dd>
+        </dl>
+    </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

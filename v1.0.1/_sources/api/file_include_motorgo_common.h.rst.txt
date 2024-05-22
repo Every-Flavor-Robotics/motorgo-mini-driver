@@ -1,0 +1,100 @@
+
+.. _file_include_motorgo_common.h:
+
+File motorgo_common.h
+=====================
+
+|exhale_lsh| :ref:`Parent directory <dir_include>` (``include``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/motorgo_common.h``)
+-----------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_motorgo_common.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``Arduino.h``
+
+- ``SPI.h``
+
+- ``SimpleFOC.h``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_include_motorgo_channel.h`
+
+- :ref:`file_include_motorgo_mini.h`
+
+- :ref:`file_include_motorgo_motors.h`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_MotorGo`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structMotorGo_1_1BLDCChannelParameters`
+
+- :ref:`exhale_struct_structMotorGo_1_1ChannelConfiguration`
+
+- :ref:`exhale_struct_structMotorGo_1_1MotorConfiguration`
+
+- :ref:`exhale_struct_structMotorGo_1_1PIDParameters`
+
+
+Enums
+-----
+
+
+- :ref:`exhale_enum_motorgo__common_8h_1af40038847c987db9ba0ecae79d54f493`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_motorgo__common_8h_1a62ac3f21bf59ff04024043e3731d95a9`
+
+
+Unions
+------
+
+
+- :ref:`exhale_union_unionMotorGo_1_1packed__pid__parameters__t`
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_motorgo__common_8h_1aecbba03599f0847d7fb31d6e896b5c2d`
+

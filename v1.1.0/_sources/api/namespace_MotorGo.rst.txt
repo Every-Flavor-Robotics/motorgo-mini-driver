@@ -1,0 +1,64 @@
+
+.. _namespace_MotorGo:
+
+Namespace MotorGo
+=================
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structMotorGo_1_1BLDCChannelParameters`
+
+- :ref:`exhale_struct_structMotorGo_1_1ChannelConfiguration`
+
+- :ref:`exhale_struct_structMotorGo_1_1MotorConfiguration`
+
+- :ref:`exhale_struct_structMotorGo_1_1PIDManagerConfig`
+
+- :ref:`exhale_struct_structMotorGo_1_1PIDParameters`
+
+- :ref:`exhale_class_classMotorGo_1_1MotorChannel`
+
+- :ref:`exhale_class_classMotorGo_1_1MotorGoMini`
+
+- :ref:`exhale_class_classMotorGo_1_1PIDManager`
+
+
+Enums
+-----
+
+
+- :ref:`exhale_enum_motorgo__common_8h_1af40038847c987db9ba0ecae79d54f493`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_motorgo__common_8h_1a62ac3f21bf59ff04024043e3731d95a9`
+
+- :ref:`exhale_function_motorgo__motors_8h_1a6afe6a3b7bfe9c37a92dd7e8ab22016e`
+
+
+Unions
+------
+
+
+- :ref:`exhale_union_unionMotorGo_1_1packed__pid__parameters__t`
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_motorgo__common_8h_1aecbba03599f0847d7fb31d6e896b5c2d`

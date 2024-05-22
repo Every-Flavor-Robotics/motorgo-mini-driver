@@ -1,0 +1,17 @@
+.. _exhale_struct_structESPWifiConfig_1_1JsonSerializer_3_01MotorGo_1_1PIDParameters_01_4:
+
+Template Struct JsonSerializer< MotorGo::PIDParameters >
+========================================================
+
+- Defined in :ref:`file_include_pid_manager.h`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: ESPWifiConfig::JsonSerializer< MotorGo::PIDParameters >
+   :project: MotorGo Docs
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -1,0 +1,14 @@
+.. _exhale_function_motorgo__motors_8h_1a6afe6a3b7bfe9c37a92dd7e8ab22016e:
+
+Function MotorGo::MotorGoGreen
+==============================
+
+- Defined in :ref:`file_include_motorgo_motors.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: MotorGo::MotorGoGreen(7, NOT_SET, NOT_SET, NOT_SET, 4., 2., 10000., 1.)
+   :project: MotorGo Docs

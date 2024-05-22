@@ -1,0 +1,14 @@
+.. _exhale_enum_motorgo__common_8h_1af40038847c987db9ba0ecae79d54f493:
+
+Enum ControlMode
+================
+
+- Defined in :ref:`file_include_motorgo_common.h`
+
+
+Enum Documentation
+------------------
+
+
+.. doxygenenum:: MotorGo::ControlMode
+   :project: MotorGo Docs

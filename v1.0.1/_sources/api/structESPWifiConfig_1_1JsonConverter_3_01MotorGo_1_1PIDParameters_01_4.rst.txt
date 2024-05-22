@@ -1,0 +1,17 @@
+.. _exhale_struct_structESPWifiConfig_1_1JsonConverter_3_01MotorGo_1_1PIDParameters_01_4:
+
+Template Struct JsonConverter< MotorGo::PIDParameters >
+=======================================================
+
+- Defined in :ref:`file_include_pid_manager.h`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: ESPWifiConfig::JsonConverter< MotorGo::PIDParameters >
+   :project: MotorGo Docs
+   :members:
+   :protected-members:
+   :undoc-members:

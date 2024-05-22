@@ -1,0 +1,14 @@
+.. _exhale_union_unionMotorGo_1_1packed__pid__parameters__t:
+
+Union packed_pid_parameters_t
+=============================
+
+- Defined in :ref:`file_include_motorgo_common.h`
+
+
+Union Documentation
+-------------------
+
+
+.. doxygenunion:: MotorGo::packed_pid_parameters_t
+   :project: MotorGo Docs

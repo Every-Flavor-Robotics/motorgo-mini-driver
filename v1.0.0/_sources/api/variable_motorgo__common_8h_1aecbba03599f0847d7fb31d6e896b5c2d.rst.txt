@@ -1,0 +1,14 @@
+.. _exhale_variable_motorgo__common_8h_1aecbba03599f0847d7fb31d6e896b5c2d:
+
+Variable MotorGo::hspi
+======================
+
+- Defined in :ref:`file_include_motorgo_common.h`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: MotorGo::hspi
+   :project: MotorGo Docs

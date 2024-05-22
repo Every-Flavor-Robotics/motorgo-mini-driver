@@ -1,0 +1,68 @@
+
+.. _file_include_motorgo_channel.h:
+
+File motorgo_channel.h
+======================
+
+|exhale_lsh| :ref:`Parent directory <dir_include>` (``include``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/motorgo_channel.h``)
+------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_motorgo_channel.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``SPI.h``
+
+- ``SimpleFOC.h``
+
+- ``Wire.h``
+
+- ``encoders/calibrated/CalibratedSensor.h``
+
+- ``encoders/mt6701/MagneticSensorMT6701SSI.h``
+
+- ``motorgo_common.h`` (:ref:`file_include_motorgo_common.h`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_include_motorgo_mini.h`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_MotorGo`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classMotorGo_1_1MotorChannel`
+

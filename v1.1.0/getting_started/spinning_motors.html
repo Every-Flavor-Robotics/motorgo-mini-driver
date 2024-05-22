@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spinning Two Motors &mdash; MotorGo Docs  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tuning PID Controllers" href="tuning_pid.html" />
+    <link rel="prev" title="Motor Calibration" href="calibration.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MotorGo Docs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="getting_started.html">Getting Started</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="software_setup.html">Get started writing code for the MotorGo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="calibration.html">Motor Calibration</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Spinning Two Motors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tuning_pid.html">Tuning PID Controllers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../example_projects/examples.html">Example Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core_concepts/core_concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api_reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../common_issues.html">Common Issues</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MotorGo Docs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="getting_started.html">Getting Started</a></li>
+      <li class="breadcrumb-item active">Spinning Two Motors</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/getting_started/spinning_motors.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+
+
+  <section id="spinning-two-motors">
+<span id="spin-two-motors"></span><h1>Spinning Two Motors<a class="headerlink" href="#spinning-two-motors" title="Link to this heading"></a></h1>
+<p><strong>Overview</strong></p>
+<p>This section explains how to operate the motors using the MotorGo system in various modes, including velocity, velocity open loop, position, position open loop, and torque modes. A crucial part of this process is enabling the motors and setting the desired control mode.</p>
+<p><em>Pre-requisites</em></p>
+<ul class="simple">
+<li><p>Calibration: Ensure that the motors have been calibrated as outlined in the previous section. Calibration can be performed during this step or previously, and then disabled if it has already been completed.</p></li>
+</ul>
+<p><strong>Motor Operation Process</strong></p>
+<p><em>Full Code Example:</em>
+The following code initializes both motor controller channels for the MotorGo brushless gimbal motor. It then enables the motors and configures them in velocity control mode with a basic PID controller. Finally, in the loop, the motors are commanded to run at 10 rad/s and the velocity is printed to the serial terminal.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;Arduino.h&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;motorgo_mini.h&quot;</span>
+
+<span class="n">MotorGo</span><span class="o">::</span><span class="n">MotorGoMini</span><span class="w"> </span><span class="n">motorgo_mini</span><span class="p">;</span>
+<span class="n">MotorGo</span><span class="o">::</span><span class="n">MotorChannel</span><span class="o">&amp;</span><span class="w"> </span><span class="n">motor_left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">motorgo_mini</span><span class="p">.</span><span class="n">ch0</span><span class="p">;</span>
+<span class="n">MotorGo</span><span class="o">::</span><span class="n">MotorChannel</span><span class="o">&amp;</span><span class="w"> </span><span class="n">motor_right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">motorgo_mini</span><span class="p">.</span><span class="n">ch1</span><span class="p">;</span>
+
+<span class="n">MotorGo</span><span class="o">::</span><span class="n">ChannelConfiguration</span><span class="w"> </span><span class="n">config_left</span><span class="p">;</span>
+<span class="n">MotorGo</span><span class="o">::</span><span class="n">ChannelConfiguration</span><span class="w"> </span><span class="n">config_right</span><span class="p">;</span>
+
+<span class="n">MotorGo</span><span class="o">::</span><span class="n">PIDParameters</span><span class="w"> </span><span class="n">velocity_pid_params_left</span><span class="p">;</span>
+<span class="n">MotorGo</span><span class="o">::</span><span class="n">PIDParameters</span><span class="w"> </span><span class="n">velocity_pid_params_right</span><span class="p">;</span>
+
+<span class="c1">// Function to print at a maximum frequency</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">freq_println</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">str</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">freq</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">last_print_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">now</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">millis</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">now</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">last_print_time</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1000</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">freq</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+<span class="w">        </span><span class="n">last_print_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">now</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">setup</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">115200</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">delay</span><span class="p">(</span><span class="mi">3000</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Setup motor parameters</span>
+
+<span class="w">    </span><span class="n">config_left</span><span class="p">.</span><span class="n">motor_config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MotorGo</span><span class="o">::</span><span class="n">MotorGoGreen</span><span class="p">;</span>
+<span class="w">    </span><span class="n">config_left</span><span class="p">.</span><span class="n">power_supply_voltage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">config_left</span><span class="p">.</span><span class="n">reversed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">config_right</span><span class="p">.</span><span class="n">motor_config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MotorGo</span><span class="o">::</span><span class="n">MotorGoGreen</span><span class="p">;</span>
+<span class="w">    </span><span class="n">config_right</span><span class="p">.</span><span class="n">power_supply_voltage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">config_right</span><span class="p">.</span><span class="n">reversed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// Setup</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">calibrate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">motor_left</span><span class="p">.</span><span class="n">init</span><span class="p">(</span><span class="n">config_left</span><span class="p">,</span><span class="w"> </span><span class="n">calibrate</span><span class="p">);</span>
+<span class="w">    </span><span class="n">motor_right</span><span class="p">.</span><span class="n">init</span><span class="p">(</span><span class="n">config_right</span><span class="p">,</span><span class="w"> </span><span class="n">calibrate</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Set velocity controller parameters</span>
+<span class="w">    </span><span class="c1">// Setup PID parameters</span>
+<span class="w">    </span><span class="n">velocity_pid_params_left</span><span class="p">.</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.8</span><span class="p">;</span>
+<span class="w">    </span><span class="n">velocity_pid_params_left</span><span class="p">.</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.01</span><span class="p">;</span>
+<span class="w">    </span><span class="n">velocity_pid_params_left</span><span class="p">.</span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">velocity_pid_params_left</span><span class="p">.</span><span class="n">output_ramp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10000.0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">velocity_pid_params_left</span><span class="p">.</span><span class="n">lpf_time_constant</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.11</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">velocity_pid_params_right</span><span class="p">.</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.8</span><span class="p">;</span>
+<span class="w">    </span><span class="n">velocity_pid_params_right</span><span class="p">.</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.01</span><span class="p">;</span>
+<span class="w">    </span><span class="n">velocity_pid_params_right</span><span class="p">.</span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">velocity_pid_params_right</span><span class="p">.</span><span class="n">output_ramp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10000.0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">velocity_pid_params_right</span><span class="p">.</span><span class="n">lpf_time_constant</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.11</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">motor_left</span><span class="p">.</span><span class="n">set_velocity_controller</span><span class="p">(</span><span class="n">velocity_pid_params_left</span><span class="p">);</span>
+<span class="w">    </span><span class="n">motor_right</span><span class="p">.</span><span class="n">set_velocity_controller</span><span class="p">(</span><span class="n">velocity_pid_params_right</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">//   Set closed-loop velocity mode</span>
+<span class="w">    </span><span class="n">motor_left</span><span class="p">.</span><span class="n">set_control_mode</span><span class="p">(</span><span class="n">MotorGo</span><span class="o">::</span><span class="n">ControlMode</span><span class="o">::</span><span class="n">Velocity</span><span class="p">);</span>
+<span class="w">    </span><span class="n">motor_right</span><span class="p">.</span><span class="n">set_control_mode</span><span class="p">(</span><span class="n">MotorGo</span><span class="o">::</span><span class="n">ControlMode</span><span class="o">::</span><span class="n">Velocity</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Set a velocity limit of 5.0 rad/s for the left motor</span>
+<span class="w">    </span><span class="n">motor_left</span><span class="p">.</span><span class="n">set_velocity_limit</span><span class="p">(</span><span class="mf">5.0</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">//   Enable motors</span>
+<span class="w">    </span><span class="n">motor_left</span><span class="p">.</span><span class="n">enable</span><span class="p">();</span>
+<span class="w">    </span><span class="n">motor_right</span><span class="p">.</span><span class="n">enable</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">loop</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">motor_left</span><span class="p">.</span><span class="n">loop</span><span class="p">();</span>
+<span class="w">    </span><span class="n">motor_right</span><span class="p">.</span><span class="n">loop</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// Left Motor should only spin at 5.0 rad/s, because of the velocity limit</span>
+<span class="w">    </span><span class="n">motor_left</span><span class="p">.</span><span class="n">set_target_velocity</span><span class="p">(</span><span class="mf">10.0</span><span class="p">);</span>
+<span class="w">    </span><span class="n">motor_right</span><span class="p">.</span><span class="n">set_target_velocity</span><span class="p">(</span><span class="mf">10.0</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Velocity - Ch0: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">motor_left</span><span class="p">.</span><span class="n">get_velocity</span><span class="p">())</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="s">&quot; Ch1: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">motor_right</span><span class="p">.</span><span class="n">get_velocity</span><span class="p">());</span>
+
+<span class="w">    </span><span class="n">freq_println</span><span class="p">(</span><span class="n">str</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="calibration.html" class="btn btn-neutral float-left" title="Motor Calibration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tuning_pid.html" class="btn btn-neutral float-right" title="Tuning PID Controllers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Every Flavor Robotics LLC, MotorGo LLC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: v1.1.0
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../../v1.0.0/getting_started/spinning_motors.html">v1.0.0</a></dd>
+            <dd><a href="../../v1.0.1/getting_started/spinning_motors.html">v1.0.1</a></dd>
+            <dd><a href="spinning_motors.html">v1.1.0</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../../dev/getting_started/spinning_motors.html">dev</a></dd>
+            <dd><a href="../../main/getting_started/spinning_motors.html">main</a></dd>
+        </dl>
+    </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

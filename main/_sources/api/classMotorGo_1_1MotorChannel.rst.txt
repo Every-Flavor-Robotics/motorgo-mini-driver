@@ -1,0 +1,17 @@
+.. _exhale_class_classMotorGo_1_1MotorChannel:
+
+Class MotorChannel
+==================
+
+- Defined in :ref:`file_include_motorgo_channel.h`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: MotorGo::MotorChannel
+   :project: MotorGo Docs
+   :members:
+   :protected-members:
+   :undoc-members:
