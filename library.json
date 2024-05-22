@@ -24,7 +24,7 @@
         },
         {
             "name": "SimpleFOCDrivers",
-            "version": "https://github.com/Every-Flavor-Robotics/Arduino-FOC-drivers.git#3c4585c95f640be3cf704b230be615a96a01e326"
+            "version": "https://github.com/Every-Flavor-Robotics/Arduino-FOC-drivers.git#639943f76a16a706b5125af28e5599060a909cea"
         },
         {
             "name": "ESP-Options",
