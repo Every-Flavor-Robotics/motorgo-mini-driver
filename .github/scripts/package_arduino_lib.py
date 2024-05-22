@@ -31,7 +31,14 @@ def check_platform(lib_dir: str, safe: bool = True) -> bool:
     with open(library_json_path, 'r') as f:
         data = json.load(f)
 
-    platform = data.get("platforms", [])
+    # If platform not present, return based on safe flag
+    platform = data.get("platforms", None)
+    if not platform:
+        if safe:
+            return False
+        else:
+            return True
+
     if isinstance(platform, list):
         if "espressif32" in platform:
             return True
@@ -202,7 +209,8 @@ def install_pio_dependencies(storage_dir: str, dependencies: List[dict], ignore_
             pio_install_command.append("--library")
             pio_install_command.append(dep)
 
-    print(f"Installing dependencies with command: {pio_install_command}")
+    # Convert to string and print
+    print(f"Installing dependencies with command:\n{' '.join(pio_install_command)}")
 
     print_dependency_summary(dependencies, ignore_packages)
 
